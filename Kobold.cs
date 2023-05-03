@@ -1,0 +1,20 @@
+using System.ComponentModel;
+
+namespace CombSim
+{
+    public class Kobold: Monster
+    {
+        public Kobold(string name) : base(name)
+        {
+            Stats.Add(StatEnum.Strength, new Stat(7));
+            Stats.Add(StatEnum.Dexterity, new Stat(15));
+            Stats.Add(StatEnum.Constitution, new Stat(9));
+            Stats.Add(StatEnum.Intelligence, new Stat(8));
+            Stats.Add(StatEnum.Wisdom, new Stat(7));
+            Stats.Add(StatEnum.Charisma, new Stat(8));
+            _repr = "k";
+            HitDice = "2d6-2";
+            Initialize();
+        }
+    }
+}
