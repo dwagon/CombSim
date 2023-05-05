@@ -2,7 +2,7 @@ namespace CombSim
 {
     public class Fighter: Character
     {
-        public Fighter(string name) : base(name)
+        public Fighter(string name, string team="Fighters") : base(name, team)
         {
             _repr = "F";
             HitPoints = 12;
@@ -14,6 +14,7 @@ namespace CombSim
             Stats.Add(StatEnum.Intelligence, new Stat(11));
             Stats.Add(StatEnum.Wisdom, new Stat(13));
             Stats.Add(StatEnum.Charisma, new Stat(9));
+            AddEquipment(Gear.Longsword);
         }
     }
 }

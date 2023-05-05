@@ -39,13 +39,21 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="Action.cs" />
         <Compile Include="Arena.cs" />
         <Compile Include="Character.cs" />
+        <Compile Include="Characters\Fighter.cs" />
+        <Compile Include="Conditions.cs" />
         <Compile Include="Creature.cs" />
+        <Compile Include="Damage.cs" />
+        <Compile Include="DamageRoll.cs" />
+        <Compile Include="DamageType.cs" />
         <Compile Include="Dice.cs" />
-        <Compile Include="Fighter.cs" />
-        <Compile Include="Kobold.cs" />
+        <Compile Include="Equipment.cs" />
+        <Compile Include="Game.cs" />
+        <Compile Include="Gear.cs" />
         <Compile Include="Monster.cs" />
+        <Compile Include="Monsters\Kobold.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="StatEnum.cs" />

@@ -1,39 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace CombSim
 {
     internal class Program
     {
-        private Arena arena = new Arena(20, 10);
-        private List<Creature> initiativeOrder;
+        private Game game;
         
         public static void Main(string[] args)
         {
             Program pc = new Program();
             pc.SetUp();
-            for (int turn = 0; turn < 5; turn++)
-            {
-                pc.TakeTurn();
-            }
+            pc.RunGame();
+        }
+
+        private void RunGame()
+        {
+            game.StartGame();
+            game.RunGame();
+            game.EndGame();
         }
 
         private void SetUp()
         {
+            game = new Game(20, 10);
             Kobold k = new Kobold("Kobold");
-            arena.Add_Creature(k);
+            game.Add_Creature(k);
             Fighter f = new Fighter("Frank");
-            arena.Add_Creature(f);
-            initiativeOrder = arena.GetInitiativeOrder();
-        }
-
-        private void TakeTurn()
-        {  
-            arena.Print();
-            foreach (var creature in initiativeOrder)
-            {
-                creature.TakeTurn();
-            }
+            game.Add_Creature(f);
         }
     }
 }

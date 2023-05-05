@@ -4,7 +4,7 @@ namespace CombSim
 {
     public class Kobold: Monster
     {
-        public Kobold(string name) : base(name)
+        public Kobold(string name, string team="Kobolds") : base(name, team)
         {
             Stats.Add(StatEnum.Strength, new Stat(7));
             Stats.Add(StatEnum.Dexterity, new Stat(15));
@@ -14,6 +14,7 @@ namespace CombSim
             Stats.Add(StatEnum.Charisma, new Stat(8));
             _repr = "k";
             HitDice = "2d6-2";
+            AddEquipment(Gear.Dagger);
             Initialize();
         }
     }

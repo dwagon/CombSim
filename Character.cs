@@ -4,7 +4,7 @@ namespace CombSim
     {
         protected int Level;
         
-        public Character(string name) : base(name)
+        public Character(string name, string team="Characters") : base(name, team)
         {
             
         }

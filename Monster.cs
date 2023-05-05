@@ -6,7 +6,7 @@ namespace CombSim
     {
         public string HitDice { get; protected set; }
         
-        protected Monster(string name) : base(name)
+        protected Monster(string name, string team="Monsters") : base(name, team)
         {
         }
 
