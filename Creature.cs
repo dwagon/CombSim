@@ -18,6 +18,7 @@ namespace CombSim
         private int _moves;
         public Game game { get; protected set; }
         public Location Location { get; protected set; }
+        public Guid Guid { get; protected set; }
 
         protected Creature(string name, string team = "")
         {
@@ -29,6 +30,7 @@ namespace CombSim
             _equipment = new List<Equipment>();
             _actions = new List<Action>();
             _actionsThisTurn = new HashSet<ActionCategory>();
+            Guid = new Guid();
         }
 
         public void SetGame(Game game)
@@ -67,9 +69,9 @@ namespace CombSim
         }
 
         // Return all the possible actions
-        private List<Action> PossibleActions(ActionCategory actcat)
+        private List<IAction> PossibleActions(ActionCategory actcat)
         {
-            List<Action> actions = new List<Action>();
+            List<IAction> actions = new List<IAction>();
             foreach (var action in _actions)
             {
                 if (action.Category == actcat)
@@ -82,7 +84,7 @@ namespace CombSim
 
         public void TakeTurn()
         {
-            Action action;
+            IAction action;
             _moves = _speed;
             if (_conditions.HasCondition(ConditionEnum.Dead))
                 return;
@@ -98,23 +100,23 @@ namespace CombSim
         
         private void EndTurn() {}
 
-        private void PerformAction(Action action)
+        private void PerformAction(IAction action)
         {
-            Console.WriteLine("PerformAction action=" + action.Name);
+            Console.WriteLine("PerformAction action=" + action.Name());
             action.DoAction(this);
         }
         
-        private Action PickActionToDo(ActionCategory actionCategory)
+        private IAction PickActionToDo(ActionCategory actionCategory)
         {
             if (!_actionsThisTurn.Contains(actionCategory))
             {
                 return null;
             }
 
-            List <Action> possibleActions = PossibleActions(actionCategory);
+            List <IAction> possibleActions = PossibleActions(actionCategory);
             foreach (var action in possibleActions)
             {
-                Console.WriteLine(this.Name +": Actions = " + action.Name);
+                Console.WriteLine(this.Name +": Actions = " + action.Name());
             }
 
             if (possibleActions.Count == 0)

@@ -41,6 +41,7 @@
     <ItemGroup>
         <Compile Include="Action.cs" />
         <Compile Include="Arena.cs" />
+        <Compile Include="Attack.cs" />
         <Compile Include="Character.cs" />
         <Compile Include="Characters\Fighter.cs" />
         <Compile Include="Conditions.cs" />
@@ -53,10 +54,12 @@
         <Compile Include="Game.cs" />
         <Compile Include="Gear.cs" />
         <Compile Include="Location.cs" />
+        <Compile Include="MeleeAttack.cs" />
         <Compile Include="Monster.cs" />
         <Compile Include="Monsters\Kobold.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="RangedAttack.cs" />
         <Compile Include="StatEnum.cs" />
         <Compile Include="Stat.cs" />
     </ItemGroup>

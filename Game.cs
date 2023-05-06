@@ -38,7 +38,7 @@ namespace CombSim
 
         public void RunGame()
         {
-            for (int turn = 0; turn < 5; turn++)
+            for (int turn = 0; turn < 1; turn++)
             {
                 TakeTurn();
             }

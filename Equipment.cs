@@ -6,7 +6,7 @@ namespace CombSim
     public class Equipment
     {
         private string _name;
-        private List<Action> actions = new List<Action>();
+        private List<Action> _actions = new List<Action>();
 
         public Equipment(string name)
         {
@@ -15,12 +15,12 @@ namespace CombSim
 
         protected void AddAction(Action act)
         {
-            actions.Add(act);
+            _actions.Add(act);
         }
 
         public List<Action> GetActions()
         {
-            return actions;
+            return _actions;
         }
     }
 
@@ -28,7 +28,7 @@ namespace CombSim
     {
         private DamageRoll dmgRoll;
 
-        public Weapon(string name, DamageRoll dmgroll) : base(name)
+        protected Weapon(string name, DamageRoll dmgroll) : base(name)
         {
             dmgRoll = dmgroll;
         }
@@ -40,6 +40,7 @@ namespace CombSim
 
         public MeleeWeapon(string name, DamageRoll dmgroll, int reach) : base(name, dmgroll)
         {
+            Console.WriteLine("Added MeleeWeapon:" + name);
             this.reach = reach;
             AddAction(new MeleeAttack(name, dmgroll, reach));
         }
