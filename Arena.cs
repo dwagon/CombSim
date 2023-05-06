@@ -8,18 +8,18 @@ namespace CombSim
 {
     public class Arena
     {
-        private int _max_x;
-        private int _max_y;
+        private int _maxX;
+        private int _maxY;
         private object[,] _grid;
 
         public Arena(int max_x, int max_y)
         {
             _grid = new object[max_x, max_y];
-            _max_x = max_x;
-            _max_y = max_y;
-            for (int x = 0; x < _max_x; x++)
+            _maxX = max_x;
+            _maxY = max_y;
+            for (int x = 0; x < _maxX; x++)
             {
-                for (int y = 0; y < _max_y; y++)
+                for (int y = 0; y < _maxY; y++)
                 {
                     _grid[x, y] = null;
                 }
@@ -30,9 +30,9 @@ namespace CombSim
         public void Print()
         {
             Console.WriteLine("");
-            for (int y = 0; y < _max_y; y++)
+            for (int y = 0; y < _maxY; y++)
             {
-                for (int x = 0; x < _max_x; x++)
+                for (int x = 0; x < _maxX; x++)
                 {
                     if (_grid[x, y] == null)
                     {
@@ -49,22 +49,16 @@ namespace CombSim
             }
         }
 
-        // Return the closest creature to {actor} that is on a different team
-        public Creature PickClosestEnemy(Creature actor)
-        {
-            return null;
-        }
-
         // Return an empty spot on the arena
         public bool Pick_Empty_Spot(out int x, out int y)
         {
             x = -1;
             y = -1;
-            for (int attempt = 0; attempt < _max_x * _max_y; attempt++)
+            for (int attempt = 0; attempt < _maxX * _maxY; attempt++)
             {
                 Random rnd = new Random();
-                x = rnd.Next() % _max_x;
-                y = rnd.Next() % _max_y;
+                x = rnd.Next() % _maxX;
+                y = rnd.Next() % _maxY;
                 if (_grid[x, y] == null)
                 {
                     return true;
@@ -76,6 +70,23 @@ namespace CombSim
         public void Set(int x, int y, object thing)
         {
             _grid[x, y] = thing;
+        }
+
+        public void Set(Location location, Creature thing)
+        {
+            int x, y;
+            x = location.x;
+            y = location.y;
+            _grid[x, y] = thing;
+        }
+
+        public void Move(Location newplace, Creature creature)
+        {
+            int x = creature.Location.x;
+            int y = creature.Location.y;
+            Set(x, y, null);
+            Set(newplace, creature);
+            creature.SetLocation(newplace);
         }
     }
 }

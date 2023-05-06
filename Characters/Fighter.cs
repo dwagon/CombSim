@@ -4,7 +4,7 @@ namespace CombSim
     {
         public Fighter(string name, string team="Fighters") : base(name, team)
         {
-            _repr = "F";
+            Repr = "F";
             HitPoints = 12;
             Level = 1;
             

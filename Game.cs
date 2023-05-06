@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CombSim
 {
@@ -19,6 +21,21 @@ namespace CombSim
             initiativeOrder = GetInitiativeOrder();
         }
 
+        // Return the next location closer to the {destination}
+        public Location NextLocationTowards(Location source, Location destination)
+        {
+            if (source.x < destination.x)
+            {
+                if (source.y < destination.y)
+                    return new Location(source.x - 1, source.x - 1);
+                return new Location(source.x - 1, source.x + 1);
+            }
+
+            if (source.y < destination.y)
+                return new Location(source.x + 1, source.x - 1);
+            return new Location(source.x +1, source.x + 1);
+        }
+
         public void RunGame()
         {
             for (int turn = 0; turn < 5; turn++)
@@ -27,12 +44,13 @@ namespace CombSim
             }
         }
 
-        public void TakeTurn()
+        private void TakeTurn()
         {
             foreach (var creature in initiativeOrder)
             {
                 creature.TakeTurn();
             }
+            arena.Print();
         }
         
         public void EndGame() {}
@@ -41,6 +59,7 @@ namespace CombSim
         {
             arena.Pick_Empty_Spot(out int x, out int y);
             arena.Set(x, y, creature);
+            creature.SetGame(this);
             _combatants.Add(creature);
         }
 
@@ -62,6 +81,28 @@ namespace CombSim
                 order.Add(critter.Item1);
             }
             return order;
+        }
+        
+        // Return the closest creature to {actor} that is on a different team
+        public Creature PickClosestEnemy(Creature actor)
+        {
+            List<(Creature, float)> enemies = new List<(Creature, float)>();
+            foreach (var critter in _combatants)
+            {
+                if (critter.Team != actor.Team)
+                {
+                    enemies.Add((critter, DistanceTo(actor, critter)));
+                }
+            }
+            enemies.Sort((a,b) =>a.Item2.CompareTo(b.Item2));
+
+            return enemies.Last().Item1;
+        }
+
+        // Return the distance between creatures {one} and {two}
+        public float DistanceTo(Creature one, Creature two)
+        {
+            return one.Location.DistanceBetween(two.Location);
         }
     }
 }

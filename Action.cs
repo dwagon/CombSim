@@ -1,3 +1,5 @@
+using System;
+
 namespace CombSim
 {
     public enum ActionCategory
@@ -21,6 +23,7 @@ namespace CombSim
 
         public bool DoAction(Creature actor)
         {
+            Console.WriteLine("Action.DoAction(" + actor.Name + ") " + this.Name);
             return false;
         }
     }
@@ -33,8 +36,9 @@ namespace CombSim
             _dmgRoll = damageroll;
         }
         
-        public bool DoAction(Creature actor)
+        public new bool DoAction(Creature actor)
         {
+            Console.WriteLine("Attack.DoAction(" + actor.Name + ") " + this.Name);
             return false;
         }
     }
@@ -48,8 +52,26 @@ namespace CombSim
             _reach = reach;
         }
 
-        public bool DoAction(Creature actor)
+        public new bool DoAction(Creature actor)
         {
+            Console.WriteLine("MeleeAttack.DoAction(" + actor.Name + ") " + this.Name);
+            Creature enemy = actor.game.PickClosestEnemy(actor);
+            float distance = actor.game.DistanceTo(actor, enemy);
+            while (distance > _reach)
+            {
+                if (!actor.MoveTowards(enemy.Location))
+                {
+                    break;
+                }
+                distance = actor.game.DistanceTo(actor, enemy);
+            }
+            
+            distance = actor.game.DistanceTo(actor, enemy);
+            if (distance <= _reach)
+            {
+                // Do melee attack here
+                return true;
+            }
             return false;
         }
     }

@@ -52,6 +52,7 @@
         <Compile Include="Equipment.cs" />
         <Compile Include="Game.cs" />
         <Compile Include="Gear.cs" />
+        <Compile Include="Location.cs" />
         <Compile Include="Monster.cs" />
         <Compile Include="Monsters\Kobold.cs" />
         <Compile Include="Program.cs" />
