@@ -1,22 +1,18 @@
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
 
 namespace CombSim
 {
     public class Arena
     {
-        private int _maxX;
-        private int _maxY;
-        private object[,] _grid;
+        private readonly int _maxX;
+        private readonly int _maxY;
+        private readonly object[,] _grid;
 
-        public Arena(int max_x, int max_y)
+        public Arena(int maxX, int maxY)
         {
-            _grid = new object[max_x, max_y];
-            _maxX = max_x;
-            _maxY = max_y;
+            _grid = new object[maxX, maxY];
+            _maxX = maxX;
+            _maxY = maxY;
             for (int x = 0; x < _maxX; x++)
             {
                 for (int y = 0; y < _maxY; y++)
@@ -27,26 +23,26 @@ namespace CombSim
         }
 
         // Print the arena out
-        public void Print()
+        public new string ToString()
         {
-            Console.WriteLine("");
+            string output = "";
             for (int y = 0; y < _maxY; y++)
             {
                 for (int x = 0; x < _maxX; x++)
                 {
                     if (_grid[x, y] == null)
                     {
-                        Console.Write(".");
+                        output += ".";
                     }
                     else
                     {
                         Creature creature = _grid[x, y] as Creature;
-                        
-                        Console.Write(creature.GetRepr());
+                        output += creature?.GetRepr();
                     }
                 }
-                Console.WriteLine("");
+                output+="\n";
             }
+            return output;
         }
 
         // Return an empty spot on the arena
@@ -74,9 +70,8 @@ namespace CombSim
 
         public void Set(Location location, Creature thing)
         {
-            int x, y;
-            x = location.x;
-            y = location.y;
+            var x = location.x;
+            var y = location.y;
             _grid[x, y] = thing;
         }
 

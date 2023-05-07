@@ -30,7 +30,6 @@ namespace CombSim
         {
             _name = name;
             Category = category;
-            Console.WriteLine("Added base Action " + name);
         }
 
         public bool DoAction(Creature actor)

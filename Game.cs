@@ -6,36 +6,45 @@ namespace CombSim
 {
     public class Game
     {
-        private Arena arena;
-        private List<Creature> initiativeOrder;
-        private List<Creature> _combatants;
-        private Dictionary<Creature, Location> _locations;
+        private readonly Arena _arena;
+        private List<Creature> _initiativeOrder;
+        private readonly List<Creature> _combatants;
+        private readonly Dictionary<Creature, Location> _locations;
 
-        public Game(int max_x = 20, int max_y = 10)
+        public Game(int maxX = 20, int maxY = 10)
         {
-            arena = new Arena(max_x, max_y);
+            _arena = new Arena(maxX, maxY);
             _combatants = new List<Creature>();
             _locations = new Dictionary<Creature, Location>();
         }
 
         public void StartGame()
         {
-            initiativeOrder = GetInitiativeOrder();
+            _initiativeOrder = GetInitiativeOrder();
+            foreach (var creature in _combatants)
+            {
+                creature.Initialise();
+            }
         }
 
         // Return the next location closer to the {destination}
-        public Location NextLocationTowards(Location source, Location destination)
+        private Location NextLocationTowards(Location source, Location destination)
         {
             if (source.x < destination.x)
             {
-                if (source.y < destination.y)
-                    return new Location(source.x + 1, source.y - 1);
+                if (source.y < destination.y) return new Location(source.x + 1, source.y + 1);
+                if (source.y > destination.y) return new Location(source.x + 1, source.y - 1);
                 return new Location(source.x + 1, source.y);
             }
 
-            if (source.y < destination.y)
-                return new Location(source.x - 1, source.y - 1);
-            return new Location(source.x - 1, source.y);
+            if (source.x > destination.x)
+            {
+                if (source.y < destination.y) return new Location(source.x - 1, source.y + 1);
+                if (source.y > destination.y) return new Location(source.x - 1, source.y - 1);
+                return new Location(source.x - 1, source.y);
+            }
+
+            return new Location(source.x, source.y);
         }
         
         public Location NextLocationTowards(Creature srcCreature, Location destination)
@@ -55,7 +64,8 @@ namespace CombSim
 
         public void RunGame()
         {
-            for (int turn = 0; turn < 1; turn++)
+            Console.WriteLine(_arena.ToString());
+            for (int turn = 0; turn < 5; turn++)
             {
                 TakeTurn();
             }
@@ -63,19 +73,23 @@ namespace CombSim
 
         private void TakeTurn()
         {
-            foreach (var creature in initiativeOrder)
+            foreach (var creature in _initiativeOrder)
             {
                 creature.TakeTurn();
             }
-            arena.Print();
+            Console.WriteLine(_arena.ToString());
+            foreach (var creature in _combatants)
+            {
+                Console.WriteLine(creature.ToString());
+            }
         }
         
         public void EndGame() {}
         
         public void Add_Creature(Creature creature)
         {
-            arena.Pick_Empty_Spot(out int x, out int y);
-            arena.Set(x, y, creature);
+            _arena.Pick_Empty_Spot(out int x, out int y);
+            _arena.Set(x, y, creature);
             creature.SetGame(this);
             _combatants.Add(creature);
             _locations.Add(creature, new Location(x, y));
@@ -126,9 +140,9 @@ namespace CombSim
         // Move {creature} to new {location}
         public void Move(Creature creature, Location location)
         {
-            arena.Clear(_locations[creature]);
+            _arena.Clear(_locations[creature]);
             _locations[creature] = location;
-            arena.Set(location, creature);
+            _arena.Set(location, creature);
         }
     }
 }

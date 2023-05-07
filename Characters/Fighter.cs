@@ -5,7 +5,7 @@ namespace CombSim
         public Fighter(string name, string team="Fighters") : base(name, team)
         {
             Repr = "F";
-            HitPoints = 12;
+            MaxHitPoints = 12;
             Level = 1;
             
             Stats.Add(StatEnum.Strength, new Stat(16));

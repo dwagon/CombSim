@@ -6,7 +6,7 @@ namespace CombSim
 {
     internal class Program
     {
-        private Game game;
+        private Game _game;
         
         public static void Main(string[] args)
         {
@@ -17,18 +17,20 @@ namespace CombSim
 
         private void RunGame()
         {
-            game.StartGame();
-            game.RunGame();
-            game.EndGame();
+            _game.StartGame();
+            _game.RunGame();
+            _game.EndGame();
         }
 
         private void SetUp()
         {
-            game = new Game(20, 10);
-            Kobold k = new Kobold("Kobold");
-            game.Add_Creature(k);
+            _game = new Game(20, 10);
+            Kobold k1 = new Kobold("Kobold1");
+            _game.Add_Creature(k1);
+            Kobold k2 = new Kobold("Kobold2");
+            _game.Add_Creature(k2);
             Fighter f = new Fighter("Frank");
-            game.Add_Creature(f);
+            _game.Add_Creature(f);
         }
     }
 }

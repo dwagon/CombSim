@@ -40,7 +40,6 @@ namespace CombSim
 
         public MeleeWeapon(string name, DamageRoll dmgroll, int reach) : base(name, dmgroll)
         {
-            Console.WriteLine("Added MeleeWeapon:" + name);
             this.reach = reach;
             AddAction(new MeleeAttack(name, dmgroll, reach));
         }

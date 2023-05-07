@@ -2,13 +2,13 @@ namespace CombSim
 {
     public class Damage
     {
-        private int _damage;
-        private DamageTypeEnums _type;
+        public int hits;
+        public DamageTypeEnums type;
 
-        public Damage(int damage, DamageTypeEnums type)
+        public Damage(int hits, DamageTypeEnums type)
         {
-            _damage = damage;
-            _type = type;
+            this.hits = hits;
+            this.type = type;
         }
     }
 }

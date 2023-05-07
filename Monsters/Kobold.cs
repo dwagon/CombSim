@@ -13,6 +13,7 @@ namespace CombSim
             Stats.Add(StatEnum.Wisdom, new Stat(7));
             Stats.Add(StatEnum.Charisma, new Stat(8));
             Repr = "k";
+            ArmourClass = 12;
             HitDice = "2d6-2";
             AddEquipment(Gear.Dagger);
             Initialize();

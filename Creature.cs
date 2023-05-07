@@ -7,7 +7,9 @@ namespace CombSim
     {
         public string Name { get; private set; }
         public int HitPoints { get; protected set; }
+        public int MaxHitPoints { get; protected set; }
         public string Team { get; protected set; }
+        public int ArmourClass { get; protected set; }
         protected readonly Dictionary<StatEnum, Stat> Stats;
         protected string Repr;
         private readonly Conditions _conditions;
@@ -28,6 +30,12 @@ namespace CombSim
             _equipment = new List<Equipment>();
             _actions = new List<Action>();
             _actionsThisTurn = new HashSet<ActionCategory>();
+        }
+
+        public void Initialise()
+        {
+            HitPoints = MaxHitPoints;
+            _conditions.SetCondition(ConditionEnum.Ok);
         }
 
         public void SetGame(Game gameGame)
@@ -76,6 +84,11 @@ namespace CombSim
             return game.GetLocation(this);
         }
 
+        public new string ToString()
+        {
+            return Name + " HP:" + HitPoints + "/" + MaxHitPoints;
+        }
+
         // Return all the possible actions
         private List<IAction> PossibleActions(ActionCategory actionCategory)
         {
@@ -93,7 +106,7 @@ namespace CombSim
         public void TakeTurn()
         {
             IAction action;
-            if (_conditions.HasCondition(ConditionEnum.Dead))
+            if (!_conditions.HasCondition(ConditionEnum.Ok))
                 return;
             StartTurn();
             action = PickActionToDo(ActionCategory.Bonus);
@@ -109,7 +122,6 @@ namespace CombSim
 
         private void PerformAction(IAction action)
         {
-            Console.WriteLine("PerformAction action=" + action.Name());
             action.DoAction(this);
         }
         
@@ -129,6 +141,23 @@ namespace CombSim
             if (possibleActions.Count == 0)
                 return null;
             return possibleActions[0];  // TODO - make pick best action
+        }
+
+        public void TakeDamage(Damage damage)
+        {
+            HitPoints -= damage.hits;
+            Console.WriteLine(Name + " took " + damage.hits + " (" + damage.type + ") damage");
+            if (HitPoints <= 0)
+            {
+                FallenUnconscious();
+            }
+        }
+
+        protected void FallenUnconscious()
+        {
+            _conditions.SetCondition(ConditionEnum.Unconscious);
+            _conditions.RemoveCondition(ConditionEnum.Ok);
+            HitPoints = 0;
         }
 
         private void StartTurn()

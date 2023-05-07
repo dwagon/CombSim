@@ -12,7 +12,7 @@ namespace CombSim
 
         protected void Initialize()
         {
-            HitPoints = RollHitDice(HitDice);
+            MaxHitPoints = RollHitDice(HitDice);
         }
 
         private int RollHitDice(string hitDice)

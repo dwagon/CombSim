@@ -25,16 +25,21 @@ namespace CombSim
     
     public class Conditions
     {
-        private HashSet<ConditionEnum> _conditions = new HashSet<ConditionEnum>();
+        private readonly HashSet<ConditionEnum> _conditions = new HashSet<ConditionEnum>();
 
-        public void SetCondition(ConditionEnum cond)
+        public void SetCondition(ConditionEnum condition)
         {
-            _conditions.Add(cond);
+            _conditions.Add(condition);
         }
 
-        public bool HasCondition(ConditionEnum cond)
+        public bool HasCondition(ConditionEnum condition)
         {
-            return _conditions.Contains(cond);  
+            return _conditions.Contains(condition);  
+        }
+
+        public void RemoveCondition(ConditionEnum condition)
+        {
+            _conditions.Remove(condition);
         }
     }
 }
