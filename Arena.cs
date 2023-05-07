@@ -80,13 +80,9 @@ namespace CombSim
             _grid[x, y] = thing;
         }
 
-        public void Move(Location newplace, Creature creature)
+        public void Clear(Location location)
         {
-            int x = creature.Location.x;
-            int y = creature.Location.y;
-            Set(x, y, null);
-            Set(newplace, creature);
-            creature.SetLocation(newplace);
+            Set(location, null);
         }
     }
 }

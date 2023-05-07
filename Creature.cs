@@ -8,37 +8,34 @@ namespace CombSim
         public string Name { get; private set; }
         public int HitPoints { get; protected set; }
         public string Team { get; protected set; }
-        protected Dictionary<StatEnum, Stat> Stats;
+        protected readonly Dictionary<StatEnum, Stat> Stats;
         protected string Repr;
-        private Conditions _conditions;
-        private HashSet<ActionCategory> _actionsThisTurn;
+        private readonly Conditions _conditions;
+        private readonly HashSet<ActionCategory> _actionsThisTurn;
         private List<Equipment> _equipment;
-        private List<Action> _actions;
-        private int _speed;
+        private readonly List<Action> _actions;
+        private readonly int _speed;
         private int _moves;
         public Game game { get; protected set; }
-        public Location Location { get; protected set; }
-        public Guid Guid { get; protected set; }
 
         protected Creature(string name, string team = "")
         {
             Name = name;
             Team = team;
-            _speed = 5;
+            _speed = 6;
             Stats = new Dictionary<StatEnum, Stat>();
             _conditions = new Conditions();
             _equipment = new List<Equipment>();
             _actions = new List<Action>();
             _actionsThisTurn = new HashSet<ActionCategory>();
-            Guid = new Guid();
         }
 
-        public void SetGame(Game game)
+        public void SetGame(Game gameGame)
         {
-            this.game = game;
+            this.game = gameGame;
         }
 
-        public void AddEquipment(Equipment gear)
+        protected void AddEquipment(Equipment gear)
         {
             _equipment.Add(gear);
             foreach (var action in gear.GetActions())
@@ -62,19 +59,30 @@ namespace CombSim
         {
             if (_moves <= 0)
                 return false;
-            Location next = game.NextLocationTowards(Location, destination);
-            this.Location = next;
+            Location next = game.NextLocationTowards(this, destination);
+            game.Move(this, next);
             _moves--;
             return true;
         }
+        
+        // Move towards a creature
+        public bool MoveTowards(Creature creature)
+        {
+            return MoveTowards(creature.GetLocation());
+        }
+
+        public Location GetLocation()
+        {
+            return game.GetLocation(this);
+        }
 
         // Return all the possible actions
-        private List<IAction> PossibleActions(ActionCategory actcat)
+        private List<IAction> PossibleActions(ActionCategory actionCategory)
         {
             List<IAction> actions = new List<IAction>();
             foreach (var action in _actions)
             {
-                if (action.Category == actcat)
+                if (action.Category == actionCategory)
                 {
                     actions.Add(action);
                 }
@@ -85,16 +93,15 @@ namespace CombSim
         public void TakeTurn()
         {
             IAction action;
-            _moves = _speed;
             if (_conditions.HasCondition(ConditionEnum.Dead))
                 return;
             StartTurn();
             action = PickActionToDo(ActionCategory.Bonus);
-            if (action!=null) PerformAction(action);
+            if (action != null) PerformAction(action);
             action = PickActionToDo(ActionCategory.Action);
-            if (action!=null) PerformAction(action);
+            if (action != null) PerformAction(action);
             action = PickActionToDo(ActionCategory.Bonus);
-            if (action!=null) PerformAction(action);
+            if (action != null) PerformAction(action);
             EndTurn();
         }
         
@@ -126,15 +133,11 @@ namespace CombSim
 
         private void StartTurn()
         {
+            _moves = _speed;
             _actionsThisTurn.Add(ActionCategory.Action);
             _actionsThisTurn.Add(ActionCategory.Bonus);
             _actionsThisTurn.Add(ActionCategory.Move);
             _actionsThisTurn.Add(ActionCategory.Reaction);
-        }
-
-        public void SetLocation(Location location)
-        {
-            Location = location;
         }
     }
 }

@@ -4,9 +4,9 @@ namespace CombSim
 {
     public class MeleeAttack : Attack, IAction
     {
-        private int _reach;
+        private readonly int _reach;
         
-        public MeleeAttack(string name, DamageRoll damageroll, int reach) : base(name, damageroll)
+        public MeleeAttack(string name, DamageRoll damageRoll, int reach) : base(name, damageRoll)
         {
             Console.WriteLine("Added MeleeAttack " + name);
             _reach = reach;
@@ -15,11 +15,11 @@ namespace CombSim
         public new bool DoAction(Creature actor)
         {
             Console.WriteLine("MeleeAttack.DoAction(" + actor.Name + ") " + this.Name());
-            Creature enemy = actor.game.PickClosestEnemy(actor);
-            float distance = actor.game.DistanceTo(actor, enemy);
+            var enemy = actor.game.PickClosestEnemy(actor);
+            var distance = actor.game.DistanceTo(actor, enemy);
             while (distance > _reach)
             {
-                if (!actor.MoveTowards(enemy.Location))
+                if (!actor.MoveTowards(enemy))
                 {
                     break;
                 }
@@ -30,6 +30,7 @@ namespace CombSim
             if (distance <= _reach)
             {
                 // Do melee attack here
+                Console.WriteLine("Attack!");
                 return true;
             }
             return false;

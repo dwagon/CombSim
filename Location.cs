@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Remoting.Proxies;
 
 namespace CombSim
 {
@@ -11,6 +12,11 @@ namespace CombSim
         {
             this.x = x;
             this.y = y;
+        }
+
+        public string ToString()
+        {
+            return "(" + x + "," + y + ")";
         }
         
         public float DistanceBetween(Location other)

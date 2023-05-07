@@ -9,11 +9,13 @@ namespace CombSim
         private Arena arena;
         private List<Creature> initiativeOrder;
         private List<Creature> _combatants;
+        private Dictionary<Creature, Location> _locations;
 
         public Game(int max_x = 20, int max_y = 10)
         {
             arena = new Arena(max_x, max_y);
             _combatants = new List<Creature>();
+            _locations = new Dictionary<Creature, Location>();
         }
 
         public void StartGame()
@@ -27,13 +29,28 @@ namespace CombSim
             if (source.x < destination.x)
             {
                 if (source.y < destination.y)
-                    return new Location(source.x - 1, source.x - 1);
-                return new Location(source.x - 1, source.x + 1);
+                    return new Location(source.x + 1, source.y - 1);
+                return new Location(source.x + 1, source.y);
             }
 
             if (source.y < destination.y)
-                return new Location(source.x + 1, source.x - 1);
-            return new Location(source.x +1, source.x + 1);
+                return new Location(source.x - 1, source.y - 1);
+            return new Location(source.x - 1, source.y);
+        }
+        
+        public Location NextLocationTowards(Creature srcCreature, Location destination)
+        {
+            return NextLocationTowards(_locations[srcCreature], destination);
+        }
+        
+        public Location NextLocationTowards(Creature srcCreature, Creature dstCreature)
+        {
+            return NextLocationTowards(_locations[srcCreature], _locations[dstCreature]);
+        }
+
+        public Location GetLocation(Creature creature)
+        {
+            return _locations[creature];
         }
 
         public void RunGame()
@@ -61,6 +78,7 @@ namespace CombSim
             arena.Set(x, y, creature);
             creature.SetGame(this);
             _combatants.Add(creature);
+            _locations.Add(creature, new Location(x, y));
         }
 
         // Calculate and return initiative order
@@ -102,7 +120,15 @@ namespace CombSim
         // Return the distance between creatures {one} and {two}
         public float DistanceTo(Creature one, Creature two)
         {
-            return one.Location.DistanceBetween(two.Location);
+            return _locations[one].DistanceBetween(_locations[two]);
+        }
+        
+        // Move {creature} to new {location}
+        public void Move(Creature creature, Location location)
+        {
+            arena.Clear(_locations[creature]);
+            _locations[creature] = location;
+            arena.Set(location, creature);
         }
     }
 }
