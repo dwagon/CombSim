@@ -5,9 +5,9 @@ namespace CombSim
     public class Attack : Action, IAction
     {
         private DamageRoll _dmgRoll;
-        protected Attack(string name, DamageRoll damageroll) : base(name, ActionCategory.Action)
+        protected Attack(string name, DamageRoll damageRoll) : base(name, ActionCategory.Action)
         {
-            _dmgRoll = damageroll;
+            _dmgRoll = damageRoll;
         }
         
         public new bool DoAction(Creature actor)

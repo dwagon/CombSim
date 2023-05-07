@@ -16,6 +16,7 @@ namespace CombSim
             ArmourClass = 12;
             HitDice = "2d6-2";
             AddEquipment(Gear.Dagger);
+            AddEquipment(Gear.Sling);
             Initialize();
         }
     }

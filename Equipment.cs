@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace CombSim
 {
@@ -42,6 +43,19 @@ namespace CombSim
         {
             this.reach = reach;
             AddAction(new MeleeAttack(name, dmgroll, reach));
+        }
+    }
+    
+    public class RangedWeapon : Weapon
+    {
+        private int short_range;
+        private int long_range;
+
+        public RangedWeapon(string name, DamageRoll dmgroll, int short_range, int long_range) : base(name, dmgroll)
+        {
+            this.short_range = short_range;
+            this.long_range = long_range;
+            AddAction(new RangedAttack(name, dmgroll, short_range, long_range));
         }
     }
 }

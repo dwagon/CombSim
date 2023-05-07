@@ -140,7 +140,9 @@ namespace CombSim
 
             if (possibleActions.Count == 0)
                 return null;
-            return possibleActions[0];  // TODO - make pick best action
+            Random rnd = new Random();
+            int idx = rnd.Next() % possibleActions.Count;
+            return possibleActions[idx];  // TODO - make pick best action
         }
 
         public void TakeDamage(Damage damage)
