@@ -3,8 +3,8 @@ namespace CombSim
 
     public class RangedAttack : Attack, IAction
     {
-        private int _sRange;
-        private int _lRange;
+        private readonly int _sRange;
+        private readonly int _lRange;
         
         public RangedAttack(string name, DamageRoll damageRoll, int sRange, int lRange) : base(name, damageRoll)
         {
@@ -15,17 +15,20 @@ namespace CombSim
         public new bool DoAction(Creature actor)
         {
             var enemy = actor.game.PickClosestEnemy(actor);
+            bool hasDisadvantage = false;
+            
             while (actor.game.DistanceTo(actor, enemy) > _sRange)
             {
                 if (!actor.MoveTowards(enemy)) break;
             }
+
+            var distance = actor.game.DistanceTo(actor, enemy);
+            if (distance <= 1) hasDisadvantage = true;
+            else if (distance <= _lRange) hasDisadvantage = true;
+            else if (distance > _lRange) return false;
             
-            if (actor.game.DistanceTo(actor, enemy) <= _sRange)
-            {
-                DoAttack(enemy);
-                return true;
-            }
-            return false;
+            DoAttack(enemy, hasDisadvantage: hasDisadvantage);
+            return true;
         }
     }
 }

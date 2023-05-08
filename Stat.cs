@@ -24,9 +24,9 @@ namespace CombSim
             return (_value - 10) / 2;
         }
 
-        public int Roll()
+        public int Roll(bool hasAdvantage=false, bool hasDisadvantage=false)
         {
-            return Dice.RollD20() + Bonus();
+            return Dice.RollD20(hasAdvantage: hasAdvantage, hasDisadvantage: hasDisadvantage) + Bonus();
         }
     }
 }

@@ -15,11 +15,11 @@ namespace CombSim
             throw new NotImplementedException();
         }
 
-        private int RollToHit(out bool criticalHit, out bool criticalMiss)
+        private int RollToHit(out bool criticalHit, out bool criticalMiss, bool hasAdvantage = false, bool hasDisadvantage = false)
         {
             criticalMiss = false;
             criticalHit = false;
-            int roll = Dice.RollD20();
+            int roll = Dice.RollD20(hasAdvantage, hasDisadvantage);
             switch (roll) 
             {
                 case 1: 
@@ -32,9 +32,9 @@ namespace CombSim
             return roll;
         }
         
-        protected void DoAttack(Creature target)
+        protected void DoAttack(Creature target, bool hasAdvantage=false, bool hasDisadvantage=false)
         {
-            int roll = RollToHit(out bool criticalHit, out bool criticalMiss);
+            int roll = RollToHit(out bool criticalHit, out bool criticalMiss, hasAdvantage, hasDisadvantage);
 
             if (!criticalMiss && roll > target.ArmourClass)
             {

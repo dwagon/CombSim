@@ -34,9 +34,19 @@ namespace CombSim
             return result;
         }
 
-        public static int RollD20()
+        public static int RollD20(bool hasAdvantage=false, bool hasDisadvantage=false)
         {
-            return Roll("d20");
+            if (hasAdvantage && hasDisadvantage)
+            {
+                hasAdvantage = false;
+                hasDisadvantage = false;
+            }
+
+            var roll = Roll("d20");
+            if (hasAdvantage) roll = Math.Max(Roll("d20"), Roll("d20"));
+            if (hasDisadvantage) roll = Math.Min(Roll("d20"), Roll("d20"));
+
+            return roll;
         }
     }
 }
