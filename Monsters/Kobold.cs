@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 
 namespace CombSim
@@ -17,7 +18,6 @@ namespace CombSim
             HitDice = "2d6-2";
             AddEquipment(Gear.Dagger);
             AddEquipment(Gear.Sling);
-            Initialize();
         }
     }
 }

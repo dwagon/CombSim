@@ -58,4 +58,20 @@ namespace CombSim
             AddAction(new RangedAttack(name, dmgroll, short_range, long_range));
         }
     }
+
+    public class Armour : Equipment
+    {
+        public int ArmourClass;
+        public int ArmourClassBonus;
+        public bool DexBonus;
+        public int MaxDexBonus;
+        
+        public Armour(string name, int armourClass=0, int armourClassBonus=0, bool dexBonus=false, int maxDexBonus=2) : base(name)
+        {
+            ArmourClass = armourClass;
+            ArmourClassBonus = armourClassBonus;
+            DexBonus = dexBonus;
+            MaxDexBonus = maxDexBonus;
+        }
+    }
 }

@@ -65,7 +65,7 @@ namespace CombSim
         public void RunGame()
         {
             Console.WriteLine(_arena.ToString());
-            for (int turn = 0; turn < 5; turn++)
+            for (int turn = 0; turn < 2; turn++)
             {
                 TakeTurn();
             }

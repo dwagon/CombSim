@@ -9,7 +9,13 @@ namespace CombSim
         protected int HitPoints { get; private set; }
         public int MaxHitPoints { get; protected set; }
         public string Team { get; protected set; }
-        public int ArmourClass { get; protected set; }
+        public int ArmourClass
+        {
+            get => CalcArmourClass();
+            protected set => _setArmourClass = value;
+        }
+
+        private int _setArmourClass = -1;
         protected readonly Dictionary<StatEnum, Stat> Stats;
         protected string Repr;
         private readonly Conditions _conditions;
@@ -50,6 +56,48 @@ namespace CombSim
             OnAttacked += Attacked;
         }
 
+        private int CalcArmourClass()
+        {
+            if (_setArmourClass >= 0)
+            {
+                return _setArmourClass;
+            }
+
+            var ac = 10;
+            var acBonus = 0;
+            var dexBonus = true;
+            var maxDexBonus = 99;
+            
+            foreach (var gear in _equipment)
+            {
+                if (gear is Armour armour)
+                {
+                    if (armour.ArmourClass > 0)
+                    {
+                        if (!armour.DexBonus) dexBonus = false;
+                        if (armour.MaxDexBonus >= 0) maxDexBonus = Math.Min(maxDexBonus, armour.MaxDexBonus);
+                        ac = Math.Max(armour.ArmourClass, ac);
+                    }
+                    
+                    acBonus += Math.Max(acBonus, armour.ArmourClassBonus);
+                }
+            }
+
+            int tmp_ac = ac + acBonus;
+            if (dexBonus)
+            {
+                var bonus = Stats[StatEnum.Dexterity].Bonus();
+                tmp_ac += Math.Min(bonus, maxDexBonus);
+            }
+
+            if (tmp_ac == 0)
+            {
+                return 10 + Stats[StatEnum.Dexterity].Bonus();;
+            }
+
+            return tmp_ac;
+        }
+        
         private void Attacked(object sender, OnAttackedEventArgs e)
         {
             if (e.CriticalMiss || e.ToHit <= ArmourClass)
