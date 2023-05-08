@@ -5,8 +5,8 @@ namespace CombSim
 {
     public abstract class Creature
     {
-        public string Name { get; private set; }
-        public int HitPoints { get; protected set; }
+        protected string Name { get; private set; }
+        protected int HitPoints { get; private set; }
         public int MaxHitPoints { get; protected set; }
         public string Team { get; protected set; }
         public int ArmourClass { get; protected set; }
@@ -18,7 +18,18 @@ namespace CombSim
         private readonly List<Action> _actions;
         private readonly int _speed;
         private int _moves;
-        public Game game { get; protected set; }
+        public Game game { get; private set; }
+        public EventHandler<OnAttackedEventArgs> OnAttacked;
+
+        public class OnAttackedEventArgs : EventArgs
+        {
+            public Creature Source;
+            public IAction Action;
+            public int ToHit;
+            public DamageRoll DmgRoll;
+            public bool CriticalHit;
+            public bool CriticalMiss;
+        }
 
         protected Creature(string name, string team = "")
         {
@@ -36,6 +47,20 @@ namespace CombSim
         {
             HitPoints = MaxHitPoints;
             _conditions.SetCondition(ConditionEnum.Ok);
+            OnAttacked += Attacked;
+        }
+
+        private void Attacked(object sender, OnAttackedEventArgs e)
+        {
+            if (e.CriticalMiss || e.ToHit <= ArmourClass)
+            {
+                NarrationLog.LogMessage($"{e.Source.Name} missed {Name} with {e.Action.Name()} (Rolled {e.ToHit} vs AC {ArmourClass})");
+                return;
+            }
+
+            var dmg = e.DmgRoll.Roll(max: e.CriticalHit);
+            NarrationLog.LogMessage($"{e.Source.Name} hit {Name} with {e.Action.Name()} (Rolled {e.ToHit}) for {dmg.ToString()}");
+            TakeDamage(dmg);
         }
 
         public void SetGame(Game gameGame)
@@ -79,7 +104,7 @@ namespace CombSim
             return MoveTowards(creature.GetLocation());
         }
 
-        public Location GetLocation()
+        private Location GetLocation()
         {
             return game.GetLocation(this);
         }
@@ -144,7 +169,7 @@ namespace CombSim
             return possibleActions[idx];  // TODO - make pick best action
         }
 
-        public void TakeDamage(Damage damage)
+        private void TakeDamage(Damage damage)
         {
             HitPoints -= damage.hits;
             NarrationLog.LogMessage($"{Name} took {damage.hits} ({damage.type}) damage");

@@ -4,7 +4,7 @@ namespace CombSim
 {
     public class Attack : Action, IAction
     {
-        private DamageRoll _dmgRoll;
+        private readonly DamageRoll _dmgRoll;
         protected Attack(string name, DamageRoll damageRoll) : base(name, ActionCategory.Action)
         {
             _dmgRoll = damageRoll;
@@ -35,17 +35,15 @@ namespace CombSim
         protected void DoAttack(Creature actor, Creature target, bool hasAdvantage=false, bool hasDisadvantage=false)
         {
             int roll = RollToHit(out bool criticalHit, out bool criticalMiss, hasAdvantage, hasDisadvantage);
-            
-            if (!criticalMiss && roll > target.ArmourClass)
-            {
-                var dmg = _dmgRoll.Roll();
-                NarrationLog.LogMessage($"{actor.Name} hit {target.Name} with {Name()} (Rolled {roll}) for {dmg.ToString()}");
-                target.TakeDamage(dmg);
-            }
-            else
-            {
-                NarrationLog.LogMessage($"{actor.Name} missed {target.Name} with {Name()} (Rolled {roll})");
-            }
+            target.OnAttacked?.Invoke(this, new Creature.OnAttackedEventArgs
+                {
+                    Source = actor,
+                    Action = this,
+                    ToHit = roll,
+                    DmgRoll = _dmgRoll,
+                    CriticalHit = criticalHit,
+                    CriticalMiss = criticalMiss
+                });
         }
     }
 }
