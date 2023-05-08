@@ -13,10 +13,10 @@ namespace CombSim
             _type = type;
         }
 
-        public Damage Roll()
+        public Damage Roll(bool max=false)
         {
             int dmg = 0;
-            dmg += Dice.Roll(_roll);
+            dmg += Dice.Roll(_roll, max);
             dmg += _bonus;
             return new Damage(dmg, _type);
         }
