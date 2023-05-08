@@ -36,16 +36,33 @@ namespace CombSim
 
         public static int RollD20(bool hasAdvantage=false, bool hasDisadvantage=false)
         {
+            string message;
             if (hasAdvantage && hasDisadvantage)
             {
                 hasAdvantage = false;
                 hasDisadvantage = false;
             }
 
-            var roll = Roll("d20");
-            if (hasAdvantage) roll = Math.Max(Roll("d20"), Roll("d20"));
-            if (hasDisadvantage) roll = Math.Min(Roll("d20"), Roll("d20"));
+            int roll;
+            var d1 = Roll("d20");
+            var d2 = Roll("d20");            
 
+            if (hasAdvantage)
+            {
+                roll = Math.Max(d1, d2);
+                message = $"Rolled {roll} with advantage ({d1}, {d2}";
+            }
+            else if (hasDisadvantage)
+            {
+                roll = Math.Min(d1, d2);
+                message = $"Rolled {roll} with disadvantage ({d1}, {d2})";
+            }
+            else
+            {
+                roll = d1;
+                message = $"Rolled {d1}";
+            }
+            NarrationLog.LogMessage(message, LogLevelEnum.Info);
             return roll;
         }
     }

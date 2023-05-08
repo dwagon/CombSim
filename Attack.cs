@@ -32,13 +32,19 @@ namespace CombSim
             return roll;
         }
         
-        protected void DoAttack(Creature target, bool hasAdvantage=false, bool hasDisadvantage=false)
+        protected void DoAttack(Creature actor, Creature target, bool hasAdvantage=false, bool hasDisadvantage=false)
         {
             int roll = RollToHit(out bool criticalHit, out bool criticalMiss, hasAdvantage, hasDisadvantage);
-
+            
             if (!criticalMiss && roll > target.ArmourClass)
             {
-                target.TakeDamage(_dmgRoll.Roll());
+                var dmg = _dmgRoll.Roll();
+                NarrationLog.LogMessage($"{actor.Name} hit {target.Name} with {Name()} (Rolled {roll}) for {dmg.ToString()}");
+                target.TakeDamage(dmg);
+            }
+            else
+            {
+                NarrationLog.LogMessage($"{actor.Name} missed {target.Name} with {Name()} (Rolled {roll})");
             }
         }
     }

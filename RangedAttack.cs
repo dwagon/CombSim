@@ -27,7 +27,7 @@ namespace CombSim
             else if (distance <= _lRange) hasDisadvantage = true;
             else if (distance > _lRange) return false;
             
-            DoAttack(enemy, hasDisadvantage: hasDisadvantage);
+            DoAttack(actor, enemy, hasDisadvantage: hasDisadvantage);
             return true;
         }
     }

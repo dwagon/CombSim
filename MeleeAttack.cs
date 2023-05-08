@@ -19,7 +19,7 @@ namespace CombSim
             
             if (actor.game.DistanceTo(actor, enemy) <= _reach)
             {
-                DoAttack(enemy);
+                DoAttack(actor, enemy);
                 return true;
             }
             return false;

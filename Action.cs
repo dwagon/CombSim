@@ -1,5 +1,3 @@
-using System;
-
 namespace CombSim
 {
     public enum ActionCategory
@@ -18,7 +16,7 @@ namespace CombSim
     
     public class Action: IAction
     {
-        private string _name;
+        private readonly string _name;
         public ActionCategory Category { get; private set; }
 
         public string Name()
@@ -34,7 +32,6 @@ namespace CombSim
 
         public bool DoAction(Creature actor)
         {
-            Console.WriteLine("Action.DoAction(" + actor.Name + ") " + this.Name());
             return false;
         }
     }

@@ -10,5 +10,10 @@ namespace CombSim
             this.hits = hits;
             this.type = type;
         }
+
+        public string ToString()
+        {
+            return $"{hits} {type}";
+        }
     }
 }

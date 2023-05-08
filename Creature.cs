@@ -63,7 +63,7 @@ namespace CombSim
         }
         
         // Move towards a location
-        public bool MoveTowards(Location destination)
+        private bool MoveTowards(Location destination)
         {
             if (_moves <= 0)
                 return false;
@@ -105,11 +105,10 @@ namespace CombSim
 
         public void TakeTurn()
         {
-            IAction action;
             if (!_conditions.HasCondition(ConditionEnum.Ok))
                 return;
             StartTurn();
-            action = PickActionToDo(ActionCategory.Bonus);
+            IAction action = PickActionToDo(ActionCategory.Bonus);
             if (action != null) PerformAction(action);
             action = PickActionToDo(ActionCategory.Action);
             if (action != null) PerformAction(action);
@@ -135,7 +134,7 @@ namespace CombSim
             List <IAction> possibleActions = PossibleActions(actionCategory);
             foreach (var action in possibleActions)
             {
-                Console.WriteLine(this.Name +": Actions = " + action.Name());
+                Console.WriteLine($"// {this.Name}: Actions = {action.Name()}");
             }
 
             if (possibleActions.Count == 0)
@@ -148,14 +147,14 @@ namespace CombSim
         public void TakeDamage(Damage damage)
         {
             HitPoints -= damage.hits;
-            Console.WriteLine(Name + " took " + damage.hits + " (" + damage.type + ") damage");
+            NarrationLog.LogMessage($"{Name} took {damage.hits} ({damage.type}) damage");
             if (HitPoints <= 0)
             {
                 FallenUnconscious();
             }
         }
 
-        protected void FallenUnconscious()
+        private void FallenUnconscious()
         {
             _conditions.SetCondition(ConditionEnum.Unconscious);
             _conditions.RemoveCondition(ConditionEnum.Ok);
