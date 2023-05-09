@@ -11,7 +11,7 @@ namespace CombSim
             this.type = type;
         }
 
-        public string ToString()
+        public override string ToString()
         {
             return $"{hits} {type}";
         }

@@ -65,10 +65,27 @@ namespace CombSim
         public void RunGame()
         {
             Console.WriteLine(_arena.ToString());
-            for (int turn = 0; turn < 2; turn++)
+            while(!IsEndOfGame())
             {
                 TakeTurn();
             }
+        }
+
+        private bool IsEndOfGame()
+        {
+            int numSides = 0;
+
+            Dictionary<string, int> sides = new Dictionary<string, int>();
+            foreach (var combatant in _combatants)
+            {
+                if (!sides.ContainsKey(combatant.Team)) sides[combatant.Team] = 0;
+                if (combatant.IsAlive()) sides[combatant.Team]++;
+            }
+            foreach (var side in sides.Keys)
+            {
+                if (sides[side] > 0) numSides++;
+            }
+            return (numSides <= 1);
         }
 
         private void TakeTurn()
@@ -121,14 +138,14 @@ namespace CombSim
             List<(Creature, float)> enemies = new List<(Creature, float)>();
             foreach (var critter in _combatants)
             {
-                if (critter.Team != actor.Team)
+                if (critter.Team != actor.Team && critter.IsAlive())
                 {
                     enemies.Add((critter, DistanceTo(actor, critter)));
                 }
             }
             enemies.Sort((a,b) =>a.Item2.CompareTo(b.Item2));
-
-            return enemies.Last().Item1;
+            Console.WriteLine($"enemies={String.Join(", ", enemies)} = {enemies.First().Item1}");
+            return enemies.First().Item1;
         }
 
         // Return the distance between creatures {one} and {two}

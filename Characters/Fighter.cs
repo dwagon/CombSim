@@ -18,7 +18,7 @@ namespace CombSim
             Stats.Add(StatEnum.Charisma, new Stat(9));
             AddEquipment(Gear.Longsword);
             AddEquipment(Gear.Plate);
-            AddEquipment(Gear.Shield);
+            // AddEquipment(Gear.Shield);
             Console.WriteLine($"{name} has an AC of {ArmourClass}");
         }
     }

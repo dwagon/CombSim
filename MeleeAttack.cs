@@ -1,3 +1,5 @@
+using System;
+
 namespace CombSim
 {
     public class MeleeAttack : Attack, IAction
@@ -14,8 +16,10 @@ namespace CombSim
             var enemy = actor.game.PickClosestEnemy(actor);
             while (actor.game.DistanceTo(actor, enemy) > _reach)
             {
+                Console.WriteLine($"// {actor.Name} Not in range {_reach} - moving closer. Currently at {actor.GetLocation()}. Enemy at {enemy.GetLocation()}");
                 if (!actor.MoveTowards(enemy)) break;
             }
+            Console.WriteLine($"// {actor.Name} Now at {actor.game.GetLocation(actor)}");
             
             if (actor.game.DistanceTo(actor, enemy) <= _reach)
             {

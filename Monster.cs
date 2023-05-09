@@ -10,19 +10,23 @@ namespace CombSim
         {
         }
 
-        protected void Initialize()
+        public override void Initialise()
         {
             MaxHitPoints = RollHitDice(HitDice);
+            base.Initialise();
+        }
+        
+        protected override void FallenUnconscious()
+        {
+            NarrationLog.LogMessage($"{Name} has died");
+            Conditions.SetCondition(ConditionEnum.Dead);
+            Conditions.RemoveCondition(ConditionEnum.Ok);
+            HitPoints = 0;
         }
 
         private int RollHitDice(string hitDice)
         {
             return Math.Max(Dice.Roll(hitDice), 1);
-        }
-
-        public string GetRepr()
-        {
-            return Name + " HP: " + HitPoints;
         }
     }
 }

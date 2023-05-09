@@ -41,5 +41,10 @@ namespace CombSim
         {
             _conditions.Remove(condition);
         }
+
+        public override string ToString()
+        {
+            return string.Join(", ", _conditions);
+        }
     }
 }

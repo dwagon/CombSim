@@ -29,6 +29,8 @@ namespace CombSim
             _game.Add_Creature(k1);
             Kobold k2 = new Kobold("Kobold2");
             _game.Add_Creature(k2);
+            Kobold k3 = new Kobold("Kobold3");
+            _game.Add_Creature(k3);
             Fighter f = new Fighter("Frank");
             _game.Add_Creature(f);
         }

@@ -8,5 +8,13 @@ namespace CombSim
         {
             
         }
+        
+        protected override void FallenUnconscious()
+        {
+            NarrationLog.LogMessage($"{Name} has fallen unconscious");
+            Conditions.SetCondition(ConditionEnum.Unconscious);
+            Conditions.RemoveCondition(ConditionEnum.Ok);
+            HitPoints = 0;
+        }
     }
 }
