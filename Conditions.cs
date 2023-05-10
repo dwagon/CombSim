@@ -22,7 +22,7 @@ namespace CombSim
         Stunned,
         Unconscious
     }
-    
+
     public class Conditions
     {
         private readonly HashSet<ConditionEnum> _conditions = new HashSet<ConditionEnum>();
@@ -34,7 +34,7 @@ namespace CombSim
 
         public bool HasCondition(ConditionEnum condition)
         {
-            return _conditions.Contains(condition);  
+            return _conditions.Contains(condition);
         }
 
         public void RemoveCondition(ConditionEnum condition)

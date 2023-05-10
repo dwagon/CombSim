@@ -2,10 +2,10 @@ namespace CombSim
 {
     public class DamageRoll
     {
-        private string _roll;
-        private int _bonus;
-        private DamageTypeEnums _type;
-        
+        private readonly int _bonus;
+        private readonly string _roll;
+        private readonly DamageTypeEnums _type;
+
         public DamageRoll(string roll, int bonus, DamageTypeEnums type)
         {
             _roll = roll;
@@ -13,9 +13,9 @@ namespace CombSim
             _type = type;
         }
 
-        public Damage Roll(bool max=false)
+        public Damage Roll(bool max = false)
         {
-            int dmg = 0;
+            var dmg = 0;
             dmg += Dice.Roll(_roll, max);
             dmg += _bonus;
             return new Damage(dmg, _type);

@@ -1,13 +1,11 @@
-using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 namespace CombSim
 {
     public class Equipment
     {
+        private readonly List<Action> _actions = new List<Action>();
         private string _name;
-        private List<Action> _actions = new List<Action>();
 
         public Equipment(string name)
         {
@@ -45,11 +43,11 @@ namespace CombSim
             AddAction(new MeleeAttack(name, dmgroll, reach));
         }
     }
-    
+
     public class RangedWeapon : Weapon
     {
-        private int short_range;
         private int long_range;
+        private int short_range;
 
         public RangedWeapon(string name, DamageRoll dmgroll, int short_range, int long_range) : base(name, dmgroll)
         {
@@ -65,8 +63,9 @@ namespace CombSim
         public int ArmourClassBonus;
         public bool DexBonus;
         public int MaxDexBonus;
-        
-        public Armour(string name, int armourClass=0, int armourClassBonus=0, bool dexBonus=false, int maxDexBonus=2) : base(name)
+
+        public Armour(string name, int armourClass = 0, int armourClassBonus = 0, bool dexBonus = false,
+            int maxDexBonus = 2) : base(name)
         {
             ArmourClass = armourClass;
             ArmourClassBonus = armourClassBonus;

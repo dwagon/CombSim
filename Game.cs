@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Principal;
-using System.Xml.Schema;
 
 namespace CombSim
 {
@@ -23,10 +21,7 @@ namespace CombSim
         public void StartGame()
         {
             _initiativeOrder = GetInitiativeOrder();
-            foreach (var creature in _combatants)
-            {
-                creature.Initialise();
-            }
+            foreach (var creature in _combatants) creature.Initialise();
         }
 
         // Return the next location closer to the {destination}
@@ -54,47 +49,40 @@ namespace CombSim
         public void RunGame()
         {
             Console.WriteLine(_arena.ToString());
-            while(!IsEndOfGame())
-            {
-                TakeTurn();
-            }
+            while (!IsEndOfGame()) TakeTurn();
         }
 
         private bool IsEndOfGame()
         {
-            int numSides = 0;
+            var numSides = 0;
 
-            Dictionary<string, int> sides = new Dictionary<string, int>();
+            var sides = new Dictionary<string, int>();
             foreach (var combatant in _combatants)
             {
                 if (!sides.ContainsKey(combatant.Team)) sides[combatant.Team] = 0;
                 if (combatant.IsAlive()) sides[combatant.Team]++;
             }
+
             foreach (var side in sides.Keys)
-            {
-                if (sides[side] > 0) numSides++;
-            }
-            return (numSides <= 1);
+                if (sides[side] > 0)
+                    numSides++;
+            return numSides <= 1;
         }
 
         private void TakeTurn()
         {
-            foreach (var creature in _initiativeOrder)
-            {
-                creature.TakeTurn();
-            }
+            foreach (var creature in _initiativeOrder) creature.TakeTurn();
             Console.WriteLine(_arena.ToString());
-            foreach (var creature in _combatants)
-            {
-                Console.WriteLine(creature.ToString());
-            }
+            foreach (var creature in _combatants) Console.WriteLine(creature.ToString());
         }
 
-        public void EndGame() {}
+        public void EndGame()
+        {
+        }
 
         public void Add_Creature(Creature creature)
         {
-            _arena.Pick_Empty_Spot(out int x, out int y);
+            _arena.Pick_Empty_Spot(out var x, out var y);
             _arena.Set(x, y, creature);
             creature.SetGame(this);
             _combatants.Add(creature);
@@ -113,27 +101,19 @@ namespace CombSim
                 tmp.Add(init);
             }
 
-            tmp.Sort((x,y) => x.Item2.CompareTo(y.Item2));
-            foreach (var critter in tmp)
-            {
-                order.Add(critter.Item1);
-            }
+            tmp.Sort((x, y) => x.Item2.CompareTo(y.Item2));
+            foreach (var critter in tmp) order.Add(critter.Item1);
             return order;
         }
 
         // Return the closest creature to {actor} that is on a different team
         public Creature PickClosestEnemy(Creature actor)
         {
-            List<(Creature, float)> enemies = new List<(Creature, float)>();
+            var enemies = new List<(Creature, float)>();
             foreach (var critter in _combatants)
-            {
                 if (critter.Team != actor.Team && critter.IsAlive())
-                {
                     enemies.Add((critter, DistanceTo(actor, critter)));
-                }
-            }
-            enemies.Sort((a,b) =>a.Item2.CompareTo(b.Item2));
-            Console.WriteLine($"// enemies={String.Join(", ", enemies)} = {enemies.First().Item1}");
+            enemies.Sort((a, b) => a.Item2.CompareTo(b.Item2));
             return enemies.First().Item1;
         }
 
@@ -159,7 +139,7 @@ namespace CombSim
 
         private IEnumerable<Location> ReconstructPath(Dictionary<Location, Location> path, Location current)
         {
-            List<Location> totalPath = new List<Location>() { current };
+            var totalPath = new List<Location> { current };
 
             while (path.ContainsKey(current))
             {
@@ -172,7 +152,7 @@ namespace CombSim
 
             return totalPath;
         }
-        
+
         // Return route from {source} to a neighbour of {destination}
         // {destination} is never walkable because the enemy is there.
         private IEnumerable<Location> FindPath(Location source, Location destination)
@@ -196,8 +176,8 @@ namespace CombSim
         // Return route from {source} to {destination}
         private IEnumerable<Location> FindRoute(Location source, Location destination)
         {
-            List<Location> closed = new List<Location>() {};
-            List<Location> openSet = new List<Location>() {source};
+            var closed = new List<Location>();
+            var openSet = new List<Location> { source };
             var path = new Dictionary<Location, Location>();
             var gScore = new Dictionary<Location, float>();
             gScore[source] = 0;
@@ -216,19 +196,15 @@ namespace CombSim
                     if (closed.Contains(neighbour) || !IsWalkable(neighbour)) continue;
                     var tentative = gScore[current] + current.DistanceBetween(neighbour);
                     if (!openSet.Contains(neighbour))
-                    {
                         openSet.Add(neighbour);
-                    }
-                    else if (tentative >= (gScore.ContainsKey(neighbour)?gScore[neighbour]:999999999))
-                    {
-                        continue;
-                    }
+                    else if (tentative >= (gScore.ContainsKey(neighbour) ? gScore[neighbour] : 999999999)) continue;
 
                     path[neighbour] = current;
                     gScore[neighbour] = tentative;
                     fScore[neighbour] = gScore[neighbour] + neighbour.DistanceBetween(destination);
                 }
             }
+
             return null;
         }
     }

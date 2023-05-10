@@ -1,14 +1,13 @@
 namespace CombSim
 {
-    public class Character: Creature
+    public class Character : Creature
     {
         protected int Level;
-        
-        public Character(string name, string team="Characters") : base(name, team)
+
+        public Character(string name, string team = "Characters") : base(name, team)
         {
-            
         }
-        
+
         protected override void FallenUnconscious()
         {
             NarrationLog.LogMessage($"{Name} has fallen unconscious");

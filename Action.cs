@@ -13,21 +13,22 @@ namespace CombSim
         bool DoAction(Creature actor);
         string Name();
     }
-    
-    public class Action: IAction
+
+    public class Action : IAction
     {
         private readonly string _name;
-        public ActionCategory Category { get; private set; }
-
-        public string Name()
-        {
-            return _name;
-        }
 
         protected Action(string name, ActionCategory category)
         {
             _name = name;
             Category = category;
+        }
+
+        public ActionCategory Category { get; private set; }
+
+        public string Name()
+        {
+            return _name;
         }
 
         public bool DoAction(Creature actor)

@@ -5,38 +5,19 @@ namespace CombSim
 {
     public class Creature
     {
-        public string Name { get; protected set; }
-        protected int HitPoints;
-        protected int MaxHitPoints;
-        public string Team { get; protected set; }
-
-        public int ArmourClass
-        {
-            get => CalcArmourClass();
-            protected set => _setArmourClass = value;
-        }
-
-        private int _setArmourClass = -1;
-        protected readonly Dictionary<StatEnum, Stat> Stats;
-        protected string Repr;
-        protected readonly Conditions Conditions;
+        private readonly List<Action> _actions;
         private readonly HashSet<ActionCategory> _actionsThisTurn;
         private readonly List<Equipment> _equipment;
-        private readonly List<Action> _actions;
         private readonly int _speed;
+        protected readonly Conditions Conditions;
+        protected readonly Dictionary<StatEnum, Stat> Stats;
         private int _moves;
-        public Game game { get; private set; }
-        public EventHandler<OnAttackedEventArgs> OnAttacked;
 
-        public class OnAttackedEventArgs : EventArgs
-        {
-            public Creature Source;
-            public IAction Action;
-            public int ToHit;
-            public DamageRoll DmgRoll;
-            public bool CriticalHit;
-            public bool CriticalMiss;
-        }
+        private int _setArmourClass = -1;
+        protected int HitPoints;
+        protected int MaxHitPoints;
+        public EventHandler<OnAttackedEventArgs> OnAttacked;
+        protected string Repr;
 
         protected Creature(string name, string team = "")
         {
@@ -50,6 +31,17 @@ namespace CombSim
             _actionsThisTurn = new HashSet<ActionCategory>();
         }
 
+        public string Name { get; protected set; }
+        public string Team { get; protected set; }
+
+        public int ArmourClass
+        {
+            get => CalcArmourClass();
+            protected set => _setArmourClass = value;
+        }
+
+        public Game game { get; private set; }
+
         public virtual void Initialise()
         {
             HitPoints = MaxHitPoints;
@@ -59,10 +51,7 @@ namespace CombSim
 
         private int CalcArmourClass()
         {
-            if (_setArmourClass >= 0)
-            {
-                return _setArmourClass;
-            }
+            if (_setArmourClass >= 0) return _setArmourClass;
 
             var ac = 10;
             var acBonus = 0;
@@ -70,7 +59,6 @@ namespace CombSim
             var maxDexBonus = 99;
 
             foreach (var gear in _equipment)
-            {
                 if (gear is Armour armour)
                 {
                     if (armour.ArmourClass > 0)
@@ -82,19 +70,15 @@ namespace CombSim
 
                     acBonus += Math.Max(acBonus, armour.ArmourClassBonus);
                 }
-            }
 
-            int tmpAc = ac + acBonus;
+            var tmpAc = ac + acBonus;
             if (dexBonus)
             {
                 var bonus = Stats[StatEnum.Dexterity].Bonus();
                 tmpAc += Math.Min(bonus, maxDexBonus);
             }
 
-            if (tmpAc == 0)
-            {
-                return 10 + Stats[StatEnum.Dexterity].Bonus();
-            }
+            if (tmpAc == 0) return 10 + Stats[StatEnum.Dexterity].Bonus();
 
             return tmpAc;
         }
@@ -108,23 +92,20 @@ namespace CombSim
                 return;
             }
 
-            var dmg = e.DmgRoll.Roll(max: e.CriticalHit);
+            var dmg = e.DmgRoll.Roll(e.CriticalHit);
             NarrationLog.LogMessage($"{e.Source.Name} hit {Name} with {e.Action.Name()} (Rolled {e.ToHit}) for {dmg}");
             TakeDamage(dmg);
         }
 
         public void SetGame(Game gameGame)
         {
-            this.game = gameGame;
+            game = gameGame;
         }
 
         protected void AddEquipment(Equipment gear)
         {
             _equipment.Add(gear);
-            foreach (var action in gear.GetActions())
-            {
-                _actions.Add(action);
-            }
+            foreach (var action in gear.GetActions()) _actions.Add(action);
         }
 
         public string GetRepr()
@@ -142,7 +123,7 @@ namespace CombSim
         {
             if (_moves <= 0)
                 return false;
-            Location next = game.NextLocationTowards(this, destination);
+            var next = game.NextLocationTowards(this, destination);
             game.Move(this, next);
             _moves--;
             return true;
@@ -173,14 +154,10 @@ namespace CombSim
         // Return all the possible actions
         private List<IAction> PossibleActions(ActionCategory actionCategory)
         {
-            List<IAction> actions = new List<IAction>();
+            var actions = new List<IAction>();
             foreach (var action in _actions)
-            {
                 if (action.Category == actionCategory)
-                {
                     actions.Add(action);
-                }
-            }
 
             return actions;
         }
@@ -190,7 +167,7 @@ namespace CombSim
             if (!Conditions.HasCondition(ConditionEnum.Ok))
                 return;
             StartTurn();
-            IAction action = PickActionToDo(ActionCategory.Bonus);
+            var action = PickActionToDo(ActionCategory.Bonus);
             if (action != null) PerformAction(action);
             action = PickActionToDo(ActionCategory.Action);
             if (action != null) PerformAction(action);
@@ -210,21 +187,15 @@ namespace CombSim
 
         private IAction PickActionToDo(ActionCategory actionCategory)
         {
-            if (!_actionsThisTurn.Contains(actionCategory))
-            {
-                return null;
-            }
+            if (!_actionsThisTurn.Contains(actionCategory)) return null;
 
-            List<IAction> possibleActions = PossibleActions(actionCategory);
-            foreach (var action in possibleActions)
-            {
-                Console.WriteLine($"// {this.Name}: Actions = {action.Name()}");
-            }
+            var possibleActions = PossibleActions(actionCategory);
+            foreach (var action in possibleActions) Console.WriteLine($"// {Name}: Actions = {action.Name()}");
 
             if (possibleActions.Count == 0)
                 return null;
-            Random rnd = new Random();
-            int idx = rnd.Next() % possibleActions.Count;
+            var rnd = new Random();
+            var idx = rnd.Next() % possibleActions.Count;
             return possibleActions[idx]; // TODO - make pick best action
         }
 
@@ -246,6 +217,16 @@ namespace CombSim
             _actionsThisTurn.Add(ActionCategory.Bonus);
             _actionsThisTurn.Add(ActionCategory.Move);
             _actionsThisTurn.Add(ActionCategory.Reaction);
+        }
+
+        public class OnAttackedEventArgs : EventArgs
+        {
+            public IAction Action;
+            public bool CriticalHit;
+            public bool CriticalMiss;
+            public DamageRoll DmgRoll;
+            public Creature Source;
+            public int ToHit;
         }
     }
 }

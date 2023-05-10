@@ -2,20 +2,20 @@ using System;
 
 namespace CombSim
 {
-    public abstract class Monster: Creature
+    public abstract class Monster : Creature
     {
-        public string HitDice { get; protected set; }
-        
-        protected Monster(string name, string team="Monsters") : base(name, team)
+        protected Monster(string name, string team = "Monsters") : base(name, team)
         {
         }
+
+        public string HitDice { get; protected set; }
 
         public override void Initialise()
         {
             MaxHitPoints = RollHitDice(HitDice);
             base.Initialise();
         }
-        
+
         protected override void FallenUnconscious()
         {
             NarrationLog.LogMessage($"{Name} has died");

@@ -5,42 +5,36 @@ namespace CombSim
 {
     public class Arena
     {
+        private readonly object[,] _grid;
         private readonly int _maxX;
         private readonly int _maxY;
-        private readonly object[,] _grid;
 
         public Arena(int maxX, int maxY)
         {
             _grid = new object[maxX, maxY];
             _maxX = maxX;
             _maxY = maxY;
-            for (int x = 0; x < _maxX; x++)
-            {
-                for (int y = 0; y < _maxY; y++)
-                {
-                    _grid[x, y] = null;
-                }
-            }
+            for (var x = 0; x < _maxX; x++)
+            for (var y = 0; y < _maxY; y++)
+                _grid[x, y] = null;
         }
 
         // Print the arena out
         public new string ToString()
         {
-            string output = "";
-            for (int y = 0; y < _maxY; y++)
+            var output = "";
+            for (var y = 0; y < _maxY; y++)
             {
-                for (int x = 0; x < _maxX; x++)
-                {
+                for (var x = 0; x < _maxX; x++)
                     if (_grid[x, y] == null)
                     {
                         output += ".";
                     }
                     else
                     {
-                        Creature creature = _grid[x, y] as Creature;
+                        var creature = _grid[x, y] as Creature;
                         output += creature?.GetRepr();
                     }
-                }
 
                 output += "\n";
             }
@@ -53,15 +47,12 @@ namespace CombSim
         {
             x = -1;
             y = -1;
-            for (int attempt = 0; attempt < _maxX * _maxY; attempt++)
+            for (var attempt = 0; attempt < _maxX * _maxY; attempt++)
             {
-                Random rnd = new Random();
+                var rnd = new Random();
                 x = rnd.Next() % _maxX;
                 y = rnd.Next() % _maxY;
-                if (_grid[x, y] == null)
-                {
-                    return true;
-                }
+                if (_grid[x, y] == null) return true;
             }
 
             return false;
@@ -91,14 +82,12 @@ namespace CombSim
 
         public List<Location> GetNeighbours(Location location)
         {
-            List<Location> neighbours = new List<Location>();
+            var neighbours = new List<Location>();
             for (var x = Math.Max(0, location.x - 1); x <= Math.Min(_maxX - 1, location.x + 1); x++)
+            for (var y = Math.Max(0, location.y - 1); y <= Math.Min(_maxY - 1, location.y + 1); y++)
             {
-                for (var y = Math.Max(0, location.y - 1); y <= Math.Min(_maxY - 1, location.y + 1); y++)
-                {
-                    if (x == location.x && y == location.y) continue;
-                    neighbours.Add(new Location(x, y));
-                }
+                if (x == location.x && y == location.y) continue;
+                neighbours.Add(new Location(x, y));
             }
 
             return neighbours;

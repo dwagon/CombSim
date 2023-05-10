@@ -1,11 +1,8 @@
-using System;
-using System.ComponentModel;
-
 namespace CombSim
 {
-    public class Kobold: Monster
+    public class Kobold : Monster
     {
-        public Kobold(string name, string team="Kobolds") : base(name, team)
+        public Kobold(string name, string team = "Kobolds") : base(name, team)
         {
             Stats.Add(StatEnum.Strength, new Stat(7));
             Stats.Add(StatEnum.Dexterity, new Stat(15));
