@@ -88,13 +88,14 @@ namespace CombSim
         {
             if (e.CriticalMiss || e.ToHit <= ArmourClass)
             {
-                NarrationLog.LogMessage(
-                    $"{e.Source.Name} missed {Name} with {e.Action.Name()} (Rolled {e.ToHit} vs AC {ArmourClass})");
+                e.AttackMessage.Result = "Miss";
+                NarrationLog.LogMessage(e.AttackMessage.ToString());
                 return;
             }
 
             var dmg = e.DmgRoll.Roll(e.CriticalHit);
-            NarrationLog.LogMessage($"{e.Source.Name} hit {Name} with {e.Action.Name()} (Rolled {e.ToHit}) for {dmg}");
+            e.AttackMessage.Result = $"Hit for {dmg}";
+            NarrationLog.LogMessage(e.AttackMessage.ToString());
             TakeDamage(dmg);
         }
 
@@ -204,7 +205,6 @@ namespace CombSim
         {
             HitPoints -= damage.hits;
             if (HitPoints <= 0) FallenUnconscious();
-            NarrationLog.LogMessage($"{Name} took {damage.hits} {damage.type} damage. Now has {HitPoints}");
         }
 
         protected virtual void FallenUnconscious()
@@ -228,6 +228,7 @@ namespace CombSim
             public DamageRoll DmgRoll;
             public Creature Source;
             public int ToHit;
+            public AttackMessage AttackMessage;
         }
     }
 }

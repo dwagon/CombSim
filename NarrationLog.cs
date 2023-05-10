@@ -16,4 +16,37 @@ namespace CombSim
             Console.WriteLine(message);
         }
     }
+
+    public class AttackMessage
+    {
+        public string Attacker;
+        public string Victim;
+        public string AttackName;
+        public int Roll;
+        public int Mods;
+        public string Result;
+
+        public AttackMessage(string attacker = "", string victim = "", string attackName = "", int roll = 0,
+            int mods = 0, string result = "")
+        {
+            Attacker = attacker;
+            Victim = victim;
+            AttackName = attackName;
+            Roll = roll;
+            Mods = mods;
+            Result = result;
+        }
+
+        public new string ToString()
+        {
+            string rollMsg = $"{Roll}";
+            if (Mods != 0)
+            {
+                rollMsg += $" + {Mods}";
+            }
+            string message =
+                $"{Attacker} attacked {Victim} with {AttackName}, rolls {rollMsg} = {Roll+Mods}: {Result}";
+            return message;
+        }
+    }
 }
