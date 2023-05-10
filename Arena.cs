@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace CombSim
 {
@@ -40,8 +41,10 @@ namespace CombSim
                         output += creature?.GetRepr();
                     }
                 }
-                output+="\n";
+
+                output += "\n";
             }
+
             return output;
         }
 
@@ -60,6 +63,7 @@ namespace CombSim
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -78,6 +82,26 @@ namespace CombSim
         public void Clear(Location location)
         {
             Set(location, null);
+        }
+
+        public bool IsClear(Location location)
+        {
+            return _grid[location.x, location.y] == null;
+        }
+
+        public List<Location> GetNeighbours(Location location)
+        {
+            List<Location> neighbours = new List<Location>();
+            for (var x = Math.Max(0, location.x - 1); x <= Math.Min(_maxX - 1, location.x + 1); x++)
+            {
+                for (var y = Math.Max(0, location.y - 1); y <= Math.Min(_maxY - 1, location.y + 1); y++)
+                {
+                    if (x == location.x && y == location.y) continue;
+                    neighbours.Add(new Location(x, y));
+                }
+            }
+
+            return neighbours;
         }
     }
 }

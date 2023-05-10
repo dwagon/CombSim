@@ -1,15 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
+using System.Xml.Schema;
 
 namespace CombSim
 {
     public class Game
     {
         private readonly Arena _arena;
-        private List<Creature> _initiativeOrder;
         private readonly List<Creature> _combatants;
         private readonly Dictionary<Creature, Location> _locations;
+        private List<Creature> _initiativeOrder;
 
         public Game(int maxX = 20, int maxY = 10)
         {
@@ -30,28 +32,15 @@ namespace CombSim
         // Return the next location closer to the {destination}
         private Location NextLocationTowards(Location source, Location destination)
         {
-            if (source.x < destination.x)
-            {
-                if (source.y < destination.y) return new Location(source.x + 1, source.y + 1);
-                if (source.y > destination.y) return new Location(source.x + 1, source.y - 1);
-                return new Location(source.x + 1, source.y);
-            }
-
-            if (source.x > destination.x)
-            {
-                if (source.y < destination.y) return new Location(source.x - 1, source.y + 1);
-                if (source.y > destination.y) return new Location(source.x - 1, source.y - 1);
-                return new Location(source.x - 1, source.y);
-            }
-
-            return new Location(source.x, source.y);
+            var route = FindPath(source, destination);
+            return route?.First();
         }
-        
+
         public Location NextLocationTowards(Creature srcCreature, Location destination)
         {
             return NextLocationTowards(_locations[srcCreature], destination);
         }
-        
+
         public Location NextLocationTowards(Creature srcCreature, Creature dstCreature)
         {
             return NextLocationTowards(_locations[srcCreature], _locations[dstCreature]);
@@ -100,9 +89,9 @@ namespace CombSim
                 Console.WriteLine(creature.ToString());
             }
         }
-        
+
         public void EndGame() {}
-        
+
         public void Add_Creature(Creature creature)
         {
             _arena.Pick_Empty_Spot(out int x, out int y);
@@ -131,7 +120,7 @@ namespace CombSim
             }
             return order;
         }
-        
+
         // Return the closest creature to {actor} that is on a different team
         public Creature PickClosestEnemy(Creature actor)
         {
@@ -144,22 +133,103 @@ namespace CombSim
                 }
             }
             enemies.Sort((a,b) =>a.Item2.CompareTo(b.Item2));
-            Console.WriteLine($"enemies={String.Join(", ", enemies)} = {enemies.First().Item1}");
+            Console.WriteLine($"// enemies={String.Join(", ", enemies)} = {enemies.First().Item1}");
             return enemies.First().Item1;
         }
 
         // Return the distance between creatures {one} and {two}
-        public float DistanceTo(Creature one, Creature two)
+        public int DistanceTo(Creature one, Creature two)
         {
-            return _locations[one].DistanceBetween(_locations[two]);
+            return (int)_locations[one].DistanceBetween(_locations[two]);
         }
-        
+
         // Move {creature} to new {location}
         public void Move(Creature creature, Location location)
         {
             _arena.Clear(_locations[creature]);
             _locations[creature] = location;
             _arena.Set(location, creature);
+        }
+
+        // Can creatures move into this {location}
+        private bool IsWalkable(Location location)
+        {
+            return _arena.IsClear(location);
+        }
+
+        private IEnumerable<Location> ReconstructPath(Dictionary<Location, Location> path, Location current)
+        {
+            List<Location> totalPath = new List<Location>() { current };
+
+            while (path.ContainsKey(current))
+            {
+                current = path[current];
+                totalPath.Add(current);
+            }
+
+            totalPath.Reverse();
+            totalPath.RemoveAt(0);
+
+            return totalPath;
+        }
+        
+        // Return route from {source} to a neighbour of {destination}
+        // {destination} is never walkable because the enemy is there.
+        private IEnumerable<Location> FindPath(Location source, Location destination)
+        {
+            var bestLength = 999999;
+            Location bestNeighbour = null;
+            IEnumerable<Location> solution = null;
+            foreach (var neighbour in _arena.GetNeighbours(destination))
+            {
+                solution = FindRoute(source, neighbour);
+                if (solution?.Count() < bestLength)
+                {
+                    bestNeighbour = neighbour;
+                    bestLength = solution.Count();
+                }
+            }
+
+            return FindRoute(source, bestNeighbour);
+        }
+
+        // Return route from {source} to {destination}
+        private IEnumerable<Location> FindRoute(Location source, Location destination)
+        {
+            List<Location> closed = new List<Location>() {};
+            List<Location> openSet = new List<Location>() {source};
+            var path = new Dictionary<Location, Location>();
+            var gScore = new Dictionary<Location, float>();
+            gScore[source] = 0;
+
+            var fScore = new Dictionary<Location, float>();
+            fScore[source] = source.DistanceBetween(destination);
+            while (openSet.Any())
+            {
+                var current = openSet.OrderBy(c => fScore[c]).First();
+                if (current == destination) return ReconstructPath(path, current);
+
+                openSet.Remove(current);
+                closed.Add(current);
+                foreach (var neighbour in _arena.GetNeighbours(current))
+                {
+                    if (closed.Contains(neighbour) || !IsWalkable(neighbour)) continue;
+                    var tentative = gScore[current] + current.DistanceBetween(neighbour);
+                    if (!openSet.Contains(neighbour))
+                    {
+                        openSet.Add(neighbour);
+                    }
+                    else if (tentative >= (gScore.ContainsKey(neighbour)?gScore[neighbour]:999999999))
+                    {
+                        continue;
+                    }
+
+                    path[neighbour] = current;
+                    gScore[neighbour] = tentative;
+                    fScore[neighbour] = gScore[neighbour] + neighbour.DistanceBetween(destination);
+                }
+            }
+            return null;
         }
     }
 }
