@@ -22,7 +22,8 @@ namespace CombSim
 
             if (actor.game.DistanceTo(actor, enemy) <= _reach)
             {
-                DoAttack(actor, enemy);
+                DoAttack(actor, enemy, attackBonus: actor.ProficiencyBonus + actor.Stats[StatEnum.Strength].Bonus(),
+                    damageBonus: actor.Stats[StatEnum.Strength].Bonus());
                 return true;
             }
 

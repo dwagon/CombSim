@@ -4,8 +4,9 @@ namespace CombSim
 {
     public enum LogLevelEnum
     {
-        Info = 1,
-        Action = 2
+        Dice = 1,
+        Info = 2,
+        Action = 3
     }
 
     public static class NarrationLog

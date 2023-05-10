@@ -20,5 +20,10 @@ namespace CombSim
             dmg += _bonus;
             return new Damage(dmg, _type);
         }
+
+        public static DamageRoll operator +(DamageRoll dmgRoll, int bonus)
+        {
+            return new DamageRoll(dmgRoll._roll, dmgRoll._bonus + bonus, dmgRoll._type);
+        }
     }
 }

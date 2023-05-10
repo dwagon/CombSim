@@ -10,13 +10,14 @@ namespace CombSim
         private readonly List<Equipment> _equipment;
         private readonly int _speed;
         protected readonly Conditions Conditions;
-        protected readonly Dictionary<StatEnum, Stat> Stats;
+        public readonly Dictionary<StatEnum, Stat> Stats;
         private int _moves;
 
         private int _setArmourClass = -1;
         protected int HitPoints;
         protected int MaxHitPoints;
         public EventHandler<OnAttackedEventArgs> OnAttacked;
+        public int ProficiencyBonus = 2;
         protected string Repr;
 
         protected Creature(string name, string team = "")

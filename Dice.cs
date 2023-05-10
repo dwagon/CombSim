@@ -32,10 +32,11 @@ namespace CombSim
                     result += int.Parse(match.Groups["mod"].Value);
             }
 
+            NarrationLog.LogMessage($"Rolled {result} on {dice}", LogLevelEnum.Dice);
             return result;
         }
 
-        public static int RollD20(bool hasAdvantage = false, bool hasDisadvantage = false)
+        public static int RollD20(bool hasAdvantage = false, bool hasDisadvantage = false, string reason="")
         {
             string message;
             if (hasAdvantage && hasDisadvantage)
@@ -51,20 +52,20 @@ namespace CombSim
             if (hasAdvantage)
             {
                 roll = Math.Max(d1, d2);
-                message = $"Rolled {roll} with advantage ({d1}, {d2}";
+                message = $"{reason}: Rolled {roll} with advantage ({d1}, {d2}";
             }
             else if (hasDisadvantage)
             {
                 roll = Math.Min(d1, d2);
-                message = $"Rolled {roll} with disadvantage ({d1}, {d2})";
+                message = $"{reason}: Rolled {roll} with disadvantage ({d1}, {d2})";
             }
             else
             {
                 roll = d1;
-                message = $"Rolled {d1}";
+                message = $"{reason}: Rolled {d1}";
             }
 
-            NarrationLog.LogMessage(message);
+            NarrationLog.LogMessage(message, LogLevelEnum.Dice);
             return roll;
         }
     }

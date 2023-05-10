@@ -48,7 +48,7 @@ namespace CombSim
 
         public void RunGame()
         {
-            Console.WriteLine(_arena.ToString());
+            Console.WriteLine(_arena);
             while (!IsEndOfGame()) TakeTurn();
         }
 
@@ -71,6 +71,7 @@ namespace CombSim
 
         private void TakeTurn()
         {
+            Console.WriteLine("\n#####################################################");
             foreach (var creature in _initiativeOrder) creature.TakeTurn();
             Console.WriteLine(_arena.ToString());
             foreach (var creature in _combatants) Console.WriteLine(creature.ToString());

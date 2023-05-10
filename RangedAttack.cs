@@ -25,7 +25,8 @@ namespace CombSim
             else if (distance <= _lRange) hasDisadvantage = true;
             else if (distance > _lRange) return false;
 
-            DoAttack(actor, enemy, hasDisadvantage: hasDisadvantage);
+            DoAttack(actor, enemy, hasDisadvantage: hasDisadvantage,
+                attackBonus: actor.ProficiencyBonus + actor.Stats[StatEnum.Dexterity].Bonus());
             return true;
         }
     }

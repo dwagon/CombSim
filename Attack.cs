@@ -17,11 +17,11 @@ namespace CombSim
         }
 
         private int RollToHit(out bool criticalHit, out bool criticalMiss, bool hasAdvantage = false,
-            bool hasDisadvantage = false)
+            bool hasDisadvantage = false, int attackBonus = 0)
         {
             criticalMiss = false;
             criticalHit = false;
-            var roll = Dice.RollD20(hasAdvantage, hasDisadvantage);
+            var roll = Dice.RollD20(hasAdvantage, hasDisadvantage, reason: "To Hit");
             switch (roll)
             {
                 case 1:
@@ -32,19 +32,20 @@ namespace CombSim
                     break;
             }
 
-            return roll;
+            return roll + attackBonus;
         }
 
         protected void DoAttack(Creature actor, Creature target, bool hasAdvantage = false,
-            bool hasDisadvantage = false)
+            bool hasDisadvantage = false, int attackBonus = 0, int damageBonus = 0)
         {
-            var roll = RollToHit(out var criticalHit, out var criticalMiss, hasAdvantage, hasDisadvantage);
+            var roll = RollToHit(out var criticalHit, out var criticalMiss, hasAdvantage: hasAdvantage,
+                hasDisadvantage: hasDisadvantage, attackBonus: attackBonus);
             target.OnAttacked?.Invoke(this, new Creature.OnAttackedEventArgs
             {
                 Source = actor,
                 Action = this,
                 ToHit = roll,
-                DmgRoll = _dmgRoll,
+                DmgRoll = _dmgRoll + damageBonus,
                 CriticalHit = criticalHit,
                 CriticalMiss = criticalMiss
             });
