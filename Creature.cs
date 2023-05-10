@@ -210,6 +210,12 @@ namespace CombSim
         protected virtual void FallenUnconscious()
         {
         }
+        
+        // Called when we have died
+        protected void Died()
+        {
+            game.Remove(this);
+        }
 
         private void StartTurn()
         {

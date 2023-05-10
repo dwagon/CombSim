@@ -131,6 +131,13 @@ namespace CombSim
             _locations[creature] = location;
             _arena.Set(location, creature);
         }
+        
+        // {creature} no longer exists (i.e. died), remove them from the game
+        public void Remove(Creature creature)
+        {
+            _arena.Clear(_locations[creature]);
+            _locations.Remove(creature);
+        }
 
         // Can creatures move into this {location}
         private bool IsWalkable(Location location)
