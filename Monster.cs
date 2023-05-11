@@ -22,6 +22,7 @@ namespace CombSim
             Conditions.SetCondition(ConditionEnum.Dead);
             Conditions.RemoveCondition(ConditionEnum.Ok);
             HitPoints = 0;
+            Died();
         }
 
         private int RollHitDice(string hitDice)

@@ -18,6 +18,21 @@ namespace CombSim
             return this == obj;
         }
 
+        public override bool Equals(object o)
+        {
+            if (o is Location)
+            {
+                return this == (Location)o;
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return 13 * x.GetHashCode() + y.GetHashCode();
+        }
+
         public override string ToString()
         {
             return "(" + x + "," + y + ")";
