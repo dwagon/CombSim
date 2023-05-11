@@ -12,6 +12,7 @@ namespace CombSim
     {
         bool DoAction(Creature actor);
         string Name();
+        int GetHeuristic(Creature actor);
     }
 
     public class Action : IAction
@@ -25,6 +26,11 @@ namespace CombSim
         }
 
         public ActionCategory Category { get; private set; }
+
+        public int GetHeuristic(Creature actor)
+        {
+            return 1;
+        }
 
         public string Name()
         {

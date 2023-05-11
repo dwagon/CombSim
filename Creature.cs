@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CombSim
 {
@@ -41,7 +42,7 @@ namespace CombSim
             protected set => _setArmourClass = value;
         }
 
-        public Game game { get; private set; }
+        public Game Game { get; private set; }
 
         public virtual void Initialise()
         {
@@ -101,7 +102,7 @@ namespace CombSim
 
         public void SetGame(Game gameGame)
         {
-            game = gameGame;
+            Game = gameGame;
         }
 
         protected void AddEquipment(Equipment gear)
@@ -125,8 +126,8 @@ namespace CombSim
         {
             if (_moves <= 0)
                 return false;
-            var next = game.NextLocationTowards(this, destination);
-            game.Move(this, next);
+            var next = Game.NextLocationTowards(this, destination);
+            Game.Move(this, next);
             _moves--;
             return true;
         }
@@ -145,7 +146,7 @@ namespace CombSim
 
         public Location GetLocation()
         {
-            return game.GetLocation(this);
+            return Game.GetLocation(this);
         }
 
         public new string ToString()
@@ -189,16 +190,24 @@ namespace CombSim
 
         private IAction PickActionToDo(ActionCategory actionCategory)
         {
+            var rnd = new Random();
+
             if (!_actionsThisTurn.Contains(actionCategory)) return null;
 
+            var sortableActions = new List<(int heuristic, IAction action)>();
             var possibleActions = PossibleActions(actionCategory);
-            foreach (var action in possibleActions) Console.WriteLine($"// {Name}: Actions = {action.Name()}");
-
             if (possibleActions.Count == 0)
                 return null;
-            var rnd = new Random();
-            var idx = rnd.Next() % possibleActions.Count;
-            return possibleActions[idx]; // TODO - make pick best action
+
+            foreach (var action in possibleActions)
+            {
+                int heuristic = action.GetHeuristic(this) + rnd.Next() % 2;
+                sortableActions.Add((heuristic, action));
+                Console.WriteLine($"// {Name}: Actions = {action.Name()} {heuristic}");
+            }
+
+            sortableActions.Sort((x, y) => x.Item1.CompareTo(y.Item1));
+            return sortableActions.Last().Item2;
         }
 
         private void TakeDamage(Damage damage)
@@ -210,11 +219,11 @@ namespace CombSim
         protected virtual void FallenUnconscious()
         {
         }
-        
+
         // Called when we have died
         protected void Died()
         {
-            game.Remove(this);
+            Game.Remove(this);
         }
 
         private void StartTurn()
