@@ -25,10 +25,10 @@
             _game.Add_Creature(k1);
             var k2 = new Kobold("Kobold2");
             _game.Add_Creature(k2);
-            var k3 = new Kobold("Kobold3");
-            _game.Add_Creature(k3);
             var g1 = new Goblin("Goblin1");
             _game.Add_Creature(g1);
+            var g2 = new Goblin("Goblin2");
+            _game.Add_Creature(g2);
             var f = new Fighter("Frank");
             _game.Add_Creature(f);
         }
