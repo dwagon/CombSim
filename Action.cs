@@ -1,5 +1,3 @@
-using System;
-
 namespace CombSim
 {
     public enum ActionCategory

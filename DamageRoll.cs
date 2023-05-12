@@ -12,6 +12,13 @@ namespace CombSim
             _bonus = bonus;
             _type = type;
         }
+        
+        public DamageRoll(string roll, DamageTypeEnums type)
+        {
+            _roll = roll;
+            _bonus = 0;
+            _type = type;
+        }
 
         public Damage Roll(bool max = false)
         {

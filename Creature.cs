@@ -213,7 +213,7 @@ namespace CombSim
 
         public new string ToString()
         {
-            return $"{Name} HP: {HitPoints}/{MaxHitPoints} {Conditions}";
+            return $"{Name} HP: {HitPoints}/{MaxHitPoints} {Conditions} {Effects}";
         }
 
         // Return all the possible actions
@@ -301,14 +301,10 @@ namespace CombSim
 
         private IAction PickActionToDo(ActionCategory actionCategory)
         {
-            var rnd = new Random();
-
             if (!_actionsThisTurn.Contains(actionCategory)) return null;
 
             var sortableActions = new List<(int heuristic, IAction action)>();
             var possibleActions = PossibleActions(actionCategory);
-            // if (possibleActions.Count == 0)
-            //     return null;
 
             foreach (var action in possibleActions)
             {
@@ -332,6 +328,24 @@ namespace CombSim
         {
         }
 
+        public bool MakeSavingThrow(StatEnum stat, int dc)
+        {
+            Console.Write($"// {Name} does {stat} saving vs DC {dc} - ");
+            if (HasCondition(ConditionEnum.Paralyzed))
+            {
+                if (stat == StatEnum.Strength || stat == StatEnum.Dexterity) return false;
+            }
+
+            var roll = Stats[stat].Roll();
+            if (roll > dc)
+            {
+                Console.WriteLine($"{roll} Success");
+                return true;
+            }
+            Console.WriteLine($"{roll} Failure");
+            return false;
+        }
+
         // Called when we have died
         protected void Died()
         {
@@ -339,7 +353,7 @@ namespace CombSim
             Game.Remove(this);
         }
 
-        protected virtual void StartTurn()
+        protected virtual void TurnStart()
         {
             OnTurnStart?.Invoke(this, new OnTurnStartEventArgs
             {
@@ -350,7 +364,6 @@ namespace CombSim
             _moves = _speed;
             _actionsThisTurn.Add(ActionCategory.Action);
             _actionsThisTurn.Add(ActionCategory.Bonus);
-            _actionsThisTurn.Add(ActionCategory.Move);
             _actionsThisTurn.Add(ActionCategory.Reaction);
         }
 
@@ -375,6 +388,7 @@ namespace CombSim
             public Creature Source;
             public int ToHit;
             public AttackMessage AttackMessage;
+            public Action<Creature> OnHitSideEffect;
         }
 
         public class OnTurnEndEventArgs : EventArgs

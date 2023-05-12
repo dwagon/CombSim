@@ -50,12 +50,15 @@
         <Compile Include="DamageRoll.cs" />
         <Compile Include="DamageType.cs" />
         <Compile Include="Dice.cs" />
+        <Compile Include="Effect.cs" />
+        <Compile Include="Effects.cs" />
         <Compile Include="Equipment.cs" />
         <Compile Include="Game.cs" />
         <Compile Include="Gear.cs" />
         <Compile Include="Location.cs" />
         <Compile Include="MeleeAttack.cs" />
         <Compile Include="Monster.cs" />
+        <Compile Include="Monsters\Ghoul.cs" />
         <Compile Include="Monsters\Goblin.cs" />
         <Compile Include="Monsters\Kobold.cs" />
         <Compile Include="Monsters\Skeleton.cs" />
@@ -63,7 +66,6 @@
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="RangedAttack.cs" />
-        <Compile Include="StatEnum.cs" />
         <Compile Include="Stat.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

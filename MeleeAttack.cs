@@ -6,7 +6,7 @@ namespace CombSim
     {
         private readonly int _reach;
 
-        public MeleeAttack(string name, DamageRoll damageRoll, int reach) : base(name, damageRoll)
+        public MeleeAttack(string name, DamageRoll damageRoll, int reach=1) : base(name, damageRoll)
         {
             _reach = reach;
         }
