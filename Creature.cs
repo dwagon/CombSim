@@ -234,6 +234,16 @@ namespace CombSim
             return hitpoints;
         }
 
+        public Creature PickClosestEnemy()
+        {
+            return Game.PickClosestEnemy(this);
+        }
+
+        public float DistanceTo(Creature enemy)
+        {
+            return Game.DistanceTo(this, enemy);
+        }
+
         public void TakeTurn()
         {
             StartTurn();

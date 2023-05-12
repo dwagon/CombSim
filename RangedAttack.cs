@@ -15,10 +15,10 @@ namespace CombSim
 
         public override int GetHeuristic(Creature actor)
         {
-            var result = 0;
-            var enemy = actor.Game.PickClosestEnemy(actor);
+            int result;
+            var enemy = actor.PickClosestEnemy();
             if (enemy == null) return 0;
-            var distance = actor.Game.DistanceTo(actor, enemy);
+            var distance = actor.DistanceTo(enemy);
             if (distance <= 2) result = 1;
             else if (distance < _sRange) result = 4;
             else if (distance < _lRange) result = 3;
@@ -28,15 +28,15 @@ namespace CombSim
 
         public new bool DoAction(Creature actor)
         {
-            var enemy = actor.Game.PickClosestEnemy(actor);
+            var enemy = actor.PickClosestEnemy();
             if (enemy == null) return false;
             var hasDisadvantage = false;
 
-            while (actor.Game.DistanceTo(actor, enemy) > _sRange)
+            while (actor.DistanceTo(enemy) > _sRange)
                 if (!actor.MoveTowards(enemy))
                     break;
 
-            var distance = actor.Game.DistanceTo(actor, enemy);
+            var distance = actor.DistanceTo(enemy);
             if (distance <= 1) hasDisadvantage = true;
             else if (distance <= _lRange) hasDisadvantage = true;
             else if (distance > _lRange) return false;
