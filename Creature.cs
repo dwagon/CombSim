@@ -18,6 +18,8 @@ namespace CombSim
         protected int HitPoints;
         protected int MaxHitPoints;
         public EventHandler<OnAttackedEventArgs> OnAttacked;
+        public EventHandler<OnTurnEndEventArgs> OnTurnEnd;
+        public EventHandler<OnTurnStartEventArgs> OnTurnStart;
         public int ProficiencyBonus = 2;
         protected string Repr;
         protected List<DamageTypeEnums> Vulnerable;
@@ -247,19 +249,22 @@ namespace CombSim
 
         public void TakeTurn()
         {
-            StartTurn();
+            TurnStart();
             if (IsAlive())
             {
                 PerformAction(PickActionToDo(ActionCategory.Bonus));
                 PerformAction(PickActionToDo(ActionCategory.Action));
                 PerformAction(PickActionToDo(ActionCategory.Bonus));
             }
-
-            EndTurn();
+            TurnEnd();
         }
 
-        private void EndTurn()
+        private void TurnEnd()
         {
+            OnTurnEnd?.Invoke(this, new OnTurnEndEventArgs
+            {
+                Creature = this
+            });
         }
 
         private void PerformAction(IAction action)
@@ -315,6 +320,10 @@ namespace CombSim
 
         protected virtual void StartTurn()
         {
+            OnTurnStart?.Invoke(this, new OnTurnStartEventArgs
+            {
+                Creature = this
+            });
             if (!Conditions.HasCondition(ConditionEnum.Ok)) return;
             if (Conditions.HasCondition(ConditionEnum.Paralyzed)) return;
             _moves = _speed;
@@ -333,6 +342,16 @@ namespace CombSim
             public Creature Source;
             public int ToHit;
             public AttackMessage AttackMessage;
+        }
+
+        public class OnTurnEndEventArgs : EventArgs
+        {
+            public Creature Creature;
+        }
+
+        public class OnTurnStartEventArgs : EventArgs
+        {
+            public Creature Creature;
         }
     }
 }
