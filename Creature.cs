@@ -48,6 +48,16 @@ namespace CombSim
             protected set => _setArmourClass = value;
         }
 
+        public int HitPointsDown()
+        {
+            return MaxHitPoints - HitPoints;
+        }
+
+        public int PercentHitPoints()
+        {
+            return (int)(100 * ((float)HitPoints / MaxHitPoints));
+        }
+
         public Game Game { get; private set; }
 
         public virtual void Initialise()
@@ -190,7 +200,38 @@ namespace CombSim
                 if (action.Category == actionCategory)
                     actions.Add(action);
 
+            Console.WriteLine($"// {Name} Possible {actionCategory} Actions: {String.Join(", ", actions)}");
             return actions;
+        }
+
+        protected void AddAction(Action action)
+        {
+            _actions.Add(action);
+        }
+
+        public void RemoveAction(Action action)
+        {
+            _actions.Remove(action);
+        }
+
+        public int Heal(int hitpoints)
+        {
+            hitpoints = Math.Min(hitpoints, HitPointsDown());
+            HitPoints += hitpoints;
+
+            if (Conditions.HasCondition(ConditionEnum.Stable))
+            {
+                Conditions.RemoveCondition(ConditionEnum.Stable);
+                Conditions.SetCondition(ConditionEnum.Ok);
+            }
+
+            if (Conditions.HasCondition(ConditionEnum.Unconscious))
+            {
+                Conditions.RemoveCondition(ConditionEnum.Unconscious);
+                Conditions.SetCondition(ConditionEnum.Ok);
+            }
+
+            return hitpoints;
         }
 
         public void TakeTurn()
@@ -229,14 +270,16 @@ namespace CombSim
 
             var sortableActions = new List<(int heuristic, IAction action)>();
             var possibleActions = PossibleActions(actionCategory);
-            if (possibleActions.Count == 0)
-                return null;
+            // if (possibleActions.Count == 0)
+            //     return null;
 
             foreach (var action in possibleActions)
             {
-                int heuristic = action.GetHeuristic(this) + rnd.Next() % 2;
-                sortableActions.Add((heuristic, action));
+                var heuristic = action.GetHeuristic(this);
+                if (heuristic > 0) sortableActions.Add((heuristic, action));
             }
+
+            if (!sortableActions.Any()) return null;
 
             sortableActions.Sort((x, y) => x.Item1.CompareTo(y.Item1));
             return sortableActions.Last().Item2;

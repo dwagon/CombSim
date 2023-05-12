@@ -11,7 +11,7 @@ namespace CombSim
             _reach = reach;
         }
 
-        public new int GetHeuristic(Creature actor)
+        public override int GetHeuristic(Creature actor)
         {
             var enemy = actor.Game.PickClosestEnemy(actor);
             if (enemy == null) return 0;

@@ -29,7 +29,7 @@ namespace CombSim
             Category = category;
         }
 
-        public int GetHeuristic(Creature actor)
+        public virtual int GetHeuristic(Creature actor)
         {
             return 1;
         }
@@ -39,7 +39,7 @@ namespace CombSim
             return _name;
         }
 
-        public bool DoAction(Creature actor)
+        public virtual bool DoAction(Creature actor)
         {
             return false;
         }

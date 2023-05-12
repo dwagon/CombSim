@@ -17,6 +17,39 @@ namespace CombSim.Characters
             AddEquipment(Gear.Mace);
             AddEquipment(Gear.Plate);
             AddEquipment(Gear.Shield);
+            AddAction(new SecondWind());
+        }
+
+        private class SecondWind : Action
+        {
+            public SecondWind() : base("Second Wind", ActionCategory.Bonus)
+            {
+            }
+
+            public override int GetHeuristic(Creature actor)
+            {
+                int result;
+        
+                 if (actor.PercentHitPoints() > 50)
+                {
+                    result = 0;
+                }
+                else
+                {
+                    result = actor.HitPointsDown() / 10 + 1;
+                }
+
+                return result;
+            }
+
+            public override bool DoAction(Creature actor)
+            {
+                Fighter f = (Fighter)actor;
+                var cured = actor.Heal(Dice.Roll("d10") + f.Level);
+                NarrationLog.LogMessage($"{actor.Name} uses Second Wind to cure themselves {cured} HP");
+                actor.RemoveAction(this);
+                return true;
+            }
         }
     }
 }

@@ -4,7 +4,7 @@ namespace CombSim
 {
     public class Character : Creature
     {
-        protected int Level;
+        protected int Level { get;  set; }
         private int _deathSavesGood;
         private int _deathSavesBad;
 
@@ -20,6 +20,8 @@ namespace CombSim
             Conditions.SetCondition(ConditionEnum.Unconscious);
             Conditions.RemoveCondition(ConditionEnum.Ok);
             HitPoints = 0;
+            _deathSavesBad = 0;
+            _deathSavesGood = 0;
         }
 
         protected override void StartTurn()
