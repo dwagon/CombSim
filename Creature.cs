@@ -315,6 +315,7 @@ namespace CombSim
         protected virtual void StartTurn()
         {
             if (!Conditions.HasCondition(ConditionEnum.Ok)) return;
+            if (Conditions.HasCondition(ConditionEnum.Paralyzed)) return;
             _moves = _speed;
             _actionsThisTurn.Add(ActionCategory.Action);
             _actionsThisTurn.Add(ActionCategory.Bonus);
