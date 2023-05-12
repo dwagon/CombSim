@@ -114,6 +114,7 @@ namespace CombSim
             foreach (var critter in _combatants)
                 if (critter.Team != actor.Team && critter.IsAlive())
                     enemies.Add((critter, DistanceTo(actor, critter)));
+            if (enemies.Count == 0) return null;
             enemies.Sort((a, b) => a.Item2.CompareTo(b.Item2));
             return enemies.First().Item1;
         }
