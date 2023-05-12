@@ -149,6 +149,16 @@ namespace CombSim
             return dmg;
         }
 
+        public bool HasCondition(ConditionEnum condition)
+        {
+            return Conditions.HasCondition(condition);
+        }
+
+        public void AddCondition(ConditionEnum condition)
+        {
+            Conditions.SetCondition(condition);
+        }
+
         public void SetGame(Game gameGame)
         {
             Game = gameGame;
