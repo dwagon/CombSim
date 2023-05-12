@@ -15,5 +15,15 @@ namespace CombSim
         {
             return $"{hits} {type}";
         }
+        
+        public static Damage operator *(Damage damage, int multiplier)
+        {
+            return new Damage(damage.hits * multiplier, damage.type);
+        }
+        
+        public static Damage operator /(Damage damage, int divisor)
+        {
+            return new Damage(damage.hits / divisor, damage.type);
+        }
     }
 }
