@@ -26,11 +26,12 @@ namespace CombSim
         public new bool DoAction(Creature actor)
         {
             var enemy = actor.PickClosestEnemy();
+            var oldLocation = actor.GetLocation();
             if (enemy == null) return false;
             while (actor.DistanceTo(enemy) > _reach)
                 if (!actor.MoveTowards(enemy))
                     break;
-            Console.WriteLine($"// {actor.Name} Now at {actor.Game.GetLocation(actor)}");
+            Console.WriteLine($"// {actor.Name} moved from {oldLocation} to {actor.GetLocation()}");
 
             if (actor.Game.DistanceTo(actor, enemy) <= _reach)
             {
