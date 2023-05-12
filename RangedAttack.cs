@@ -13,7 +13,7 @@ namespace CombSim
             _lRange = lRange;
         }
 
-        public new int GetHeuristic(Creature actor)
+        public override int GetHeuristic(Creature actor)
         {
             var result = 0;
             var enemy = actor.Game.PickClosestEnemy(actor);
