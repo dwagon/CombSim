@@ -34,6 +34,10 @@ namespace CombSim
 
             return roll;
         }
+        
+        // Overwrite if the attack has a side effect
+        protected virtual void SideEffect(Creature target)
+        { }
 
         protected void DoAttack(Creature actor, Creature target, bool hasAdvantage = false,
             bool hasDisadvantage = false, int attackBonus = 0, int damageBonus = 0)
@@ -56,7 +60,8 @@ namespace CombSim
                 DmgRoll = _dmgRoll + damageBonus,
                 CriticalHit = criticalHit,
                 CriticalMiss = criticalMiss,
-                AttackMessage = attackMessage
+                AttackMessage = attackMessage,
+                OnHitSideEffect = SideEffect
             });
         }
     }

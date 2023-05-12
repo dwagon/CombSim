@@ -115,6 +115,7 @@ namespace CombSim
             e.AttackMessage.Result = $"Hit for {dmg}";
             NarrationLog.LogMessage(e.AttackMessage.ToString());
             TakeDamage(dmg);
+            e.OnHitSideEffect(this);
         }
 
         private Damage ModifyDamageForVulnerabilityOrResistance(Damage dmg)
