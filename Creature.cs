@@ -132,9 +132,12 @@ namespace CombSim
             return true;
         }
 
+        // Is this creature able to continue participating in combat
         public bool IsAlive()
         {
             if (Conditions.HasCondition(ConditionEnum.Dead)) return false;
+            if (Conditions.HasCondition(ConditionEnum.Unconscious)) return false;
+            if (Conditions.HasCondition(ConditionEnum.Stable)) return false;
             return true;
         }
 
