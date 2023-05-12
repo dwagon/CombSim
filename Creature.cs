@@ -365,6 +365,7 @@ namespace CombSim
             if (!Conditions.HasCondition(ConditionEnum.Ok)) return;
             if (Conditions.HasCondition(ConditionEnum.Paralyzed)) return;
             _moves = _speed;
+            _actionsThisTurn.Clear();
             _actionsThisTurn.Add(ActionCategory.Action);
             _actionsThisTurn.Add(ActionCategory.Bonus);
             _actionsThisTurn.Add(ActionCategory.Reaction);
