@@ -114,7 +114,16 @@ namespace CombSim
                 return;
             }
 
-            var dmg = e.DmgRoll.Roll(e.CriticalHit);
+            Damage dmg;
+            if (e.CriticalHit)
+            {
+                dmg = e.DmgRoll.Roll(max: true) + e.DmgRoll.Roll();
+            }
+            else
+            {
+                dmg = e.DmgRoll.Roll();
+            }
+
             dmg = ModifyDamageForVulnerabilityOrResistance(dmg);
             e.AttackMessage.Result = $"Hit for {dmg}";
             NarrationLog.LogMessage(e.AttackMessage.ToString());
