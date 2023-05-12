@@ -26,6 +26,7 @@ namespace CombSim
         protected List<DamageTypeEnums> Resistant;
         protected List<DamageTypeEnums> Immune;
         protected Effects Effects;
+        protected List<Damage> DamageReceived;
 
         protected Creature(string name, string team = "")
         {
@@ -41,6 +42,7 @@ namespace CombSim
             Vulnerable = new List<DamageTypeEnums>();
             Resistant = new List<DamageTypeEnums>();
             Immune = new List<DamageTypeEnums>();
+            DamageReceived = new List<Damage>();
         }
 
         public string Name { get; protected set; }
@@ -321,6 +323,7 @@ namespace CombSim
         private void TakeDamage(Damage damage)
         {
             HitPoints -= damage.hits;
+            DamageReceived.Add(damage);
             if (HitPoints <= 0) FallenUnconscious();
         }
 
@@ -362,6 +365,7 @@ namespace CombSim
             if (!Conditions.HasCondition(ConditionEnum.Ok)) return;
             if (Conditions.HasCondition(ConditionEnum.Paralyzed)) return;
             _moves = _speed;
+            _actionsThisTurn.Clear();
             _actionsThisTurn.Add(ActionCategory.Action);
             _actionsThisTurn.Add(ActionCategory.Bonus);
             _actionsThisTurn.Add(ActionCategory.Reaction);
