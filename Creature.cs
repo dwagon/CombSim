@@ -25,6 +25,7 @@ namespace CombSim
         protected List<DamageTypeEnums> Vulnerable;
         protected List<DamageTypeEnums> Resistant;
         protected List<DamageTypeEnums> Immune;
+        protected Effects Effects;
 
         protected Creature(string name, string team = "")
         {
@@ -33,6 +34,7 @@ namespace CombSim
             _speed = 6;
             Stats = new Dictionary<StatEnum, Stat>();
             Conditions = new Conditions();
+            Effects = new Effects();
             _equipment = new List<Equipment>();
             _actions = new List<Action>();
             _actionsThisTurn = new HashSet<ActionCategory>();
@@ -331,6 +333,18 @@ namespace CombSim
             _actionsThisTurn.Add(ActionCategory.Bonus);
             _actionsThisTurn.Add(ActionCategory.Move);
             _actionsThisTurn.Add(ActionCategory.Reaction);
+        }
+
+        public void AddEffect(Effect effect)
+        {
+            Effects.Add(effect);
+            effect.Start(this);
+        }
+
+        public void RemoveEffect(Effect effect)
+        {
+            Effects.Remove(effect);
+            effect.End(this);
         }
 
         public class OnAttackedEventArgs : EventArgs
