@@ -72,7 +72,10 @@ namespace CombSim
         private void TakeTurn()
         {
             Console.WriteLine("\n#####################################################");
-            foreach (var creature in _initiativeOrder) creature.TakeTurn();
+            foreach (var creature in _initiativeOrder)
+            {
+                creature.TakeTurn();
+            }
             Console.WriteLine(_arena.ToString());
             foreach (var creature in _combatants) Console.WriteLine(creature.ToString());
         }
@@ -114,6 +117,7 @@ namespace CombSim
             foreach (var critter in _combatants)
                 if (critter.Team != actor.Team && critter.IsAlive())
                     enemies.Add((critter, DistanceTo(actor, critter)));
+            if (enemies.Count == 0) return null;
             enemies.Sort((a, b) => a.Item2.CompareTo(b.Item2));
             return enemies.First().Item1;
         }
@@ -137,6 +141,7 @@ namespace CombSim
         {
             _arena.Clear(_locations[creature]);
             _locations.Remove(creature);
+            _combatants.Remove(creature);
         }
 
         // Can creatures move into this {location}

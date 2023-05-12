@@ -1,3 +1,5 @@
+using System;
+
 namespace CombSim
 {
     public enum ActionCategory
@@ -13,19 +15,19 @@ namespace CombSim
         bool DoAction(Creature actor);
         string Name();
         int GetHeuristic(Creature actor);
+        ActionCategory Category { get; set; }
     }
 
     public class Action : IAction
     {
         private readonly string _name;
+        public ActionCategory Category { get; set; }
 
         protected Action(string name, ActionCategory category)
         {
             _name = name;
             Category = category;
         }
-
-        public ActionCategory Category { get; private set; }
 
         public int GetHeuristic(Creature actor)
         {

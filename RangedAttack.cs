@@ -17,6 +17,7 @@ namespace CombSim
         {
             var result = 0;
             var enemy = actor.Game.PickClosestEnemy(actor);
+            if (enemy == null) return 0;
             var distance = actor.Game.DistanceTo(actor, enemy);
             if (distance <= 2) result = 1;
             else if (distance < _sRange) result = 4;
@@ -28,6 +29,7 @@ namespace CombSim
         public new bool DoAction(Creature actor)
         {
             var enemy = actor.Game.PickClosestEnemy(actor);
+            if (enemy == null) return false;
             var hasDisadvantage = false;
 
             while (actor.Game.DistanceTo(actor, enemy) > _sRange)

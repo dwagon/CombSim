@@ -14,6 +14,7 @@ namespace CombSim
         public new int GetHeuristic(Creature actor)
         {
             var enemy = actor.Game.PickClosestEnemy(actor);
+            if (enemy == null) return 0;
             if (actor.Game.DistanceTo(actor, enemy) <= 2)
             {
                 return 4;
@@ -25,6 +26,7 @@ namespace CombSim
         public new bool DoAction(Creature actor)
         {
             var enemy = actor.Game.PickClosestEnemy(actor);
+            if (enemy == null) return false;
             while (actor.Game.DistanceTo(actor, enemy) > _reach)
                 if (!actor.MoveTowards(enemy))
                     break;

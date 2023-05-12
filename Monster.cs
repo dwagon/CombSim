@@ -18,7 +18,6 @@ namespace CombSim
 
         protected override void FallenUnconscious()
         {
-            NarrationLog.LogMessage($"{Name} has died");
             Conditions.SetCondition(ConditionEnum.Dead);
             Conditions.RemoveCondition(ConditionEnum.Ok);
             HitPoints = 0;

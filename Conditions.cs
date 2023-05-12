@@ -19,6 +19,7 @@ namespace CombSim
         Poisoned,
         Prone,
         Restrained,
+        Stable,
         Stunned,
         Unconscious
     }
