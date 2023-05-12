@@ -1,4 +1,7 @@
-﻿namespace CombSim
+﻿using CombSim.Characters;
+using CombSim.Monsters;
+
+namespace CombSim
 {
     internal class Program
     {
@@ -21,14 +24,11 @@
         private void SetUp()
         {
             _game = new Game(40);
-            var k1 = new Kobold("Kobold1");
-            _game.Add_Creature(k1);
-            var k2 = new Kobold("Kobold2");
-            _game.Add_Creature(k2);
-            var g1 = new Goblin("Goblin1");
-            _game.Add_Creature(g1);
-            var g2 = new Goblin("Goblin2");
-            _game.Add_Creature(g2);
+            for (int i = 0; i < 6; i++)
+            {
+                var s1 = new Skeleton($"Skeleton{i}");
+                _game.Add_Creature(s1);
+            }
             var f = new Fighter("Frank");
             _game.Add_Creature(f);
         }
