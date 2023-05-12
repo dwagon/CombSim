@@ -141,7 +141,6 @@ namespace CombSim
         {
             _arena.Clear(_locations[creature]);
             _locations.Remove(creature);
-            _combatants.Remove(creature);
         }
 
         // Can creatures move into this {location}

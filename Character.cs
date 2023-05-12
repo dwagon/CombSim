@@ -29,7 +29,6 @@ namespace CombSim
             if (Conditions.HasCondition(ConditionEnum.Unconscious) && !Conditions.HasCondition(ConditionEnum.Stable))
             {
                 int roll = Dice.RollD20();
-                Console.WriteLine($"Death Save {roll}");
                 
                 if (roll == 1) _deathSavesBad += 2;
                 else if (roll <= 10) _deathSavesBad++;
@@ -43,8 +42,6 @@ namespace CombSim
                 
                 if (_deathSavesBad >= 3) Died();
                 if (_deathSavesGood >= 3) Conditions.SetCondition(ConditionEnum.Stable);
-                
-                Console.WriteLine($"DeathSave Good={_deathSavesGood} Bad={_deathSavesBad}");
             }
         }
     }

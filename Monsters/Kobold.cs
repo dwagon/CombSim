@@ -1,4 +1,4 @@
-namespace CombSim
+namespace CombSim.Monsters
 {
     public class Kobold : Monster
     {

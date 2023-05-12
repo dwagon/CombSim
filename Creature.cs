@@ -20,6 +20,9 @@ namespace CombSim
         public EventHandler<OnAttackedEventArgs> OnAttacked;
         public int ProficiencyBonus = 2;
         protected string Repr;
+        protected List<DamageTypeEnums> Vulnerable;
+        protected List<DamageTypeEnums> Resistant;
+        protected List<DamageTypeEnums> Immune;
 
         protected Creature(string name, string team = "")
         {
@@ -31,6 +34,9 @@ namespace CombSim
             _equipment = new List<Equipment>();
             _actions = new List<Action>();
             _actionsThisTurn = new HashSet<ActionCategory>();
+            Vulnerable = new List<DamageTypeEnums>();
+            Resistant = new List<DamageTypeEnums>();
+            Immune = new List<DamageTypeEnums>();
         }
 
         public string Name { get; protected set; }
@@ -95,9 +101,28 @@ namespace CombSim
             }
 
             var dmg = e.DmgRoll.Roll(e.CriticalHit);
+            dmg = ModifyDamageForVulnerabilityOrResistance(dmg);
             e.AttackMessage.Result = $"Hit for {dmg}";
             NarrationLog.LogMessage(e.AttackMessage.ToString());
             TakeDamage(dmg);
+        }
+
+        private Damage ModifyDamageForVulnerabilityOrResistance(Damage dmg)
+        {
+            if (Vulnerable.Contains(dmg.type))
+            {
+                dmg *= 2;
+            }
+            else if (Resistant.Contains(dmg.type))
+            {
+                dmg /= 2;
+            }
+            else if (Immune.Contains(dmg.type))
+            {
+                dmg = new Damage(0, dmg.type);
+            }
+
+            return dmg;
         }
 
         public void SetGame(Game gameGame)
@@ -191,6 +216,7 @@ namespace CombSim
             {
                 return;
             }
+
             action.DoAction(this);
             _actionsThisTurn.Remove(action.Category);
         }
@@ -210,7 +236,6 @@ namespace CombSim
             {
                 int heuristic = action.GetHeuristic(this) + rnd.Next() % 2;
                 sortableActions.Add((heuristic, action));
-                Console.WriteLine($"// {Name}: Actions = {action.Name()} {heuristic}");
             }
 
             sortableActions.Sort((x, y) => x.Item1.CompareTo(y.Item1));
@@ -236,7 +261,7 @@ namespace CombSim
 
         protected virtual void StartTurn()
         {
-            if(!Conditions.HasCondition(ConditionEnum.Ok)) return;
+            if (!Conditions.HasCondition(ConditionEnum.Ok)) return;
             _moves = _speed;
             _actionsThisTurn.Add(ActionCategory.Action);
             _actionsThisTurn.Add(ActionCategory.Bonus);
