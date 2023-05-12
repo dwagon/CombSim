@@ -170,15 +170,14 @@ namespace CombSim
 
         public void TakeTurn()
         {
-            if (!Conditions.HasCondition(ConditionEnum.Ok))
-                return;
             StartTurn();
-            var action = PickActionToDo(ActionCategory.Bonus);
-            if (action != null) PerformAction(action);
-            action = PickActionToDo(ActionCategory.Action);
-            if (action != null) PerformAction(action);
-            action = PickActionToDo(ActionCategory.Bonus);
-            if (action != null) PerformAction(action);
+            if (IsAlive())
+            {
+                PerformAction(PickActionToDo(ActionCategory.Bonus));
+                PerformAction(PickActionToDo(ActionCategory.Action));
+                PerformAction(PickActionToDo(ActionCategory.Bonus));
+            }
+
             EndTurn();
         }
 
@@ -188,7 +187,12 @@ namespace CombSim
 
         private void PerformAction(IAction action)
         {
+            if (action is null)
+            {
+                return;
+            }
             action.DoAction(this);
+            _actionsThisTurn.Remove(action.Category);
         }
 
         private IAction PickActionToDo(ActionCategory actionCategory)
@@ -226,11 +230,13 @@ namespace CombSim
         // Called when we have died
         protected void Died()
         {
+            NarrationLog.LogMessage($"{Name} has died");
             Game.Remove(this);
         }
 
-        private void StartTurn()
+        protected virtual void StartTurn()
         {
+            if(!Conditions.HasCondition(ConditionEnum.Ok)) return;
             _moves = _speed;
             _actionsThisTurn.Add(ActionCategory.Action);
             _actionsThisTurn.Add(ActionCategory.Bonus);

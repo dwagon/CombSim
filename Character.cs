@@ -1,3 +1,5 @@
+using System;
+
 namespace CombSim
 {
     public class Character : Creature
@@ -6,7 +8,7 @@ namespace CombSim
         private int _deathSavesGood;
         private int _deathSavesBad;
 
-        public Character(string name, string team = "Characters") : base(name, team)
+        protected Character(string name, string team = "Characters") : base(name, team)
         {
             _deathSavesGood = 0;
             _deathSavesBad = 0;

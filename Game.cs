@@ -72,7 +72,10 @@ namespace CombSim
         private void TakeTurn()
         {
             Console.WriteLine("\n#####################################################");
-            foreach (var creature in _initiativeOrder) creature.TakeTurn();
+            foreach (var creature in _initiativeOrder)
+            {
+                creature.TakeTurn();
+            }
             Console.WriteLine(_arena.ToString());
             foreach (var creature in _combatants) Console.WriteLine(creature.ToString());
         }
@@ -138,6 +141,7 @@ namespace CombSim
         {
             _arena.Clear(_locations[creature]);
             _locations.Remove(creature);
+            _combatants.Remove(creature);
         }
 
         // Can creatures move into this {location}
