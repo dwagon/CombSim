@@ -48,8 +48,9 @@ namespace CombSim
 
         public void RunGame()
         {
-            Console.WriteLine(_arena);
-            while (!IsEndOfGame()) TakeTurn();
+            int turn = 0;
+            Console.WriteLine(_arena.ToString());
+            while (!IsEndOfGame() && turn < 30) TakeTurn(turn++);
         }
 
         private bool IsEndOfGame()
@@ -69,9 +70,9 @@ namespace CombSim
             return numSides <= 1;
         }
 
-        private void TakeTurn()
+        private void TakeTurn(int turn)
         {
-            Console.WriteLine("\n#####################################################");
+            Console.WriteLine($"\n# {turn} ####################################################");
             foreach (var creature in _initiativeOrder)
             {
                 creature.TakeTurn();

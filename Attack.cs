@@ -34,13 +34,23 @@ namespace CombSim
 
             return roll;
         }
+        
+        // Overwrite if the attack has a side effect
+        protected virtual void SideEffect(Creature target)
+        { }
 
         protected void DoAttack(Creature actor, Creature target, bool hasAdvantage = false,
             bool hasDisadvantage = false, int attackBonus = 0, int damageBonus = 0)
         {
+            if (target.HasCondition(ConditionEnum.Paralyzed) && actor.DistanceTo(target) < 2) hasAdvantage = true;
+            
             var roll = RollToHit(out var criticalHit, out var criticalMiss, hasAdvantage: hasAdvantage,
                 hasDisadvantage: hasDisadvantage);
             var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name(), roll: roll, mods: attackBonus);
+            if (target.HasCondition(ConditionEnum.Paralyzed) && actor.DistanceTo(target) < 2)
+            {
+                criticalHit = true;
+            }
             
             target.OnAttacked?.Invoke(this, new Creature.OnAttackedEventArgs
             {
@@ -50,7 +60,8 @@ namespace CombSim
                 DmgRoll = _dmgRoll + damageBonus,
                 CriticalHit = criticalHit,
                 CriticalMiss = criticalMiss,
-                AttackMessage = attackMessage
+                AttackMessage = attackMessage,
+                OnHitSideEffect = SideEffect
             });
         }
     }

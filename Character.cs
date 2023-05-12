@@ -1,5 +1,3 @@
-using System;
-
 namespace CombSim
 {
     public class Character : Creature
@@ -24,9 +22,9 @@ namespace CombSim
             _deathSavesGood = 0;
         }
 
-        protected override void StartTurn()
+        protected override void TurnStart()
         {
-            base.StartTurn();
+            base.TurnStart();
 
             if (Conditions.HasCondition(ConditionEnum.Unconscious) && !Conditions.HasCondition(ConditionEnum.Stable))
             {

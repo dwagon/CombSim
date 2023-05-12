@@ -6,16 +6,16 @@ namespace CombSim
     {
         private readonly int _reach;
 
-        public MeleeAttack(string name, DamageRoll damageRoll, int reach) : base(name, damageRoll)
+        public MeleeAttack(string name, DamageRoll damageRoll, int reach=1) : base(name, damageRoll)
         {
             _reach = reach;
         }
 
         public override int GetHeuristic(Creature actor)
         {
-            var enemy = actor.Game.PickClosestEnemy(actor);
+            var enemy = actor.PickClosestEnemy();
             if (enemy == null) return 0;
-            if (actor.Game.DistanceTo(actor, enemy) <= 2)
+            if (actor.DistanceTo(enemy) <= 2)
             {
                 return 4;
             }
@@ -25,9 +25,9 @@ namespace CombSim
 
         public new bool DoAction(Creature actor)
         {
-            var enemy = actor.Game.PickClosestEnemy(actor);
+            var enemy = actor.PickClosestEnemy();
             if (enemy == null) return false;
-            while (actor.Game.DistanceTo(actor, enemy) > _reach)
+            while (actor.DistanceTo(enemy) > _reach)
                 if (!actor.MoveTowards(enemy))
                     break;
             Console.WriteLine($"// {actor.Name} Now at {actor.Game.GetLocation(actor)}");

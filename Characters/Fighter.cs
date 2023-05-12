@@ -15,7 +15,7 @@ namespace CombSim.Characters
             Stats.Add(StatEnum.Wisdom, new Stat(13));
             Stats.Add(StatEnum.Charisma, new Stat(9));
             AddEquipment(Gear.Mace);
-            AddEquipment(Gear.Plate);
+            // AddEquipment(Gear.Plate);
             AddEquipment(Gear.Shield);
             AddAction(new SecondWind());
         }

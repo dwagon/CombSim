@@ -18,11 +18,14 @@ namespace CombSim
         protected int HitPoints;
         protected int MaxHitPoints;
         public EventHandler<OnAttackedEventArgs> OnAttacked;
+        public EventHandler<OnTurnEndEventArgs> OnTurnEnd;
+        public EventHandler<OnTurnStartEventArgs> OnTurnStart;
         public int ProficiencyBonus = 2;
         protected string Repr;
         protected List<DamageTypeEnums> Vulnerable;
         protected List<DamageTypeEnums> Resistant;
         protected List<DamageTypeEnums> Immune;
+        protected Effects Effects;
 
         protected Creature(string name, string team = "")
         {
@@ -31,6 +34,7 @@ namespace CombSim
             _speed = 6;
             Stats = new Dictionary<StatEnum, Stat>();
             Conditions = new Conditions();
+            Effects = new Effects();
             _equipment = new List<Equipment>();
             _actions = new List<Action>();
             _actionsThisTurn = new HashSet<ActionCategory>();
@@ -110,11 +114,21 @@ namespace CombSim
                 return;
             }
 
-            var dmg = e.DmgRoll.Roll(e.CriticalHit);
+            Damage dmg;
+            if (e.CriticalHit)
+            {
+                dmg = e.DmgRoll.Roll(max: true) + e.DmgRoll.Roll();
+            }
+            else
+            {
+                dmg = e.DmgRoll.Roll();
+            }
+
             dmg = ModifyDamageForVulnerabilityOrResistance(dmg);
             e.AttackMessage.Result = $"Hit for {dmg}";
             NarrationLog.LogMessage(e.AttackMessage.ToString());
             TakeDamage(dmg);
+            e.OnHitSideEffect(this);
         }
 
         private Damage ModifyDamageForVulnerabilityOrResistance(Damage dmg)
@@ -133,6 +147,16 @@ namespace CombSim
             }
 
             return dmg;
+        }
+
+        public bool HasCondition(ConditionEnum condition)
+        {
+            return Conditions.HasCondition(condition);
+        }
+
+        public void AddCondition(ConditionEnum condition)
+        {
+            Conditions.SetCondition(condition);
         }
 
         public void SetGame(Game gameGame)
@@ -189,7 +213,7 @@ namespace CombSim
 
         public new string ToString()
         {
-            return $"{Name} HP: {HitPoints}/{MaxHitPoints} {Conditions}";
+            return $"{Name} HP: {HitPoints}/{MaxHitPoints} {Conditions} {Effects}";
         }
 
         // Return all the possible actions
@@ -234,21 +258,34 @@ namespace CombSim
             return hitpoints;
         }
 
+        public Creature PickClosestEnemy()
+        {
+            return Game.PickClosestEnemy(this);
+        }
+
+        public float DistanceTo(Creature enemy)
+        {
+            return Game.DistanceTo(this, enemy);
+        }
+
         public void TakeTurn()
         {
-            StartTurn();
+            TurnStart();
             if (IsAlive())
             {
                 PerformAction(PickActionToDo(ActionCategory.Bonus));
                 PerformAction(PickActionToDo(ActionCategory.Action));
                 PerformAction(PickActionToDo(ActionCategory.Bonus));
             }
-
-            EndTurn();
+            TurnEnd();
         }
 
-        private void EndTurn()
+        private void TurnEnd()
         {
+            OnTurnEnd?.Invoke(this, new OnTurnEndEventArgs
+            {
+                Creature = this
+            });
         }
 
         private void PerformAction(IAction action)
@@ -264,14 +301,10 @@ namespace CombSim
 
         private IAction PickActionToDo(ActionCategory actionCategory)
         {
-            var rnd = new Random();
-
             if (!_actionsThisTurn.Contains(actionCategory)) return null;
 
             var sortableActions = new List<(int heuristic, IAction action)>();
             var possibleActions = PossibleActions(actionCategory);
-            // if (possibleActions.Count == 0)
-            //     return null;
 
             foreach (var action in possibleActions)
             {
@@ -295,6 +328,24 @@ namespace CombSim
         {
         }
 
+        public bool MakeSavingThrow(StatEnum stat, int dc)
+        {
+            Console.Write($"// {Name} does {stat} saving vs DC {dc} - ");
+            if (HasCondition(ConditionEnum.Paralyzed))
+            {
+                if (stat == StatEnum.Strength || stat == StatEnum.Dexterity) return false;
+            }
+
+            var roll = Stats[stat].Roll();
+            if (roll > dc)
+            {
+                Console.WriteLine($"{roll} Success");
+                return true;
+            }
+            Console.WriteLine($"{roll} Failure");
+            return false;
+        }
+
         // Called when we have died
         protected void Died()
         {
@@ -302,14 +353,30 @@ namespace CombSim
             Game.Remove(this);
         }
 
-        protected virtual void StartTurn()
+        protected virtual void TurnStart()
         {
+            OnTurnStart?.Invoke(this, new OnTurnStartEventArgs
+            {
+                Creature = this
+            });
             if (!Conditions.HasCondition(ConditionEnum.Ok)) return;
+            if (Conditions.HasCondition(ConditionEnum.Paralyzed)) return;
             _moves = _speed;
             _actionsThisTurn.Add(ActionCategory.Action);
             _actionsThisTurn.Add(ActionCategory.Bonus);
-            _actionsThisTurn.Add(ActionCategory.Move);
             _actionsThisTurn.Add(ActionCategory.Reaction);
+        }
+
+        public void AddEffect(Effect effect)
+        {
+            Effects.Add(effect);
+            effect.Start(this);
+        }
+
+        public void RemoveEffect(Effect effect)
+        {
+            Effects.Remove(effect);
+            effect.End(this);
         }
 
         public class OnAttackedEventArgs : EventArgs
@@ -321,6 +388,17 @@ namespace CombSim
             public Creature Source;
             public int ToHit;
             public AttackMessage AttackMessage;
+            public Action<Creature> OnHitSideEffect;
+        }
+
+        public class OnTurnEndEventArgs : EventArgs
+        {
+            public Creature Creature;
+        }
+
+        public class OnTurnStartEventArgs : EventArgs
+        {
+            public Creature Creature;
         }
     }
 }
