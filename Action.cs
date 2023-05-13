@@ -42,5 +42,24 @@ namespace CombSim
         {
             return false;
         }
+        
+        protected int RollToHit(out bool criticalHit, out bool criticalMiss, bool hasAdvantage = false,
+            bool hasDisadvantage = false)
+        {
+            criticalMiss = false;
+            criticalHit = false;
+            var roll = Dice.RollD20(hasAdvantage, hasDisadvantage, reason: "To Hit");
+            switch (roll)
+            {
+                case 1:
+                    criticalMiss = true;
+                    break;
+                case 20:
+                    criticalHit = true;
+                    break;
+            }
+
+            return roll;
+        }
     }
 }
