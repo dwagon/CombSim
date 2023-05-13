@@ -5,7 +5,8 @@ namespace CombSim
         Action,
         Bonus,
         Move,
-        Reaction
+        Reaction,
+        Supplemental    // Things like Action Surge which don't actually take up anything
     }
 
     public interface IAction
