@@ -6,6 +6,7 @@ namespace CombSim
 {
     public class Creature
     {
+        private readonly Dictionary<string, Spell> _spells;
         private readonly List<Action> _actions;
         private readonly HashSet<ActionCategory> _actionsThisTurn;
         private readonly List<Equipment> _equipment;
@@ -13,6 +14,7 @@ namespace CombSim
         protected readonly Conditions Conditions;
         public readonly Dictionary<StatEnum, Stat> Stats;
         private int _moves;
+        protected StatEnum SpellCastingAbility;
 
         private int _setArmourClass = -1;
         protected int HitPoints;
@@ -39,6 +41,7 @@ namespace CombSim
             _equipment = new List<Equipment>();
             _actions = new List<Action>();
             _actionsThisTurn = new HashSet<ActionCategory>();
+            _spells = new Dictionary<string, Spell>();
             Vulnerable = new List<DamageTypeEnums>();
             Resistant = new List<DamageTypeEnums>();
             Immune = new List<DamageTypeEnums>();
@@ -71,6 +74,11 @@ namespace CombSim
             HitPoints = MaxHitPoints;
             Conditions.SetCondition(ConditionEnum.Ok);
             OnAttacked += Attacked;
+        }
+
+        public int SpellAttackModifier()
+        {
+            return ProficiencyBonus + Stats[SpellCastingAbility].Bonus();
         }
 
         private int CalcArmourClass()
@@ -149,6 +157,12 @@ namespace CombSim
             }
 
             return dmg;
+        }
+
+        public void AddSpell(Spell spell)
+        {
+            _spells[spell.Name()] = spell;
+            AddAction(spell);
         }
 
         public bool HasCondition(ConditionEnum condition)
