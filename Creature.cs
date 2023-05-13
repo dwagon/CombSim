@@ -369,6 +369,7 @@ namespace CombSim
             _actionsThisTurn.Add(ActionCategory.Action);
             _actionsThisTurn.Add(ActionCategory.Bonus);
             _actionsThisTurn.Add(ActionCategory.Reaction);
+            _actionsThisTurn.Add(ActionCategory.Supplemental);
         }
 
         public void AddEffect(Effect effect)
