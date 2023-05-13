@@ -75,6 +75,12 @@ namespace CombSim.Monsters
                 Console.WriteLine($"// {target} now has ghoul effect");
                 target.AddCondition(ConditionEnum.Paralyzed);
             }
+
+            public override void End(Creature target)
+            {
+                target.RemoveCondition(ConditionEnum.Paralyzed);
+                target.OnTurnEnd -= TurnEnd;
+            }
         }
     }
 }
