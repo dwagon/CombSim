@@ -161,6 +161,11 @@ namespace CombSim
             Conditions.SetCondition(condition);
         }
 
+        public void RemoveCondition(ConditionEnum condition)
+        {
+            Conditions.RemoveCondition(condition);
+        }
+        
         public void SetGame(Game gameGame)
         {
             Game = gameGame;
@@ -223,7 +228,7 @@ namespace CombSim
         {
             var actions = new List<IAction>();
             foreach (var action in _actions)
-                if (action.Category == actionCategory)
+                if (action.Category == actionCategory && _actionsThisTurn.Contains(actionCategory))
                     actions.Add(action);
 
             Console.WriteLine($"// {Name} Possible {actionCategory} Actions: {String.Join(", ", actions)}");
@@ -270,14 +275,22 @@ namespace CombSim
             return Game.DistanceTo(this, enemy);
         }
 
+        public void DoActionCategory(ActionCategory actionCategory, bool force = false)
+        {
+            if (force) _actionsThisTurn.Add(actionCategory);
+            PerformAction(PickActionToDo(actionCategory));
+        }
+
         public void TakeTurn()
         {
+            Console.WriteLine($"// {Name} -----------------------------------------------");
             TurnStart();
             if (IsAlive())
             {
-                PerformAction(PickActionToDo(ActionCategory.Bonus));
-                PerformAction(PickActionToDo(ActionCategory.Action));
-                PerformAction(PickActionToDo(ActionCategory.Bonus));
+                DoActionCategory(ActionCategory.Bonus);
+                DoActionCategory(ActionCategory.Action);
+                DoActionCategory(ActionCategory.Supplemental);
+                DoActionCategory(ActionCategory.Bonus);
             }
             TurnEnd();
         }
@@ -292,10 +305,7 @@ namespace CombSim
 
         private void PerformAction(IAction action)
         {
-            if (action is null)
-            {
-                return;
-            }
+            if (action is null) return;
 
             action.DoAction(this);
             _actionsThisTurn.Remove(action.Category);
@@ -362,10 +372,10 @@ namespace CombSim
             {
                 Creature = this
             });
+            _actionsThisTurn.Clear();
             if (!Conditions.HasCondition(ConditionEnum.Ok)) return;
             if (Conditions.HasCondition(ConditionEnum.Paralyzed)) return;
             _moves = _speed;
-            _actionsThisTurn.Clear();
             _actionsThisTurn.Add(ActionCategory.Action);
             _actionsThisTurn.Add(ActionCategory.Bonus);
             _actionsThisTurn.Add(ActionCategory.Reaction);

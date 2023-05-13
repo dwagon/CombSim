@@ -1,12 +1,20 @@
+using System.Collections.Generic;
+
 namespace CombSim.Characters
 {
     public class Fighter : Character
     {
-        public Fighter(string name, string team = "Fighters") : base(name, team)
+        private readonly Dictionary<int, int> _hitPointsAtLevel = new Dictionary<int, int>()
+        {
+            { 1, 12 }, { 2, 20 }
+        };
+
+        public Fighter(string name, int level = 1, string team = "Fighters") : base(name, team)
         {
             Repr = "F";
-            MaxHitPoints = 12;
-            Level = 1;
+
+            Level = level;
+            MaxHitPoints = _hitPointsAtLevel[level];
 
             Stats.Add(StatEnum.Strength, new Stat(16));
             Stats.Add(StatEnum.Dexterity, new Stat(14));
@@ -15,9 +23,13 @@ namespace CombSim.Characters
             Stats.Add(StatEnum.Wisdom, new Stat(13));
             Stats.Add(StatEnum.Charisma, new Stat(9));
             AddEquipment(Gear.Mace);
-            // AddEquipment(Gear.Plate);
+            AddEquipment(Gear.Plate);
             AddEquipment(Gear.Shield);
             AddAction(new SecondWind());
+            if (level >= 2)
+            {
+                AddAction(new ActionSurge());
+            }
         }
 
         private class SecondWind : Action
@@ -29,8 +41,8 @@ namespace CombSim.Characters
             public override int GetHeuristic(Creature actor)
             {
                 int result;
-        
-                 if (actor.PercentHitPoints() > 50)
+
+                if (actor.PercentHitPoints() > 50)
                 {
                     result = 0;
                 }
@@ -49,6 +61,30 @@ namespace CombSim.Characters
                 NarrationLog.LogMessage($"{actor.Name} uses Second Wind to cure themselves {cured} HP");
                 actor.RemoveAction(this);
                 return true;
+            }
+        }
+
+        private class ActionSurge : Action
+        {
+            public ActionSurge() : base("Action Surge", ActionCategory.Supplemental)
+            {
+            }
+
+            public override int GetHeuristic(Creature actor)
+            {
+                // Only invoke it if we are next to an enemy
+                var enemy = actor.PickClosestEnemy();
+                if (actor.DistanceTo(enemy) < 2)
+                    return 1;
+                return 0;
+            }
+
+            public override bool DoAction(Creature actor)
+            {
+                NarrationLog.LogMessage($"{actor.Name} uses Action Surge");
+                actor.DoActionCategory(ActionCategory.Action, force:true);
+                actor.RemoveAction(this);
+                return base.DoAction(actor);
             }
         }
     }
