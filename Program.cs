@@ -26,15 +26,15 @@ namespace CombSim
 
         private void SetUp()
         {
-            _game = new Game(40);
-            /*for (int i = 0; i < 6; i++)
-            {
-                var s1 = new Skeleton($"Skeleton{i}", "monsters");
-                _game.Add_Creature(s1);
-            }*/
-            _game.Add_Creature(new Ghoul("Ghoul1", "monsters"));
-            var f = new Fighter("Frank");
-            _game.Add_Creature(f);
+            _game = new Game(80);
+            // _game.Add_Creature(new Ghoul("Ghoul1", "monsters"));
+            // _game.Add_Creature(new Ghoul("Ghoul2", "monsters"));
+            _game.Add_Creature(new Zombie("Zombie1", "monsters"));
+            _game.Add_Creature(new Zombie("Zombie2", "monsters"));
+            _game.Add_Creature(new Zombie("Zombie3", "monsters"));
+
+            _game.Add_Creature( new Fighter("Frank", level: 2, "humans"));
+            _game.Add_Creature( new Wizard("Wizard", level: 1, "humans"));
         }
     }
 }

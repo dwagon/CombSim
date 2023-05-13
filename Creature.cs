@@ -321,6 +321,7 @@ namespace CombSim
         {
             if (action is null) return;
 
+            Console.WriteLine($"// {Name} doing {action.Name()}");
             action.DoAction(this);
             _actionsThisTurn.Remove(action.Category);
         }
