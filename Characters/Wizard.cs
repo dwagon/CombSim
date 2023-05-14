@@ -37,6 +37,17 @@ namespace CombSim.Characters
             AddSpell(new Spells.MagicMissile());
         }
 
+        public override string ToString()
+        {
+            var baseString = base.ToString();
+            var spellString = "Spells: ";
+            foreach (var kvp in _spellsAtLevel[Level])
+            {
+                spellString += $"L{kvp.Key} = {kvp.Value}; ";
+            }
+            return baseString + spellString;
+        }
+
         public override bool CanCastSpell(Spell spell)
         {
             Console.WriteLine($"// CanCastSpell(spell={spell.Name()})");
