@@ -8,11 +8,6 @@ namespace CombSim.Spells
             _dmgRoll = new DamageRoll("1d8", DamageTypeEnums.Cold);
         }
 
-        protected override void SideEffect(Creature target)
-        {
-            
-        }
-        
         public override int GetHeuristic(Creature actor)
         {
             return 3;
