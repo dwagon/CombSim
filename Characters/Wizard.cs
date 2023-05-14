@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace CombSim.Characters
@@ -7,6 +8,12 @@ namespace CombSim.Characters
         private readonly Dictionary<int, int> _hitPointsAtLevel = new Dictionary<int, int>()
         {
             { 1, 8 }, { 2, 12 }
+        };
+        
+        // CasterLevel: <SpellLevel: NumberOfSlots>
+        private readonly Dictionary<int, Dictionary<int, int>> _spellsAtLevel = new Dictionary<int, Dictionary<int, int>>()
+        {
+            {1, new Dictionary<int, int>() {{1, 2}}},
         };
 
         public Wizard(string name, int level = 1, string team = "Wizards") : base(name, team)
@@ -27,6 +34,21 @@ namespace CombSim.Characters
             // AddEquipment(Gear.LightCrossbow);
 
             AddSpell(new Spells.RayOfFrost());
+            AddSpell(new Spells.MagicMissile());
+        }
+
+        public override bool CanCastSpell(Spell spell)
+        {
+            Console.WriteLine($"// CanCastSpell(spell={spell.Name()})");
+            if (spell.Level == 0) return true;
+            if (_spellsAtLevel[Level][spell.Level] >= 1) return true;
+            return false;
+        }
+
+        public override void DoCastSpell(Spell spell)
+        {
+            if (spell.Level == 0) return;
+            _spellsAtLevel[Level][spell.Level]--;
         }
     }
 }

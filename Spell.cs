@@ -5,15 +5,24 @@ namespace CombSim
     public class Spell : Action
     {
         protected int _reach;
+        public int Level;
         protected DamageRoll _dmgRoll;
 
         public Spell(string name, int level, ActionCategory actionCategory) : base(name, actionCategory)
         {
+            Level = level;
         }
         
         // Overwrite if the attack has a side effect
         protected virtual void SideEffect(Creature target)
         { }
+
+        // Check to make sure we can cast this spell
+        public override bool DoAction(Creature actor)
+        {
+            actor.DoCastSpell(this);
+            return true;
+        }
     }
 
     public class ToHitSpell : Spell
@@ -24,6 +33,7 @@ namespace CombSim
 
         public override bool DoAction(Creature actor)
         {
+            if (!actor.CanCastSpell(this)) return false;
             var enemy = actor.PickClosestEnemy();
             var oldLocation = actor.GetLocation();
             if (enemy == null) return false;
@@ -34,6 +44,7 @@ namespace CombSim
 
             if (actor.Game.DistanceTo(actor, enemy) <= _reach)
             {
+                actor.DoCastSpell(this);
                 DoAttack(actor, enemy);
                 return true;
             }

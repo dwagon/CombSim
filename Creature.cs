@@ -140,7 +140,17 @@ namespace CombSim
             TakeDamage(dmg);
             e.OnHitSideEffect(this);
         }
+        
+        public virtual bool CanCastSpell(Spell spell)
+        {
+            throw new NotImplementedException();
+        }
 
+        public virtual void DoCastSpell(Spell spell)
+        {
+            throw new NotImplementedException();
+        }
+        
         private Damage ModifyDamageForVulnerabilityOrResistance(Damage dmg)
         {
             if (Vulnerable.Contains(dmg.type))
@@ -378,6 +388,8 @@ namespace CombSim
         protected void Died()
         {
             NarrationLog.LogMessage($"{Name} has died");
+            Conditions.RemoveAllConditions();
+            Conditions.SetCondition(ConditionEnum.Dead);
             Game.Remove(this);
         }
 
