@@ -50,6 +50,8 @@ namespace CombSim
         {
             int turn = 0;
             Console.WriteLine(_arena.ToString());
+            foreach (var creature in _combatants) Console.WriteLine(creature.ToString());
+            
             while (!IsEndOfGame() && turn < 30) TakeTurn(turn++);
         }
 
@@ -140,8 +142,15 @@ namespace CombSim
         // {creature} no longer exists (i.e. died), remove them from the game
         public void Remove(Creature creature)
         {
-            _arena.Clear(_locations[creature]);
-            _locations.Remove(creature);
+            try
+            {
+                _arena.Clear(_locations[creature]);
+                _locations.Remove(creature);
+            }
+            catch (KeyNotFoundException e)
+            {
+                // Ignore as the same creature can "die" multiple times - e.g Scorching Ray where it is near death
+            }
         }
 
         // Can creatures move into this {location}

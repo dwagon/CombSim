@@ -11,7 +11,7 @@ namespace CombSim.Spells
 
         public override int GetHeuristic(Creature actor)
         {
-            if(actor.CanCastSpell(this)) return 7;
+            if(actor.CanCastSpell(this)) return 3;
             return 0;
         }
 
