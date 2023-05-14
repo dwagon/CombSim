@@ -39,13 +39,20 @@ namespace CombSim
 
         public new string ToString()
         {
-            string rollMsg = $"{Roll}";
-            if (Mods != 0)
-            {
-                rollMsg += $" + {Mods}";
+            string rollMsg = "";
+            if (Roll != 0)
+            { 
+                rollMsg = $", rolls {Roll}";
+                if (Mods != 0)
+                {
+                    rollMsg += $" + {Mods}";
+                }
+
+                rollMsg += $" = {Roll+Mods}";
             }
+
             string message =
-                $"{Attacker} attacked {Victim} with {AttackName}, rolls {rollMsg} = {Roll+Mods}: {Result}";
+                $"{Attacker} attacked {Victim} with {AttackName}{rollMsg}: {Result}";
             return message;
         }
     }
