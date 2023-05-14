@@ -2,21 +2,18 @@ namespace CombSim
 {
     public class DamageRoll
     {
-        private readonly int _bonus;
         private readonly string _roll;
         private readonly DamageTypeEnums _type;
 
         public DamageRoll(string roll, int bonus, DamageTypeEnums type)
         {
             _roll = roll;
-            _bonus = bonus;
             _type = type;
         }
         
         public DamageRoll(string roll, DamageTypeEnums type)
         {
             _roll = roll;
-            _bonus = 0;
             _type = type;
         }
 
@@ -24,13 +21,12 @@ namespace CombSim
         {
             var dmg = 0;
             dmg += Dice.Roll(_roll, max);
-            dmg += _bonus;
             return new Damage(dmg, _type);
         }
 
         public static DamageRoll operator +(DamageRoll dmgRoll, int bonus)
         {
-            return new DamageRoll(dmgRoll._roll, dmgRoll._bonus + bonus, dmgRoll._type);
+            return new DamageRoll(dmgRoll._roll, dmgRoll._type);
         }
     }
 }

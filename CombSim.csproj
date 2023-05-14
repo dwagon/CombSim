@@ -44,6 +44,7 @@
         <Compile Include="Attack.cs" />
         <Compile Include="Character.cs" />
         <Compile Include="Characters\Fighter.cs" />
+        <Compile Include="Characters\Wizard.cs" />
         <Compile Include="Conditions.cs" />
         <Compile Include="Creature.cs" />
         <Compile Include="Damage.cs" />
@@ -67,6 +68,9 @@
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="RangedAttack.cs" />
+        <Compile Include="Spell.cs" />
+        <Compile Include="Spells\MagicMissile.cs" />
+        <Compile Include="Spells\RayOfFrost.cs" />
         <Compile Include="Stat.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

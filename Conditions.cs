@@ -47,5 +47,11 @@ namespace CombSim
         {
             return string.Join(", ", _conditions);
         }
+
+        // Sometimes (e.g. death) you need to remove all conditions
+        public void RemoveAllConditions()
+        {
+            _conditions.Clear();
+        }
     }
 }
