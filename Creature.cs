@@ -242,7 +242,7 @@ namespace CombSim
             return Game.GetLocation(this);
         }
 
-        public new string ToString()
+        public virtual new string ToString()
         {
             return $"{Name} HP: {HitPoints}/{MaxHitPoints} {Conditions} {Effects}";
         }

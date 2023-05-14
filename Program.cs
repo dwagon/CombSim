@@ -34,7 +34,7 @@ namespace CombSim
             _game.Add_Creature(new Zombie("Zombie3", "monsters"));
 
             _game.Add_Creature( new Fighter("Frank", level: 2, "humans"));
-            _game.Add_Creature( new Wizard("Wizard", level: 1, "humans"));
+            _game.Add_Creature( new Wizard("Wizard", level: 3, "humans"));
         }
     }
 }
