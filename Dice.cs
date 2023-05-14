@@ -22,7 +22,7 @@ namespace CombSim
                 if (max)
                     result += int.Parse(match.Groups["sides"].Value);
                 else
-                    result += rnd.Next(1, int.Parse(match.Groups["sides"].Value));
+                    result += rnd.Next(1, 1 + int.Parse(match.Groups["sides"].Value)); // End is exclusive, hence +1
 
             if (match.Groups["sign"].Length > 0)
             {
