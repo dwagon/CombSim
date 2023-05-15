@@ -147,7 +147,7 @@ namespace CombSim
                 _arena.Clear(_locations[creature]);
                 _locations.Remove(creature);
             }
-            catch (KeyNotFoundException e)
+            catch (KeyNotFoundException)
             {
                 // Ignore as the same creature can "die" multiple times - e.g Scorching Ray where it is near death
             }

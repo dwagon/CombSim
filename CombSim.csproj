@@ -70,6 +70,7 @@
         <Compile Include="RangedAttack.cs" />
         <Compile Include="Spell.cs" />
         <Compile Include="Spells\MagicMissile.cs" />
+        <Compile Include="Spells\PoisonSpray.cs" />
         <Compile Include="Spells\RayOfFrost.cs" />
         <Compile Include="Spells\ScorchingRay.cs" />
         <Compile Include="Stat.cs" />
