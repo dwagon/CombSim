@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
 namespace CombSim
 {
@@ -63,6 +62,7 @@ namespace CombSim
             return MaxHitPoints - HitPoints;
         }
 
+        // What percentage of maximum hit points does the creature have
         public int PercentHitPoints()
         {
             return (int)(100 * ((float)HitPoints / MaxHitPoints));
@@ -205,7 +205,7 @@ namespace CombSim
             return dmg;
         }
 
-        public void AddSpell(Spell spell)
+        protected void AddSpell(Spell spell)
         {
             _spells[spell.Name()] = spell;
             AddAction(spell);
@@ -291,7 +291,12 @@ namespace CombSim
                 if (action.Category == actionCategory && _actionsThisTurn.Contains(actionCategory))
                     actions.Add(action);
 
-            Console.WriteLine($"// {Name} Possible {actionCategory} Actions: {String.Join(", ", actions)}");
+            string actionList = "";
+            foreach (var action in actions)
+            {
+                actionList += action.Name() + "; ";
+            }
+            Console.WriteLine($"// {Name} Possible {actionCategory} Actions: {actionList}");
             return actions;
         }
 
@@ -472,7 +477,7 @@ namespace CombSim
             public DamageRoll DmgRollSaved;
             public Creature Source;
             public int ToHit;
-            public (StatEnum, int) DC;
+            public (StatEnum, int) Dc;
             public AttackMessage AttackMessage; 
             public Action<Creature> OnHitSideEffect;
         }
