@@ -39,6 +39,7 @@ namespace CombSim.Characters
 
             AddSpell(new RayOfFrost());
             AddSpell(new MagicMissile());
+            AddSpell(new PoisonSpray());
             if (Level >= 3)
             {
                 AddSpell(new ScorchingRay());

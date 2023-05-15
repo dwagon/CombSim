@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace CombSim
 {
@@ -81,6 +82,11 @@ namespace CombSim
             return ProficiencyBonus + Stats[SpellCastingAbility].Bonus();
         }
 
+        public int SpellSaveDC()
+        {
+            return 8 + SpellAttackModifier();
+        }
+
         private int CalcArmourClass()
         {
             if (_setArmourClass >= 0) return _setArmourClass;
@@ -115,16 +121,37 @@ namespace CombSim
             return tmpAc;
         }
 
-        private void Attacked(object sender, OnAttackedEventArgs e)
+        // Attack that is a DC challenge
+        private Damage DcAttack(object sender, OnAttackedEventArgs e)
         {
+            Damage dmg;
+
+            bool save = MakeSavingThrow(e.DC.Item1, e.DC.Item2);
+            if (save)
+            {
+                dmg = e.DmgRollSaved.Roll();
+                e.AttackMessage.Result = $"Saved for {dmg}";
+            }
+            else
+            {
+                dmg = e.DmgRoll.Roll();
+                e.AttackMessage.Result = $"Failed save for {dmg}";
+            }
+
+            return dmg;
+        }
+
+        // Attack that is a To Hit challenge
+        private Damage ToHitAttack(object sender, OnAttackedEventArgs e)
+        {
+            Damage dmg;
+
             if (e.CriticalMiss || e.ToHit <= ArmourClass)
             {
                 e.AttackMessage.Result = "Miss";
                 NarrationLog.LogMessage(e.AttackMessage.ToString());
-                return;
+                return null;
             }
-
-            Damage dmg;
             if (e.CriticalHit)
             {
                 dmg = e.DmgRoll.Roll(max: true) + e.DmgRoll.Roll();
@@ -133,9 +160,25 @@ namespace CombSim
             {
                 dmg = e.DmgRoll.Roll();
             }
-
             dmg = ModifyDamageForVulnerabilityOrResistance(dmg);
             e.AttackMessage.Result = $"Hit for {dmg}";
+            return dmg;
+        }
+
+        private void Attacked(object sender, OnAttackedEventArgs e)
+        {
+            Damage dmg;
+            
+            if (e.DC.Item2 != 0)
+            {
+                dmg = DcAttack(sender, e);
+            }
+            else
+            {
+                dmg = ToHitAttack(sender, e);
+            }
+            if (dmg is null) return;
+
             NarrationLog.LogMessage(e.AttackMessage.ToString());
             TakeDamage(dmg);
             e.OnHitSideEffect(this);
@@ -387,7 +430,7 @@ namespace CombSim
         // Called when we have died
         protected void Died()
         {
-            NarrationLog.LogMessage($"{Name} has died");
+            if(!HasCondition(ConditionEnum.Dead)) NarrationLog.LogMessage($"{Name} has died");
             Conditions.RemoveAllConditions();
             Conditions.SetCondition(ConditionEnum.Dead);
             Game.Remove(this);
@@ -427,9 +470,11 @@ namespace CombSim
             public bool CriticalHit;
             public bool CriticalMiss;
             public DamageRoll DmgRoll;
+            public DamageRoll DmgRollSaved;
             public Creature Source;
             public int ToHit;
-            public AttackMessage AttackMessage;
+            public (StatEnum, int) DC;
+            public AttackMessage AttackMessage; 
             public Action<Creature> OnHitSideEffect;
         }
 

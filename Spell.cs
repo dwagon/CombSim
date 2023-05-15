@@ -16,20 +16,7 @@ namespace CombSim
         // Overwrite if the attack has a side effect
         protected virtual void SideEffect(Creature target)
         { }
-
-        // Check to make sure we can cast this spell
-        public override bool DoAction(Creature actor)
-        {
-            actor.DoCastSpell(this);
-            return true;
-        }
-    }
-
-    public class ToHitSpell : Spell
-    {
-        public ToHitSpell(string name, int level, ActionCategory actionCategory) : base(name, level, actionCategory)
-        {
-        }
+        
 
         public override bool DoAction(Creature actor)
         {
@@ -52,7 +39,20 @@ namespace CombSim
             return false;
         }
 
-        protected void DoAttack(Creature actor, Creature target, bool hasAdvantage = false,
+        protected virtual void DoAttack(Creature actor, Creature target, bool hasAdvantage = false,
+            bool hasDisadvantage = false)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class ToHitSpell : Spell
+    {
+        public ToHitSpell(string name, int level, ActionCategory actionCategory) : base(name, level, actionCategory)
+        {
+        }
+
+        protected override void DoAttack(Creature actor, Creature target, bool hasAdvantage = false,
             bool hasDisadvantage = false)
         {
             if (target.HasCondition(ConditionEnum.Paralyzed) && actor.DistanceTo(target) < 2) hasAdvantage = true;
@@ -75,11 +75,30 @@ namespace CombSim
         }
     }
     
-    /*
-    public class DcSaveSpell: Spell {
+    public class DcSaveSpell: Spell
+    {
+        protected DamageRoll _dmgRollSaved;
+        
         public DcSaveSpell(string name, int level, ActionCategory actionCategory) : base(name, level, actionCategory)
         {
         }
+
+        protected override void DoAttack(Creature actor, Creature target, bool hasAdvantage = false, bool hasDisadvantage = false)
+        {
+            var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name());
+            
+            target.OnAttacked?.Invoke(this, new Creature.OnAttackedEventArgs
+            {
+                Source = actor,
+                Action = this,
+                DC = (StatEnum.Constitution, actor.SpellSaveDC()),
+                DmgRoll = _dmgRoll,
+                DmgRollSaved = _dmgRollSaved,
+                CriticalHit = false,
+                CriticalMiss = false,
+                AttackMessage = attackMessage,
+                OnHitSideEffect = SideEffect
+            });
+        }
     }
-    */
 }

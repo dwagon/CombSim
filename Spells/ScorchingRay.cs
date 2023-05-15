@@ -18,7 +18,6 @@ namespace CombSim.Spells
         public override bool DoAction(Creature actor)
         {
             var numMissiles = 3;
-            var hasCast = false;
 
             var enemy = actor.PickClosestEnemy();
             var oldLocation = actor.GetLocation();
