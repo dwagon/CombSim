@@ -1,3 +1,5 @@
+using CombSim.Gear;
+
 namespace CombSim.Monsters
 {
     public class Kobold : Monster
@@ -13,8 +15,8 @@ namespace CombSim.Monsters
             Repr = "k";
             ArmourClass = 12;
             HitDice = "2d6-2";
-            AddEquipment(Gear.Dagger);
-            AddEquipment(Gear.Sling);
+            AddEquipment(MeleeWeaponGear.Dagger);
+            AddEquipment(RangedWeaponGear.Sling);
         }
     }
 }

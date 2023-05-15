@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace CombSim
@@ -5,7 +6,7 @@ namespace CombSim
     public class Equipment
     {
         private readonly List<Action> _actions = new List<Action>();
-        private string _name;
+        protected string _name;
 
         public Equipment(string name)
         {
@@ -32,7 +33,7 @@ namespace CombSim
             dmgRoll = dmgroll;
         }
     }
-
+    
     public class MeleeWeapon : Weapon
     {
         private int reach;

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
 namespace CombSim
 {
@@ -63,6 +62,7 @@ namespace CombSim
             return MaxHitPoints - HitPoints;
         }
 
+        // What percentage of maximum hit points does the creature have
         public int PercentHitPoints()
         {
             return (int)(100 * ((float)HitPoints / MaxHitPoints));
@@ -82,7 +82,7 @@ namespace CombSim
             return ProficiencyBonus + Stats[SpellCastingAbility].Bonus();
         }
 
-        public int SpellSaveDC()
+        public int SpellSaveDc()
         {
             return 8 + SpellAttackModifier();
         }
@@ -126,7 +126,7 @@ namespace CombSim
         {
             Damage dmg;
 
-            bool save = MakeSavingThrow(e.DC.Item1, e.DC.Item2);
+            bool save = MakeSavingThrow(e.Dc.Item1, e.Dc.Item2);
             if (save)
             {
                 dmg = e.DmgRollSaved.Roll();
@@ -169,14 +169,7 @@ namespace CombSim
         {
             Damage dmg;
             
-            if (e.DC.Item2 != 0)
-            {
-                dmg = DcAttack(sender, e);
-            }
-            else
-            {
-                dmg = ToHitAttack(sender, e);
-            }
+            dmg = e.Dc.Item2 != 0? DcAttack(sender, e) : ToHitAttack(sender, e);
             if (dmg is null) return;
 
             NarrationLog.LogMessage(e.AttackMessage.ToString());
@@ -212,7 +205,7 @@ namespace CombSim
             return dmg;
         }
 
-        public void AddSpell(Spell spell)
+        protected void AddSpell(Spell spell)
         {
             _spells[spell.Name()] = spell;
             AddAction(spell);
@@ -298,7 +291,12 @@ namespace CombSim
                 if (action.Category == actionCategory && _actionsThisTurn.Contains(actionCategory))
                     actions.Add(action);
 
-            Console.WriteLine($"// {Name} Possible {actionCategory} Actions: {String.Join(", ", actions)}");
+            string actionList = "";
+            foreach (var action in actions)
+            {
+                actionList += action.Name() + "; ";
+            }
+            Console.WriteLine($"// {Name} Possible {actionCategory} Actions: {actionList}");
             return actions;
         }
 
@@ -312,10 +310,16 @@ namespace CombSim
             _actions.Remove(action);
         }
 
-        public int Heal(int hitpoints)
+        public int Heal(int hitPoints, string reason = "")
         {
-            hitpoints = Math.Min(hitpoints, HitPointsDown());
-            HitPoints += hitpoints;
+            string reasonString="";
+            hitPoints = Math.Min(hitPoints, HitPointsDown());
+            HitPoints += hitPoints;
+            if(reason != "")
+            {
+                reasonString = $" by {reason}";
+            }
+            NarrationLog.LogMessage($"{Name} healed {hitPoints}{reasonString}");
 
             if (Conditions.HasCondition(ConditionEnum.Stable))
             {
@@ -329,7 +333,7 @@ namespace CombSim
                 Conditions.SetCondition(ConditionEnum.Ok);
             }
 
-            return hitpoints;
+            return hitPoints;
         }
 
         public Creature PickClosestEnemy()
@@ -473,7 +477,7 @@ namespace CombSim
             public DamageRoll DmgRollSaved;
             public Creature Source;
             public int ToHit;
-            public (StatEnum, int) DC;
+            public (StatEnum, int) Dc;
             public AttackMessage AttackMessage; 
             public Action<Creature> OnHitSideEffect;
         }

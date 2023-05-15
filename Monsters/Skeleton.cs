@@ -1,3 +1,5 @@
+using CombSim.Gear;
+
 namespace CombSim.Monsters
 {
     public class Skeleton : Monster
@@ -13,8 +15,8 @@ namespace CombSim.Monsters
             Repr = "s";
             ArmourClass = 13;
             HitDice = "2d8+4";
-            AddEquipment(Gear.Shortsword);
-            AddEquipment(Gear.Shortbow);
+            AddEquipment(MeleeWeaponGear.Shortsword);
+            AddEquipment(RangedWeaponGear.Shortbow);
             Vulnerable.Add(DamageTypeEnums.Bludgeoning);
             Immune.Add(DamageTypeEnums.Poison);
         }

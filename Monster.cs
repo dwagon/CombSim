@@ -18,8 +18,6 @@ namespace CombSim
 
         protected override void FallenUnconscious()
         {
-            Conditions.SetCondition(ConditionEnum.Dead);
-            Conditions.RemoveCondition(ConditionEnum.Ok);
             HitPoints = 0;
             Died();
         }

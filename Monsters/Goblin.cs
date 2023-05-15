@@ -1,3 +1,5 @@
+using CombSim.Gear;
+
 namespace CombSim.Monsters
 {
     public class Goblin : Monster
@@ -12,10 +14,10 @@ namespace CombSim.Monsters
             Stats.Add(StatEnum.Charisma, new Stat(8));
             Repr = "g";
             HitDice = "2d6";
-            AddEquipment(Gear.Scimitar);
-            AddEquipment(Gear.Shortbow);
-            AddEquipment(Gear.Leather);
-            AddEquipment(Gear.Shield);
+            AddEquipment(MeleeWeaponGear.Scimitar);
+            AddEquipment(RangedWeaponGear.Shortbow);
+            AddEquipment(ArmourGear.Leather);
+            AddEquipment(ArmourGear.Shield);
         }
     }
 }
