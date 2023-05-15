@@ -305,10 +305,16 @@ namespace CombSim
             _actions.Remove(action);
         }
 
-        public int Heal(int hitpoints)
+        public int Heal(int hitPoints, string reason = "")
         {
-            hitpoints = Math.Min(hitpoints, HitPointsDown());
-            HitPoints += hitpoints;
+            string reasonString="";
+            hitPoints = Math.Min(hitPoints, HitPointsDown());
+            HitPoints += hitPoints;
+            if(reason != "")
+            {
+                reasonString = $" by {reason}";
+            }
+            NarrationLog.LogMessage($"{Name} healed {hitPoints}{reasonString}");
 
             if (Conditions.HasCondition(ConditionEnum.Stable))
             {
@@ -322,7 +328,7 @@ namespace CombSim
                 Conditions.SetCondition(ConditionEnum.Ok);
             }
 
-            return hitpoints;
+            return hitPoints;
         }
 
         public Creature PickClosestEnemy()

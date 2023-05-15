@@ -59,8 +59,7 @@ namespace CombSim.Characters
             public override bool DoAction(Creature actor)
             {
                 Fighter f = (Fighter)actor;
-                var cured = actor.Heal(Dice.Roll("d10") + f.Level);
-                NarrationLog.LogMessage($"{actor.Name} uses Second Wind to cure themselves {cured} HP");
+                actor.Heal(Dice.Roll("d10") + f.Level, "Second Wind");
                 actor.RemoveAction(this);
                 return true;
             }
