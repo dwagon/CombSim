@@ -91,7 +91,7 @@ namespace CombSim
             {
                 Source = actor,
                 Action = this,
-                DC = (StatEnum.Constitution, actor.SpellSaveDC()),
+                Dc = (StatEnum.Constitution, actor.SpellSaveDc()),
                 DmgRoll = _dmgRoll,
                 DmgRollSaved = _dmgRollSaved,
                 CriticalHit = false,

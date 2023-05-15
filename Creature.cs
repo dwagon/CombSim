@@ -82,7 +82,7 @@ namespace CombSim
             return ProficiencyBonus + Stats[SpellCastingAbility].Bonus();
         }
 
-        public int SpellSaveDC()
+        public int SpellSaveDc()
         {
             return 8 + SpellAttackModifier();
         }
@@ -126,7 +126,7 @@ namespace CombSim
         {
             Damage dmg;
 
-            bool save = MakeSavingThrow(e.DC.Item1, e.DC.Item2);
+            bool save = MakeSavingThrow(e.Dc.Item1, e.Dc.Item2);
             if (save)
             {
                 dmg = e.DmgRollSaved.Roll();
@@ -169,14 +169,7 @@ namespace CombSim
         {
             Damage dmg;
             
-            if (e.DC.Item2 != 0)
-            {
-                dmg = DcAttack(sender, e);
-            }
-            else
-            {
-                dmg = ToHitAttack(sender, e);
-            }
+            dmg = e.Dc.Item2 != 0? DcAttack(sender, e) : ToHitAttack(sender, e);
             if (dmg is null) return;
 
             NarrationLog.LogMessage(e.AttackMessage.ToString());
