@@ -1,5 +1,3 @@
-using System;
-
 namespace CombSim.Gear
 {
     public static class PotionsGear
@@ -24,13 +22,13 @@ namespace CombSim.Gear
                 _healingAmount = healing;
             }
 
-            public override void PotionEffect(Creature drinker)
+            protected override void PotionEffect(Creature drinker)
             {
                 var healed = Dice.Roll(_healingAmount);
                 drinker.Heal(healed, _name);
             }
 
-            public override int GetHeuristic(Creature drinker)
+            protected override int GetHeuristic(Creature drinker)
             {
                 if (drinker.PercentHitPoints() > 50) return 0;
 
