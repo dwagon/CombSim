@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using CombSim.Gear;
 using CombSim.Spells;
 
 namespace CombSim.Characters
@@ -34,8 +35,8 @@ namespace CombSim.Characters
             Stats.Add(StatEnum.Wisdom, new Stat(11));
             Stats.Add(StatEnum.Charisma, new Stat(13));
 
-            AddEquipment(Gear.Quarterstaff);
-            // AddEquipment(Gear.LightCrossbow);
+            AddEquipment(MeleeWeaponGear.Quarterstaff);
+            AddEquipment(PotionsGear.SuperiorHealingPotion);
 
             AddSpell(new RayOfFrost());
             AddSpell(new MagicMissile());

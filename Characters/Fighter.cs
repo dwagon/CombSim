@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using CombSim.Gear;
 
 namespace CombSim.Characters
 {
@@ -22,9 +23,10 @@ namespace CombSim.Characters
             Stats.Add(StatEnum.Intelligence, new Stat(11));
             Stats.Add(StatEnum.Wisdom, new Stat(13));
             Stats.Add(StatEnum.Charisma, new Stat(9));
-            AddEquipment(Gear.Mace);
-            AddEquipment(Gear.Plate);
-            AddEquipment(Gear.Shield);
+            AddEquipment(MeleeWeaponGear.Mace);
+            AddEquipment(ArmourGear.Plate);
+            AddEquipment(ArmourGear.Shield);
+            AddEquipment(PotionsGear.HealingPotion);
             AddAction(new SecondWind());
             if (level >= 2)
             {
