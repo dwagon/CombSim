@@ -2,9 +2,11 @@ namespace CombSim.Gear
 {
     public class MeleeWeaponGear
     {
-        // Melee Weapons
         public static readonly MeleeWeapon Longsword =
             new MeleeWeapon("Longsword", new DamageRoll("1d8", 0, DamageTypeEnums.Piercing), 5 / 5);
+
+        public static readonly MeleeWeapon Greatclub =
+            new MeleeWeapon("Greatclub", new DamageRoll("1d8", 0, DamageTypeEnums.Bludgeoning), 5 / 5);
 
         public static readonly MeleeWeapon Dagger =
             new MeleeWeapon("Dagger", new DamageRoll("1d4", 0, DamageTypeEnums.Piercing), 5 / 5);
