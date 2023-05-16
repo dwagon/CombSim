@@ -109,16 +109,17 @@ namespace CombSim
                     acBonus += Math.Max(acBonus, armour.ArmourClassBonus);
                 }
 
-            var tmpAc = ac + acBonus;
-            if (dexBonus)
-            {
-                var bonus = Stats[StatEnum.Dexterity].Bonus();
-                tmpAc += Math.Min(bonus, maxDexBonus);
-            }
+            var tmpAc = ac + acBonus + GetDexAcBonus(dexBonus, maxDexBonus);
 
             if (tmpAc == 0) return 10 + Stats[StatEnum.Dexterity].Bonus();
 
             return tmpAc;
+        }
+
+        private int GetDexAcBonus(bool dexBonus, int maxDexBonus)
+        {
+            if (!dexBonus) return 0;
+            return Math.Min(Stats[StatEnum.Dexterity].Bonus(), maxDexBonus);
         }
 
         // Attack that is a DC challenge
@@ -145,6 +146,7 @@ namespace CombSim
         private Damage ToHitAttack(object sender, OnAttackedEventArgs e)
         {
             Damage dmg;
+            string damageNote = "";
 
             if (e.CriticalMiss || e.ToHit <= ArmourClass)
             {
@@ -154,22 +156,22 @@ namespace CombSim
             }
             if (e.CriticalHit)
             {
+                damageNote += " (Critical Hit) ";
                 dmg = e.DmgRoll.Roll(max: true) + e.DmgRoll.Roll();
             }
             else
             {
                 dmg = e.DmgRoll.Roll();
             }
-            dmg = ModifyDamageForVulnerabilityOrResistance(dmg);
-            e.AttackMessage.Result = $"Hit for {dmg}";
+            dmg = ModifyDamageForVulnerabilityOrResistance(dmg, out string dmgModifier);
+            damageNote += dmgModifier;
+            e.AttackMessage.Result = $"Hit for {dmg} ({e.DmgRoll}) {damageNote}";
             return dmg;
         }
 
         private void Attacked(object sender, OnAttackedEventArgs e)
         {
-            Damage dmg;
-            
-            dmg = e.Dc.Item2 != 0? DcAttack(sender, e) : ToHitAttack(sender, e);
+            Damage dmg = e.Dc.Item2 != 0? DcAttack(sender, e) : ToHitAttack(sender, e);
             if (dmg is null) return;
 
             NarrationLog.LogMessage(e.AttackMessage.ToString());
@@ -187,19 +189,23 @@ namespace CombSim
             throw new NotImplementedException();
         }
         
-        private Damage ModifyDamageForVulnerabilityOrResistance(Damage dmg)
+        private Damage ModifyDamageForVulnerabilityOrResistance(Damage dmg, out string dmgModifier)
         {
+            dmgModifier = "";
             if (Vulnerable.Contains(dmg.type))
             {
+                dmgModifier = " (Vulnerable) ";
                 dmg *= 2;
             }
             else if (Resistant.Contains(dmg.type))
             {
+                dmgModifier = " (Resistant) ";
                 dmg /= 2;
             }
             else if (Immune.Contains(dmg.type))
             {
                 dmg = new Damage(0, dmg.type);
+                dmgModifier = " (Immune) ";
             }
 
             return dmg;
@@ -280,7 +286,7 @@ namespace CombSim
 
         public virtual new string ToString()
         {
-            return $"{Name} HP: {HitPoints}/{MaxHitPoints} {Conditions} {Effects}";
+            return $"{Name} AC: {ArmourClass}; HP: {HitPoints}/{MaxHitPoints}; {Conditions}; {Effects}";
         }
 
         // Return all the possible actions
