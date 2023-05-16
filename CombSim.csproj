@@ -65,6 +65,7 @@
         <Compile Include="Monsters\Ghoul.cs" />
         <Compile Include="Monsters\Goblin.cs" />
         <Compile Include="Monsters\Kobold.cs" />
+        <Compile Include="Monsters\Ogre.cs" />
         <Compile Include="Monsters\Skeleton.cs" />
         <Compile Include="Monsters\Zombie.cs" />
         <Compile Include="NarrationLog.cs" />
