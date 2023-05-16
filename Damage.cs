@@ -26,6 +26,11 @@ namespace CombSim
             return new Damage(damage1.hits + damage2.hits, damage1.type);
         }
         
+        public static Damage operator +(Damage damage1, int dmgBonus)
+        {
+            return new Damage(damage1.hits + dmgBonus, damage1.type);
+        }
+        
         public static Damage operator /(Damage damage, int divisor)
         {
             return new Damage(damage.hits / divisor, damage.type);
