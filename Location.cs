@@ -1,4 +1,5 @@
 using System;
+using System.Numerics;
 
 namespace CombSim
 {
@@ -54,6 +55,11 @@ namespace CombSim
         public static bool operator !=(Location lhs, Location rhs)
         {
             return !(lhs == rhs);
+        }
+
+        public static Location operator +(Location lhs, Vector2 rhs)
+        {
+            return new Location(lhs.x + (int)Math.Round(rhs.X), lhs.y + (int)Math.Round(rhs.Y));
         }
     }
 }

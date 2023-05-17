@@ -1,8 +1,21 @@
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace CombSim
 {
+
+    public enum GridDirection
+    {
+        N=0,
+        NE=45,
+        E=90,
+        SE=135,
+        S=180,
+        SW=225,
+        W=270,
+        NW=315
+    }
     public class Arena
     {
         private readonly object[,] _grid;
@@ -91,6 +104,63 @@ namespace CombSim
             }
 
             return neighbours;
+        }
+
+        // Return a list of all locations from the {origin} of size {coneSize} in {direction}
+        // Cone is a 60 degree section
+        public IEnumerable<Location> ConeLocations(Location origin, int coneSize, GridDirection direction)
+        {
+            var locations = new List<Location>();
+            var angle = (float)(Math.PI / 180) * (int)direction;
+            var rotationMatrix = Matrix4x4.CreateRotationZ(angle);
+            var originVector = new Vector2(origin.x, origin.y);
+            
+            // Vertices of triangle
+            var v1 = new Vector2(origin.x, origin.y) - originVector;    // Should always be <0,0>
+            var v2 = new Vector2(origin.x + coneSize/2f, origin.y - coneSize) - originVector;
+            var v3 = new Vector2(origin.x -coneSize/2f, origin.y - coneSize) - originVector;
+            
+            // Vertices rotated
+            var v1r = Vector2.Transform(v1, rotationMatrix);
+            var v2r = Vector2.Transform(v2, rotationMatrix);
+            var v3r = Vector2.Transform(v3, rotationMatrix);
+
+            // Calculate bounding box of triangle
+            var minX = (int)Math.Round(Math.Min(v1r.X, Math.Min(v2r.X, v3r.X))) - 1;
+            var maxX = (int)Math.Round(Math.Max(v1r.X, Math.Max(v2r.X, v3r.X))) + 1;
+            var minY = (int)Math.Round(Math.Min(v1r.Y, Math.Min(v2r.Y, v3r.Y))) - 1;
+            var maxY = (int)Math.Round(Math.Max(v1r.Y, Math.Max(v2r.Y, v3r.Y))) + 1;
+
+            for (var i = minX; i <= maxX; i++)
+            {
+                for (var j = minY; j <= maxY; j++)
+                {
+                    var location = new Location(i, j);
+                    if (IsInsideTriangle(v1r, v2r, v3r, location))
+                    {
+                        locations.Add(location+originVector);
+                    }
+                }
+            }
+
+            return locations;
+        }
+
+        private static float CrossProduct(Vector2 a, Vector2 b)
+        {
+            return a.X*b.Y - a.Y*b.X;
+        }
+
+        // Is the {point} inside the triangle specified by the vertices {v1}, {v2} and {v3}?
+        private static bool IsInsideTriangle(Vector2 v1, Vector2 v2, Vector2 v3, Location point)
+        {
+            var vs1 = new Vector2(v2.X - v1.X, v2.Y - v1.Y);
+            var vs2 = new Vector2(v3.X - v1.X, v3.Y - v1.Y);
+            var q = new Vector2(point.x - v1.X, point.y - v1.Y);
+            
+            var s = CrossProduct(q, vs2) / CrossProduct(vs1, vs2);
+            var t = CrossProduct(vs1, q) / CrossProduct(vs1, vs2);
+            return s >= 0 && t >= 0 && s + t <= 1;
         }
     }
 }
