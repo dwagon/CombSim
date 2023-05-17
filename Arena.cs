@@ -131,9 +131,9 @@ namespace CombSim
             var minY = (int)Math.Round(Math.Min(v1r.Y, Math.Min(v2r.Y, v3r.Y))) - 1;
             var maxY = (int)Math.Round(Math.Max(v1r.Y, Math.Max(v2r.Y, v3r.Y))) + 1;
 
-            for (var i = minX; i <= maxX; i++)
+            for (var i = Math.Max(0, minX); i < Math.Min(_maxX - 1, maxX); i++)
             {
-                for (var j = minY; j <= maxY; j++)
+                for (var j = Math.Max(0, minY); j < Math.Min(_maxY - 1, maxY); j++)
                 {
                     var location = new Location(i, j);
                     if (IsInsideTriangle(v1r, v2r, v3r, location))
