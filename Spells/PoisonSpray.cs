@@ -5,7 +5,7 @@ namespace CombSim.Spells
         public PoisonSpray() : base("Poison Spray", 0, ActionCategory.Action)
         {
             _dmgRoll = new DamageRoll("1d12", DamageTypeEnums.Poison);
-            _dmgRollSaved = new DamageRoll("0d0", DamageTypeEnums.Poison);
+            _spellSavedEffect = SpellSavedEffect.NoDamage;
             _reach = 5 / 5;
         }
 

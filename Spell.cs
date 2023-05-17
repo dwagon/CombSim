@@ -1,5 +1,11 @@
 using System;
 
+public enum SpellSavedEffect
+{
+    NoDamage,
+    DamageHalved
+}
+
 namespace CombSim
 {
     public class Spell : Action
@@ -77,7 +83,7 @@ namespace CombSim
     
     public class DcSaveSpell: Spell
     {
-        protected DamageRoll _dmgRollSaved;
+        protected SpellSavedEffect _spellSavedEffect;
         
         public DcSaveSpell(string name, int level, ActionCategory actionCategory) : base(name, level, actionCategory)
         {
@@ -93,7 +99,7 @@ namespace CombSim
                 Action = this,
                 Dc = (StatEnum.Constitution, actor.SpellSaveDc()),
                 DmgRoll = _dmgRoll,
-                DmgRollSaved = _dmgRollSaved,
+                SpellSavedEffect = _spellSavedEffect,
                 CriticalHit = false,
                 CriticalMiss = false,
                 AttackMessage = attackMessage,

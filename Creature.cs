@@ -128,14 +128,23 @@ namespace CombSim
             Damage dmg;
 
             bool save = MakeSavingThrow(e.Dc.Item1, e.Dc.Item2);
+            dmg = e.DmgRoll.Roll();
             if (save)
             {
-                dmg = e.DmgRollSaved.Roll();
-                e.AttackMessage.Result = $"Saved for {dmg}";
+                switch (e.SpellSavedEffect)
+                {
+                    case SpellSavedEffect.DamageHalved:
+                        dmg /= 2;
+                        e.AttackMessage.Result = $"Saved for {dmg}";
+                        break;
+                    case SpellSavedEffect.NoDamage:
+                        e.AttackMessage.Result = $"Saved for no damage";
+                        dmg = new Damage(0, DamageTypeEnums.None);
+                        break;
+                }
             }
             else
             {
-                dmg = e.DmgRoll.Roll();
                 e.AttackMessage.Result = $"Failed save for {dmg}";
             }
 
@@ -480,7 +489,7 @@ namespace CombSim
             public bool CriticalHit;
             public bool CriticalMiss;
             public DamageRoll DmgRoll;
-            public DamageRoll DmgRollSaved;
+            public SpellSavedEffect SpellSavedEffect;
             public Creature Source;
             public int ToHit;
             public (StatEnum, int) Dc;
