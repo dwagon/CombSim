@@ -29,10 +29,7 @@ namespace CombSim
             var enemy = actor.PickClosestEnemy();
             if (enemy == null) return false;
             var hasDisadvantage = false;
-
-            while (actor.DistanceTo(enemy) > _sRange)
-                if (!actor.MoveTowards(enemy))
-                    break;
+            actor.MoveWithinReachOfEnemy(_sRange, enemy);
 
             var distance = actor.DistanceTo(enemy);
             if (distance <= 1) hasDisadvantage = true;

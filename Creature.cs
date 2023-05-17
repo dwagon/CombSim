@@ -351,6 +351,16 @@ namespace CombSim
             return hitPoints;
         }
 
+        public void MoveWithinReachOfEnemy(int reach, Creature enemy)
+        {
+            var oldLocation = GetLocation();
+            if (enemy == null) return;
+            while (DistanceTo(enemy) > reach)
+                if (!MoveTowards(enemy))
+                    break;
+            Console.WriteLine($"// {Name} moved from {oldLocation} to {GetLocation()}");
+        }
+
         public Creature PickClosestEnemy()
         {
             return Game.PickClosestEnemy(this);

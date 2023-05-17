@@ -23,18 +23,11 @@ namespace CombSim
         protected virtual void SideEffect(Creature target)
         { }
         
-
         public override bool DoAction(Creature actor)
         {
             if (!actor.CanCastSpell(this)) return false;
             var enemy = actor.PickClosestEnemy();
-            var oldLocation = actor.GetLocation();
-            if (enemy == null) return false;
-            while (actor.DistanceTo(enemy) > _reach)
-                if (!actor.MoveTowards(enemy))
-                    break;
-            Console.WriteLine($"// {actor.Name} moved from {oldLocation} to {actor.GetLocation()}");
-
+            actor.MoveWithinReachOfEnemy(_reach, enemy);
             if (actor.Game.DistanceTo(actor, enemy) <= _reach)
             {
                 actor.DoCastSpell(this);
