@@ -35,15 +35,15 @@ namespace CombSim.Spells
         private void DoMissile(Creature actor, Creature target)
         {
             var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name());
-            var roll = RollToHit(out var criticalHit, out var criticalMiss);
+            var roll = RollToHit();
             target.OnAttacked?.Invoke(this, new Creature.OnAttackedEventArgs
             {
                 Source = actor,
                 Action = this,
                 ToHit = roll + actor.SpellAttackModifier(),
                 DmgRoll = new DamageRoll("2d6", DamageTypeEnums.Fire),
-                CriticalHit = criticalHit,
-                CriticalMiss = criticalMiss,
+                CriticalHit = IsCriticalHit(actor, target, roll),
+                CriticalMiss = IsCriticalMiss(actor, target, roll),
                 AttackMessage = attackMessage,
                 OnHitSideEffect = SideEffect
             });

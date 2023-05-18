@@ -43,23 +43,26 @@ namespace CombSim
             return false;
         }
         
-        protected int RollToHit(out bool criticalHit, out bool criticalMiss, bool hasAdvantage = false,
+        protected int RollToHit(bool hasAdvantage = false,
             bool hasDisadvantage = false)
         {
-            criticalMiss = false;
-            criticalHit = false;
             var roll = Dice.RollD20(hasAdvantage, hasDisadvantage, reason: "To Hit");
-            switch (roll)
-            {
-                case 1:
-                    criticalMiss = true;
-                    break;
-                case 20:
-                    criticalHit = true;
-                    break;
-            }
-
             return roll;
+        }
+        
+        
+        protected static bool IsCriticalHit(Creature actor, Creature target, int roll)
+        {
+            if (target.HasCondition(ConditionEnum.Paralyzed) && actor.DistanceTo(target) < 2)
+            {
+                return true;
+            }
+            return roll == 20 || roll >= actor.CriticalHitRoll;
+        }
+
+        protected static bool IsCriticalMiss(Creature actor, Creature target, int roll)
+        {
+            return roll == 1;
         }
     }
 }
