@@ -25,13 +25,9 @@ namespace CombSim
         {
             if (target.HasCondition(ConditionEnum.Paralyzed) && actor.DistanceTo(target) < 2) hasAdvantage = true;
             
-            var roll = RollToHit(out var criticalHit, out var criticalMiss, hasAdvantage: hasAdvantage,
+            var roll = RollToHit(hasAdvantage: hasAdvantage,
                 hasDisadvantage: hasDisadvantage);
             var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name(), roll: roll, mods: attackBonus);
-            if (target.HasCondition(ConditionEnum.Paralyzed) && actor.DistanceTo(target) < 2)
-            {
-                criticalHit = true;
-            }
             
             target.OnAttacked?.Invoke(this, new Creature.OnAttackedEventArgs
             {
@@ -39,8 +35,8 @@ namespace CombSim
                 Action = this,
                 ToHit = roll + attackBonus,
                 DmgRoll = _dmgRoll + damageBonus,
-                CriticalHit = criticalHit,
-                CriticalMiss = criticalMiss,
+                CriticalHit = IsCriticalHit(actor, target, roll),
+                CriticalMiss = IsCriticalMiss(actor, target, roll),
                 AttackMessage = attackMessage,
                 OnHitSideEffect = SideEffect
             });
