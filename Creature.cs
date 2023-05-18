@@ -47,6 +47,7 @@ namespace CombSim
             Resistant = new List<DamageTypeEnums>();
             Immune = new List<DamageTypeEnums>();
             DamageReceived = new List<Damage>();
+            CriticalHitRoll = 20;
         }
 
         public string Name { get; protected set; }
@@ -358,7 +359,10 @@ namespace CombSim
             while (DistanceTo(enemy) > reach)
                 if (!MoveTowards(enemy))
                     break;
-            Console.WriteLine($"// {Name} moved from {oldLocation} to {GetLocation()}");
+            if (oldLocation != GetLocation())
+            {
+                Console.WriteLine($"// {Name} moved from {oldLocation} to {GetLocation()}");
+            }
         }
 
         public Creature PickClosestEnemy()

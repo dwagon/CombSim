@@ -1,5 +1,3 @@
-using System;
-
 namespace CombSim.Spells
 {
     public class MagicMissile : Spell
@@ -16,12 +14,8 @@ namespace CombSim.Spells
             for (int i = 0; i < numMissiles; i++)
             {
                 var enemy = actor.PickClosestEnemy();
-                var oldLocation = actor.GetLocation();
                 if (enemy == null) return false;
-                while (actor.DistanceTo(enemy) > Reach)
-                    if (!actor.MoveTowards(enemy))
-                        break;
-                Console.WriteLine($"// {actor.Name} moved from {oldLocation} to {actor.GetLocation()}");
+                actor.MoveWithinReachOfEnemy(Reach, enemy);
 
                 if (actor.Game.DistanceTo(actor, enemy) <= Reach)
                 {
