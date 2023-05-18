@@ -7,12 +7,12 @@ namespace CombSim
     {
         public Location(int x, int y)
         {
-            this.x = x;
-            this.y = y;
+            this.X = x;
+            this.Y = y;
         }
 
-        public int x { get; }
-        public int y { get; }
+        public int X { get; }
+        public int Y { get; }
 
         public bool Equals(Location obj)
         {
@@ -31,17 +31,17 @@ namespace CombSim
 
         public override int GetHashCode()
         {
-            return 13 * x.GetHashCode() + y.GetHashCode();
+            return 13 * X.GetHashCode() + Y.GetHashCode();
         }
 
         public override string ToString()
         {
-            return "(" + x + "," + y + ")";
+            return "(" + X + "," + Y + ")";
         }
 
         public float DistanceBetween(Location other)
         {
-            var distance = (float)Math.Sqrt(Math.Pow(x - other.x, 2f) + Math.Pow(y - other.y, 2f));
+            var distance = (float)Math.Sqrt(Math.Pow(X - other.X, 2f) + Math.Pow(Y - other.Y, 2f));
             return distance;
         }
 
@@ -49,7 +49,7 @@ namespace CombSim
         {
             if (lhs is null && rhs is null) return true;
             if (lhs is null || rhs is null) return false;
-            return lhs.x == rhs.x && lhs.y == rhs.y;
+            return lhs.X == rhs.X && lhs.Y == rhs.Y;
         }
 
         public static bool operator !=(Location lhs, Location rhs)
@@ -59,7 +59,7 @@ namespace CombSim
 
         public static Location operator +(Location lhs, Vector2 rhs)
         {
-            return new Location(lhs.x + (int)Math.Round(rhs.X), lhs.y + (int)Math.Round(rhs.Y));
+            return new Location(lhs.X + (int)Math.Round(rhs.X), lhs.Y + (int)Math.Round(rhs.Y));
         }
     }
 }
