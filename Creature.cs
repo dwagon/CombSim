@@ -29,6 +29,7 @@ namespace CombSim
         protected readonly List<DamageTypeEnums> Immune;
         private readonly Effects Effects;
         protected readonly List<Damage> DamageReceived;
+        public int CriticalHitRoll { get; protected set; }
 
         protected Creature(string name, string team = "")
         {
