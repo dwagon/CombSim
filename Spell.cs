@@ -37,6 +37,16 @@ namespace CombSim
 
             return false;
         }
+        
+        public override int GetHeuristic(Creature actor)
+        {
+            if (!actor.CanCastSpell(this)) return 0;
+            var enemy = actor.PickClosestEnemy();
+            if (enemy == null) return 0;
+            if (actor.DistanceTo(enemy) <= Reach)
+                return 2 + 2*Level;
+            return 0;
+        }
 
         protected virtual void DoAttack(Creature actor, Creature target, bool hasAdvantage = false,
             bool hasDisadvantage = false)

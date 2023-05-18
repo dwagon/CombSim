@@ -9,12 +9,6 @@ namespace CombSim.Spells
             _reach = 120 / 5;
         }
 
-        public override int GetHeuristic(Creature actor)
-        {
-            if(actor.CanCastSpell(this)) return 3;
-            return 0;
-        }
-
         public override bool DoAction(Creature actor)
         {
             var numMissiles = 3;
