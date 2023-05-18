@@ -10,11 +10,11 @@ namespace CombSim
 {
     public class Spell : Action
     {
-        protected int _reach;
-        public int Level;
-        protected DamageRoll _dmgRoll;
+        protected int Reach;
+        public readonly int Level;
+        protected DamageRoll DmgRoll;
 
-        public Spell(string name, int level, ActionCategory actionCategory) : base(name, actionCategory)
+        protected Spell(string name, int level, ActionCategory actionCategory) : base(name, actionCategory)
         {
             Level = level;
         }
@@ -27,8 +27,8 @@ namespace CombSim
         {
             if (!actor.CanCastSpell(this)) return false;
             var enemy = actor.PickClosestEnemy();
-            actor.MoveWithinReachOfEnemy(_reach, enemy);
-            if (actor.Game.DistanceTo(actor, enemy) <= _reach)
+            actor.MoveWithinReachOfEnemy(Reach, enemy);
+            if (actor.Game.DistanceTo(actor, enemy) <= Reach)
             {
                 actor.DoCastSpell(this);
                 DoAttack(actor, enemy);
@@ -57,7 +57,7 @@ namespace CombSim
 
     public class ToHitSpell : Spell
     {
-        public ToHitSpell(string name, int level, ActionCategory actionCategory) : base(name, level, actionCategory)
+        protected ToHitSpell(string name, int level, ActionCategory actionCategory) : base(name, level, actionCategory)
         {
         }
 
@@ -75,7 +75,7 @@ namespace CombSim
                 Source = actor,
                 Action = this,
                 ToHit = roll + actor.SpellAttackModifier(),
-                DmgRoll = _dmgRoll,
+                DmgRoll = DmgRoll,
                 CriticalHit = criticalHit,
                 CriticalMiss = criticalMiss,
                 AttackMessage = attackMessage,
@@ -86,9 +86,9 @@ namespace CombSim
     
     public class DcSaveSpell: Spell
     {
-        protected SpellSavedEffect _spellSavedEffect;
+        protected SpellSavedEffect SpellSavedEffect;
         
-        public DcSaveSpell(string name, int level, ActionCategory actionCategory) : base(name, level, actionCategory)
+        protected DcSaveSpell(string name, int level, ActionCategory actionCategory) : base(name, level, actionCategory)
         {
         }
 
@@ -101,8 +101,8 @@ namespace CombSim
                 Source = actor,
                 Action = this,
                 Dc = (StatEnum.Constitution, actor.SpellSaveDc()),
-                DmgRoll = _dmgRoll,
-                SpellSavedEffect = _spellSavedEffect,
+                DmgRoll = DmgRoll,
+                SpellSavedEffect = SpellSavedEffect,
                 CriticalHit = false,
                 CriticalMiss = false,
                 AttackMessage = attackMessage,

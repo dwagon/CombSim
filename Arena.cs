@@ -4,18 +4,20 @@ using System.Numerics;
 
 namespace CombSim
 {
-
     public enum GridDirection
     {
-        N=0,
-        NE=45,
-        E=90,
-        SE=135,
-        S=180,
-        SW=225,
-        W=270,
-        NW=315
+        // ReSharper disable All
+        N = 0,
+        NE = 45,
+        E = 90,
+        SE = 135,
+        S = 180,
+        SW = 225,
+        W = 270,
+        NW = 315
+        // ReSharper restore All
     }
+
     public class Arena
     {
         private readonly object[,] _grid;
@@ -30,6 +32,11 @@ namespace CombSim
             for (var x = 0; x < _maxX; x++)
             for (var y = 0; y < _maxY; y++)
                 _grid[x, y] = null;
+        }
+
+        public object GetLocation(Location location)
+        {
+            return _grid[location.X, location.Y];
         }
 
         // Print the arena out
@@ -120,11 +127,9 @@ namespace CombSim
         // Cone is a 60 degree section
         public IEnumerable<Location> ConeLocations(Location origin, int coneSize, GridDirection direction)
         {
-            var locations = new List<Location>();
-            var angle = (float)(Math.PI / 180) * (int)direction;
-            var rotationMatrix = Matrix4x4.CreateRotationZ(angle);
-            var originVector = new Vector2(origin.x, origin.y);
-            
+            var locations = new HashSet<Location>();
+            var originVector = new Vector2(origin.X, origin.Y);
+
             // Vertices of triangle
             var v1 = new Vector2(origin.X, origin.Y) - originVector; // Should always be <0,0>
             var v2 = new Vector2(origin.X + coneSize / 2f, origin.Y - coneSize) - originVector;
@@ -141,14 +146,16 @@ namespace CombSim
             var minY = (int)Math.Round(Math.Min(v1R.Y, Math.Min(v2R.Y, v3R.Y))) - 1;
             var maxY = (int)Math.Round(Math.Max(v1R.Y, Math.Max(v2R.Y, v3R.Y))) + 1;
 
-            for (var i = Math.Max(0, minX); i < Math.Min(_maxX - 1, maxX); i++)
+            for (var i = minX; i < maxX; i++)
             {
-                for (var j = Math.Max(0, minY); j < Math.Min(_maxY - 1, maxY); j++)
+                for (var j = minY; j < maxY; j++)
                 {
                     var location = new Location(i, j);
-                    if (IsInsideTriangle(v1r, v2r, v3r, location))
+                    if (IsInsideTriangle(v1R, v2R, v3R, location))
                     {
-                        locations.Add(location+originVector);
+                        var newLocation = location + originVector;
+                        if (IsValidLocation(newLocation) && newLocation != origin)
+                            locations.Add(newLocation);
                     }
                 }
             }
@@ -156,9 +163,17 @@ namespace CombSim
             return locations;
         }
 
+        private Vector2 RotateVector(Vector2 vector, GridDirection direction)
+        {
+            var angle = (float)(Math.PI / 180) * (int)direction;
+            var rotationMatrix = Matrix4x4.CreateRotationZ(angle);
+            var newVector = Vector2.Transform(vector, rotationMatrix);
+            return newVector;
+        }
+
         private static float CrossProduct(Vector2 a, Vector2 b)
         {
-            return a.X*b.Y - a.Y*b.X;
+            return a.X * b.Y - a.Y * b.X;
         }
 
         // Is the {point} inside the triangle specified by the vertices {v1}, {v2} and {v3}?
@@ -166,8 +181,8 @@ namespace CombSim
         {
             var vs1 = new Vector2(v2.X - v1.X, v2.Y - v1.Y);
             var vs2 = new Vector2(v3.X - v1.X, v3.Y - v1.Y);
-            var q = new Vector2(point.x - v1.X, point.y - v1.Y);
-            
+            var q = new Vector2(point.X - v1.X, point.Y - v1.Y);
+
             var s = CrossProduct(q, vs2) / CrossProduct(vs1, vs2);
             var t = CrossProduct(vs1, q) / CrossProduct(vs1, vs2);
             return s >= 0 && t >= 0 && s + t <= 1;

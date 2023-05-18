@@ -6,7 +6,7 @@ namespace CombSim.Spells
     {
         public ScorchingRay() : base("Scorching Ray", 2, ActionCategory.Action)
         {
-            _reach = 120 / 5;
+            Reach = 120 / 5;
         }
 
         public override bool DoAction(Creature actor)
@@ -16,12 +16,9 @@ namespace CombSim.Spells
             var enemy = actor.PickClosestEnemy();
             var oldLocation = actor.GetLocation();
             if (enemy == null) return false;
-            while (actor.DistanceTo(enemy) > _reach)
-                if (!actor.MoveTowards(enemy))
-                    break;
-            Console.WriteLine($"// {actor.Name} moved from {oldLocation} to {actor.GetLocation()}");
+            actor.MoveWithinReachOfEnemy(Reach, enemy);
 
-            if (actor.Game.DistanceTo(actor, enemy) <= _reach)
+            if (actor.Game.DistanceTo(actor, enemy) <= Reach)
             {
                 for (int i = 0; i < numMissiles; i++)
                 {

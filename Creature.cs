@@ -24,11 +24,11 @@ namespace CombSim
         public EventHandler<OnTurnStartEventArgs> OnTurnStart;
         public int ProficiencyBonus = 2;
         protected string Repr;
-        protected List<DamageTypeEnums> Vulnerable;
-        protected List<DamageTypeEnums> Resistant;
-        protected List<DamageTypeEnums> Immune;
-        protected Effects Effects;
-        protected List<Damage> DamageReceived;
+        protected readonly List<DamageTypeEnums> Vulnerable;
+        private readonly List<DamageTypeEnums> Resistant;
+        protected readonly List<DamageTypeEnums> Immune;
+        private readonly Effects Effects;
+        protected readonly List<Damage> DamageReceived;
 
         protected Creature(string name, string team = "")
         {
@@ -123,12 +123,11 @@ namespace CombSim
         }
 
         // Attack that is a DC challenge
-        private Damage DcAttack(object sender, OnAttackedEventArgs e)
+        private Damage DcAttack(OnAttackedEventArgs e)
         {
-            Damage dmg;
+            var dmg = e.DmgRoll.Roll();
 
             bool save = MakeSavingThrow(e.Dc.Item1, e.Dc.Item2);
-            dmg = e.DmgRoll.Roll();
             if (save)
             {
                 switch (e.SpellSavedEffect)
@@ -152,7 +151,7 @@ namespace CombSim
         }
 
         // Attack that is a To Hit challenge
-        private Damage ToHitAttack(object sender, OnAttackedEventArgs e)
+        private Damage ToHitAttack(OnAttackedEventArgs e)
         {
             Damage dmg;
             string damageNote = "";
@@ -174,13 +173,13 @@ namespace CombSim
             }
             dmg = ModifyDamageForVulnerabilityOrResistance(dmg, out string dmgModifier);
             damageNote += dmgModifier;
-            e.AttackMessage.Result = $"Hit for {dmg} ({e.DmgRoll}) {damageNote}";
+            e.AttackMessage.Result = $"Hit for {dmg} damage ({e.DmgRoll}) {damageNote}";
             return dmg;
         }
 
         private void Attacked(object sender, OnAttackedEventArgs e)
         {
-            Damage dmg = e.Dc.Item2 != 0? DcAttack(sender, e) : ToHitAttack(sender, e);
+            Damage dmg = e.Dc.Item2 != 0? DcAttack(e) : ToHitAttack(e);
             if (dmg is null) return;
 
             NarrationLog.LogMessage(e.AttackMessage.ToString());
@@ -293,7 +292,7 @@ namespace CombSim
             return Game.GetLocation(this);
         }
 
-        public virtual new string ToString()
+        public new virtual string ToString()
         {
             return $"{Name} AC: {ArmourClass}; HP: {HitPoints}/{MaxHitPoints}; {Conditions}; {Effects}";
         }
@@ -371,6 +370,11 @@ namespace CombSim
             return Game.DistanceTo(this, enemy);
         }
 
+        public IEnumerable<Location> GetConeLocations(int coneSize, GridDirection direction)
+        {
+            return Game.GetConeLocations(this, coneSize, direction);
+        }
+
         public void DoActionCategory(ActionCategory actionCategory, bool force = false)
         {
             if (force) _actionsThisTurn.Add(actionCategory);
@@ -418,6 +422,7 @@ namespace CombSim
             foreach (var action in possibleActions)
             {
                 var heuristic = action.GetHeuristic(this);
+                Console.WriteLine($"//\tHeuristic of {action.Name()} = {heuristic}");
                 if (heuristic > 0) sortableActions.Add((heuristic, action));
             }
 
