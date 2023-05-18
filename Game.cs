@@ -36,6 +36,11 @@ namespace CombSim
             return NextLocationTowards(_locations[srcCreature], destination);
         }
 
+        public IEnumerable<Location> GetConeLocations(Creature actor, int coneSize, GridDirection direction)
+        {
+            return _arena.ConeLocations(actor.GetLocation(), coneSize, direction);
+        }
+
         public Location NextLocationTowards(Creature srcCreature, Creature dstCreature)
         {
             return NextLocationTowards(_locations[srcCreature], _locations[dstCreature]);
@@ -151,6 +156,11 @@ namespace CombSim
             {
                 // Ignore as the same creature can "die" multiple times - e.g Scorching Ray where it is near death
             }
+        }
+
+        public Creature GetCreatureAtLocation(Location location)
+        {
+            return (_arena.GetLocation(location) as Creature);
         }
 
         // Can creatures move into this {location}

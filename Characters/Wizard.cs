@@ -39,6 +39,7 @@ namespace CombSim.Characters
             AddEquipment(PotionsGear.SuperiorHealingPotion);
 
             AddSpell(new RayOfFrost());
+            AddSpell(new BurningHands());
             AddSpell(new MagicMissile());
             AddSpell(new PoisonSpray());
             if (Level >= 3)
@@ -67,7 +68,7 @@ namespace CombSim.Characters
 
         public override void DoCastSpell(Spell spell)
         {
-            Console.WriteLine($"// DoCastSpell(spell={spell.Name()}) {spell.Level}");
+            Console.WriteLine($"// DoCastSpell(spell={spell.Name()}) Level: {spell.Level}");
             if (spell.Level == 0) return;
             _spellsAtLevel[Level][spell.Level]--;
         }

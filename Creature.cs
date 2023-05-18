@@ -24,11 +24,11 @@ namespace CombSim
         public EventHandler<OnTurnStartEventArgs> OnTurnStart;
         public int ProficiencyBonus = 2;
         protected string Repr;
-        protected List<DamageTypeEnums> Vulnerable;
-        protected List<DamageTypeEnums> Resistant;
-        protected List<DamageTypeEnums> Immune;
-        protected Effects Effects;
-        protected List<Damage> DamageReceived;
+        protected readonly List<DamageTypeEnums> Vulnerable;
+        private readonly List<DamageTypeEnums> Resistant;
+        protected readonly List<DamageTypeEnums> Immune;
+        private readonly Effects Effects;
+        protected readonly List<Damage> DamageReceived;
 
         protected Creature(string name, string team = "")
         {
@@ -123,19 +123,27 @@ namespace CombSim
         }
 
         // Attack that is a DC challenge
-        private Damage DcAttack(object sender, OnAttackedEventArgs e)
+        private Damage DcAttack(OnAttackedEventArgs e)
         {
-            Damage dmg;
+            var dmg = e.DmgRoll.Roll();
 
             bool save = MakeSavingThrow(e.Dc.Item1, e.Dc.Item2);
             if (save)
             {
-                dmg = e.DmgRollSaved.Roll();
-                e.AttackMessage.Result = $"Saved for {dmg}";
+                switch (e.SpellSavedEffect)
+                {
+                    case SpellSavedEffect.DamageHalved:
+                        dmg /= 2;
+                        e.AttackMessage.Result = $"Saved for {dmg}";
+                        break;
+                    case SpellSavedEffect.NoDamage:
+                        e.AttackMessage.Result = $"Saved for no damage";
+                        dmg = new Damage(0, DamageTypeEnums.None);
+                        break;
+                }
             }
             else
             {
-                dmg = e.DmgRoll.Roll();
                 e.AttackMessage.Result = $"Failed save for {dmg}";
             }
 
@@ -143,7 +151,7 @@ namespace CombSim
         }
 
         // Attack that is a To Hit challenge
-        private Damage ToHitAttack(object sender, OnAttackedEventArgs e)
+        private Damage ToHitAttack(OnAttackedEventArgs e)
         {
             Damage dmg;
             string damageNote = "";
@@ -165,13 +173,13 @@ namespace CombSim
             }
             dmg = ModifyDamageForVulnerabilityOrResistance(dmg, out string dmgModifier);
             damageNote += dmgModifier;
-            e.AttackMessage.Result = $"Hit for {dmg} ({e.DmgRoll}) {damageNote}";
+            e.AttackMessage.Result = $"Hit for {dmg} damage ({e.DmgRoll}) {damageNote}";
             return dmg;
         }
 
         private void Attacked(object sender, OnAttackedEventArgs e)
         {
-            Damage dmg = e.Dc.Item2 != 0? DcAttack(sender, e) : ToHitAttack(sender, e);
+            Damage dmg = e.Dc.Item2 != 0? DcAttack(e) : ToHitAttack(e);
             if (dmg is null) return;
 
             NarrationLog.LogMessage(e.AttackMessage.ToString());
@@ -284,7 +292,7 @@ namespace CombSim
             return Game.GetLocation(this);
         }
 
-        public virtual new string ToString()
+        public new virtual string ToString()
         {
             return $"{Name} AC: {ArmourClass}; HP: {HitPoints}/{MaxHitPoints}; {Conditions}; {Effects}";
         }
@@ -342,6 +350,16 @@ namespace CombSim
             return hitPoints;
         }
 
+        public void MoveWithinReachOfEnemy(int reach, Creature enemy)
+        {
+            var oldLocation = GetLocation();
+            if (enemy == null) return;
+            while (DistanceTo(enemy) > reach)
+                if (!MoveTowards(enemy))
+                    break;
+            Console.WriteLine($"// {Name} moved from {oldLocation} to {GetLocation()}");
+        }
+
         public Creature PickClosestEnemy()
         {
             return Game.PickClosestEnemy(this);
@@ -350,6 +368,11 @@ namespace CombSim
         public float DistanceTo(Creature enemy)
         {
             return Game.DistanceTo(this, enemy);
+        }
+
+        public IEnumerable<Location> GetConeLocations(int coneSize, GridDirection direction)
+        {
+            return Game.GetConeLocations(this, coneSize, direction);
         }
 
         public void DoActionCategory(ActionCategory actionCategory, bool force = false)
@@ -399,6 +422,7 @@ namespace CombSim
             foreach (var action in possibleActions)
             {
                 var heuristic = action.GetHeuristic(this);
+                Console.WriteLine($"//\tHeuristic of {action.Name()} = {heuristic}");
                 if (heuristic > 0) sortableActions.Add((heuristic, action));
             }
 
@@ -480,7 +504,7 @@ namespace CombSim
             public bool CriticalHit;
             public bool CriticalMiss;
             public DamageRoll DmgRoll;
-            public DamageRoll DmgRollSaved;
+            public SpellSavedEffect SpellSavedEffect;
             public Creature Source;
             public int ToHit;
             public (StatEnum, int) Dc;

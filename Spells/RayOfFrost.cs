@@ -4,13 +4,8 @@ namespace CombSim.Spells
     {
         public RayOfFrost() : base("Ray of Frost", 0, ActionCategory.Action)
         {
-            _reach = 60 / 5;
-            _dmgRoll = new DamageRoll("1d8", DamageTypeEnums.Cold);
-        }
-
-        public override int GetHeuristic(Creature actor)
-        {
-            return 3;
+            Reach = 60 / 5;
+            DmgRoll = new DamageRoll("1d8", DamageTypeEnums.Cold);
         }
     }
 }

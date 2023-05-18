@@ -33,9 +33,14 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
+        <Reference Include="mscorlib" />
         <Reference Include="System" />
         <Reference Include="System.Core" />
         <Reference Include="System.Data" />
+        <Reference Include="System.Numerics" />
+        <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+        </Reference>
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
@@ -74,11 +79,15 @@
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="RangedAttack.cs" />
         <Compile Include="Spell.cs" />
+        <Compile Include="Spells\BurningHands.cs" />
         <Compile Include="Spells\MagicMissile.cs" />
         <Compile Include="Spells\PoisonSpray.cs" />
         <Compile Include="Spells\RayOfFrost.cs" />
         <Compile Include="Spells\ScorchingRay.cs" />
         <Compile Include="Stat.cs" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Include="packages.config" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

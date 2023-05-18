@@ -1,14 +1,20 @@
 using System;
 
+public enum SpellSavedEffect
+{
+    NoDamage,
+    DamageHalved
+}
+
 namespace CombSim
 {
     public class Spell : Action
     {
-        protected int _reach;
-        public int Level;
-        protected DamageRoll _dmgRoll;
+        protected int Reach;
+        public readonly int Level;
+        protected DamageRoll DmgRoll;
 
-        public Spell(string name, int level, ActionCategory actionCategory) : base(name, actionCategory)
+        protected Spell(string name, int level, ActionCategory actionCategory) : base(name, actionCategory)
         {
             Level = level;
         }
@@ -17,19 +23,12 @@ namespace CombSim
         protected virtual void SideEffect(Creature target)
         { }
         
-
         public override bool DoAction(Creature actor)
         {
             if (!actor.CanCastSpell(this)) return false;
             var enemy = actor.PickClosestEnemy();
-            var oldLocation = actor.GetLocation();
-            if (enemy == null) return false;
-            while (actor.DistanceTo(enemy) > _reach)
-                if (!actor.MoveTowards(enemy))
-                    break;
-            Console.WriteLine($"// {actor.Name} moved from {oldLocation} to {actor.GetLocation()}");
-
-            if (actor.Game.DistanceTo(actor, enemy) <= _reach)
+            actor.MoveWithinReachOfEnemy(Reach, enemy);
+            if (actor.Game.DistanceTo(actor, enemy) <= Reach)
             {
                 actor.DoCastSpell(this);
                 DoAttack(actor, enemy);
@@ -37,6 +36,16 @@ namespace CombSim
             }
 
             return false;
+        }
+        
+        public override int GetHeuristic(Creature actor)
+        {
+            if (!actor.CanCastSpell(this)) return 0;
+            var enemy = actor.PickClosestEnemy();
+            if (enemy == null) return 0;
+            if (actor.DistanceTo(enemy) <= Reach)
+                return 2 + 2*Level;
+            return 0;
         }
 
         protected virtual void DoAttack(Creature actor, Creature target, bool hasAdvantage = false,
@@ -48,7 +57,7 @@ namespace CombSim
 
     public class ToHitSpell : Spell
     {
-        public ToHitSpell(string name, int level, ActionCategory actionCategory) : base(name, level, actionCategory)
+        protected ToHitSpell(string name, int level, ActionCategory actionCategory) : base(name, level, actionCategory)
         {
         }
 
@@ -66,7 +75,7 @@ namespace CombSim
                 Source = actor,
                 Action = this,
                 ToHit = roll + actor.SpellAttackModifier(),
-                DmgRoll = _dmgRoll,
+                DmgRoll = DmgRoll,
                 CriticalHit = criticalHit,
                 CriticalMiss = criticalMiss,
                 AttackMessage = attackMessage,
@@ -77,9 +86,9 @@ namespace CombSim
     
     public class DcSaveSpell: Spell
     {
-        protected DamageRoll _dmgRollSaved;
+        protected SpellSavedEffect SpellSavedEffect;
         
-        public DcSaveSpell(string name, int level, ActionCategory actionCategory) : base(name, level, actionCategory)
+        protected DcSaveSpell(string name, int level, ActionCategory actionCategory) : base(name, level, actionCategory)
         {
         }
 
@@ -92,8 +101,8 @@ namespace CombSim
                 Source = actor,
                 Action = this,
                 Dc = (StatEnum.Constitution, actor.SpellSaveDc()),
-                DmgRoll = _dmgRoll,
-                DmgRollSaved = _dmgRollSaved,
+                DmgRoll = DmgRoll,
+                SpellSavedEffect = SpellSavedEffect,
                 CriticalHit = false,
                 CriticalMiss = false,
                 AttackMessage = attackMessage,

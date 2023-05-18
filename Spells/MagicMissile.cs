@@ -6,13 +6,7 @@ namespace CombSim.Spells
     {
         public MagicMissile() : base("Magic Missile", 1, ActionCategory.Action)
         {
-            _reach = 120 / 5;
-        }
-
-        public override int GetHeuristic(Creature actor)
-        {
-            if(actor.CanCastSpell(this)) return 3;
-            return 0;
+            Reach = 120 / 5;
         }
 
         public override bool DoAction(Creature actor)
@@ -24,12 +18,12 @@ namespace CombSim.Spells
                 var enemy = actor.PickClosestEnemy();
                 var oldLocation = actor.GetLocation();
                 if (enemy == null) return false;
-                while (actor.DistanceTo(enemy) > _reach)
+                while (actor.DistanceTo(enemy) > Reach)
                     if (!actor.MoveTowards(enemy))
                         break;
                 Console.WriteLine($"// {actor.Name} moved from {oldLocation} to {actor.GetLocation()}");
 
-                if (actor.Game.DistanceTo(actor, enemy) <= _reach)
+                if (actor.Game.DistanceTo(actor, enemy) <= Reach)
                 {
                     hasCast = true;
                     DoMissile(actor, enemy);
