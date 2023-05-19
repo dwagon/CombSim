@@ -5,6 +5,7 @@ on: [push]
 jobs:
   build:
 
+    working-directory: CombSimTest
     runs-on: ubuntu-latest
     strategy:
       matrix:
