@@ -34,17 +34,19 @@ namespace CombSim.Monsters
                 return 2;
             }
         }
+
         private class GhoulClaw : MeleeAttack
         {
-            public GhoulClaw(): base("Ghoul Claw", new DamageRoll("2d4", DamageTypeEnums.Slashing)) {
-            }
-            
-            public override int GetHeuristic(Creature actor)
+            public GhoulClaw() : base("Ghoul Claw", new DamageRoll("2d4", DamageTypeEnums.Slashing))
             {
-                return 1 + (actor.HasCondition(ConditionEnum.Paralyzed)?0:2);
             }
 
-            protected override void SideEffect(Creature target)
+            public override int GetHeuristic(Creature actor)
+            {
+                return 1 + (actor.HasCondition(ConditionEnum.Paralyzed) ? 0 : 2);
+            }
+
+            protected override void SideEffect(Creature actor, Creature target)
             {
                 Console.WriteLine($"// Ghoul Claw Side Effect");
                 if (!target.MakeSavingThrow(StatEnum.Constitution, 10))

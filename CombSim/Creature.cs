@@ -206,7 +206,10 @@ namespace CombSim
 
             NarrationLog.LogMessage(e.AttackMessage.ToString());
             TakeDamage(dmg);
-            e.OnHitSideEffect(this);
+            if (e.OnHitSideEffect != null)
+            {
+                e.OnHitSideEffect(e.Source, this);
+            }
         }
         
         public virtual bool CanCastSpell(Spell spell)
@@ -532,9 +535,6 @@ namespace CombSim
             public SpellSavedEffect SpellSavedEffect;
             public Creature Source;
             public int ToHit;
-            public (StatEnum, int) Dc;
-            public AttackMessage AttackMessage; 
-            public Action<Creature> OnHitSideEffect;
         }
 
         public class OnTurnEndEventArgs : EventArgs
