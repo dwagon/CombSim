@@ -21,7 +21,7 @@ jobs:
         run: dotnet restore
       - name: Build
         working-directory: CombSimTest
-        run: dotnet build --configuration Release --no-restore --verbosity detailed
+        run: dotnet build --configuration Release --no-restore --verbosity normal
       - name: Test
         working-directory: CombSimTest
-        run: dotnet test --no-restore --verbosity detailed
+        run: dotnet test --no-restore --verbosity normal
