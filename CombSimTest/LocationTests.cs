@@ -1,5 +1,5 @@
-using NUnit.Framework;
 using CombSim;
+using NUnit.Framework;
 
 namespace CombSimTest
 {
@@ -18,7 +18,7 @@ namespace CombSimTest
         public void TestEquals()
         {
             var location = new Location(3, 4);
-            Assert.AreEqual(location, new Location(3,4));
+            Assert.AreEqual(location, new Location(3, 4));
         }
 
         [Test]
@@ -41,7 +41,9 @@ namespace CombSimTest
         {
             var locationA = new Location(5, 5);
             var locationB = new Location(5, 5);
+            var locationC = new Location(5, 7);
             Assert.True(locationA == locationB);
+            Assert.False(locationA == locationC);
         }
     }
 }

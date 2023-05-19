@@ -3,8 +3,6 @@
   &lt;Assembly Path="/Library/Frameworks/Mono.framework/Versions/6.12.0/lib/mono/4.8-api/System.dll" /&gt;
 &lt;/AssemblyExplorer&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=619b3faa_002D45bd_002D43a2_002Db150_002D3f48f481a794/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="ArenaTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
-  &lt;TestAncestor&gt;
-    &lt;TestId&gt;NUnit3x::34F750C5-825D-47FE-8163-73E8D75F1B33::.NETFramework,Version=v4.8::CombSimTest.ArenaTests&lt;/TestId&gt;
-  &lt;/TestAncestor&gt;
+  &lt;Solution /&gt;
 &lt;/SessionState&gt;</s:String>
 	</wpf:ResourceDictionary>
