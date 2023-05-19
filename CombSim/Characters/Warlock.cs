@@ -8,14 +8,16 @@ namespace CombSim.Characters
     {
         private readonly Dictionary<int, int> _hitPointsAtLevel = new Dictionary<int, int>()
         {
-            { 1, 10 },
+            { 1, 10 }, { 2, 18 }
         };
-        
+
         // CasterLevel: <SpellLevel: NumberOfSlots>
-        private readonly Dictionary<int, Dictionary<int, int>> _spellsAtLevel = new Dictionary<int, Dictionary<int, int>>()
-        {
-            {1, new Dictionary<int, int>() {{1, 1}}},
-        };
+        private readonly Dictionary<int, Dictionary<int, int>> _spellsAtLevel =
+            new Dictionary<int, Dictionary<int, int>>()
+            {
+                { 1, new Dictionary<int, int>() { { 1, 1 } } },
+                { 2, new Dictionary<int, int>() { { 1, 2 } } },
+            };
 
         public Warlock(string name, int level = 1, string team = "Warlocks") : base(name, team)
         {
@@ -31,20 +33,31 @@ namespace CombSim.Characters
             Stats.Add(StatEnum.Intelligence, new Stat(13));
             Stats.Add(StatEnum.Wisdom, new Stat(10));
             Stats.Add(StatEnum.Charisma, new Stat(15));
- 
+
             AddEquipment(PotionsGear.HealingPotion);
             AddEquipment(ArmourGear.StuddedLeather);
             AddEquipment(MeleeWeaponGear.Quarterstaff);
 
             // Cantrips
             AddSpell(new Thunderclap());
-            AddSpell(new EldritchBlast());
-            
+
             // Level 1
             AddSpell(new BurningHands());
             // AddSpell(new HellishRebuke());
+
+            int ebRange = 120 / 5;
+            int ebDmgBonus = 0;
+            if (Level >= 2)
+            {
+                Attributes.Add(Attribute.AgonizingBlast);
+                Attributes.Add(Attribute.EldritchSpear);
+            }
+
+            if (HasAttribute(Attribute.EldritchSpear)) ebRange = 300 / 5;
+            if (HasAttribute(Attribute.AgonizingBlast)) ebDmgBonus = Stats[StatEnum.Charisma].Bonus();
+            AddSpell(new EldritchBlast(ebRange, ebDmgBonus));
         }
-        
+
         public override string ToString()
         {
             var baseString = base.ToString();
@@ -53,6 +66,7 @@ namespace CombSim.Characters
             {
                 spellString += $"L{kvp.Key} = {kvp.Value}; ";
             }
+
             return baseString + spellString;
         }
 

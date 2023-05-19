@@ -1,11 +1,11 @@
 namespace CombSim.Spells
 {
-    public class EldritchBlast: ToHitSpell
+    public class EldritchBlast : ToHitSpell
     {
-        public EldritchBlast() : base("Eldritch Blast", 0, ActionCategory.Action)
+        public EldritchBlast(int reach = 120 / 5, int dmgBonus = 0) : base("Eldritch Blast", 0, ActionCategory.Action)
         {
-            Reach = 120 / 5;
-            DmgRoll = new DamageRoll("1d10", DamageTypeEnums.Force);
+            Reach = reach;
+            DmgRoll = new DamageRoll("1d10", dmgBonus, DamageTypeEnums.Force);
         }
     }
 }
