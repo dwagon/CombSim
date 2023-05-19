@@ -45,19 +45,17 @@ namespace CombSim.Characters
             AddSpell(new BurningHands());
             // AddSpell(new HellishRebuke());
 
-            int eb_range = 120 / 5;
-            int eb_dmg_bonus = 0;
+            int ebRange = 120 / 5;
+            int ebDmgBonus = 0;
             if (Level >= 2)
             {
                 Attributes.Add(Attribute.AgonizingBlast);
                 Attributes.Add(Attribute.EldritchSpear);
             }
 
-            new DamageRoll("1d10", DamageTypeEnums.Force);
-
-            if (HasAttribute(Attribute.EldritchSpear)) eb_range = 300 / 5;
-            if (HasAttribute(Attribute.AgonizingBlast)) eb_dmg_bonus = Stats[StatEnum.Charisma].Bonus();
-            AddSpell(new EldritchBlast(eb_range, eb_dmg_bonus));
+            if (HasAttribute(Attribute.EldritchSpear)) ebRange = 300 / 5;
+            if (HasAttribute(Attribute.AgonizingBlast)) ebDmgBonus = Stats[StatEnum.Charisma].Bonus();
+            AddSpell(new EldritchBlast(ebRange, ebDmgBonus));
         }
 
         public override string ToString()

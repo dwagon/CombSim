@@ -1,5 +1,3 @@
-using System;
-
 namespace CombSim.Spells
 {
     public class ScorchingRay : ToHitSpell
@@ -14,7 +12,6 @@ namespace CombSim.Spells
             var numMissiles = 3;
 
             var enemy = actor.PickClosestEnemy();
-            var oldLocation = actor.GetLocation();
             if (enemy == null) return false;
             actor.MoveWithinReachOfEnemy(Reach, enemy);
 

@@ -11,13 +11,14 @@ namespace CombSim
     public class Spell : Action
     {
         public readonly int Level;
-        protected DamageRoll DmgRoll;
-        protected int Reach;
 
         protected Spell(string name, int level, ActionCategory actionCategory) : base(name, actionCategory)
         {
             Level = level;
         }
+
+        public DamageRoll DmgRoll { get; protected set; }
+        public int Reach { get; protected set; }
 
         // Overwrite if the attack has a side effect
         protected virtual void SideEffect(Creature actor, Creature target)
