@@ -40,7 +40,7 @@ namespace CombSimTest
         public void TestDblEquals()
         {
             var locationA = new Location(5, 5);
-            var locationB = new Location(5, 5);
+            var locationB = new Location(5, 6);
             Assert.True(locationA == locationB);
         }
     }
