@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace CombSim
 {
-    public class Creature
+    public partial class Creature
     {
         private readonly List<Action> _actions;
         private readonly HashSet<ActionCategory> _actionsThisTurn;
@@ -85,16 +84,6 @@ namespace CombSim
             HitPoints = MaxHitPoints;
             Conditions.SetCondition(ConditionEnum.Ok);
             OnAttacked += Attacked;
-        }
-
-        public int SpellAttackModifier()
-        {
-            return ProficiencyBonus + Stats[SpellCastingAbility].Bonus();
-        }
-
-        public int SpellSaveDc()
-        {
-            return 8 + SpellAttackModifier();
         }
 
         public List<Location> GetNeighbourLocations()
@@ -222,16 +211,6 @@ namespace CombSim
             }
         }
 
-        public virtual bool CanCastSpell(Spell spell)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual void DoCastSpell(Spell spell)
-        {
-            throw new NotImplementedException();
-        }
-
         private Damage ModifyDamageForVulnerabilityOrResistance(Damage dmg, out string dmgModifier)
         {
             dmgModifier = "";
@@ -252,12 +231,6 @@ namespace CombSim
             }
 
             return dmg;
-        }
-
-        protected void AddSpell(Spell spell)
-        {
-            _spells[spell.Name()] = spell;
-            AddAction(spell);
         }
 
         public bool HasCondition(ConditionEnum condition)
@@ -330,34 +303,6 @@ namespace CombSim
         public new virtual string ToString()
         {
             return $"{Name} AC: {ArmourClass}; HP: {HitPoints}/{MaxHitPoints}; {Conditions}; {Effects}";
-        }
-
-        // Return all the possible actions
-        private List<IAction> PossibleActions(ActionCategory actionCategory)
-        {
-            var actions = new List<IAction>();
-            foreach (var action in _actions)
-                if (action.Category == actionCategory && _actionsThisTurn.Contains(actionCategory))
-                    actions.Add(action);
-
-            string actionList = "";
-            foreach (var action in actions)
-            {
-                actionList += action.Name() + "; ";
-            }
-
-            Console.WriteLine($"// {Name} Possible {actionCategory} Actions: {actionList}");
-            return actions;
-        }
-
-        protected void AddAction(Action action)
-        {
-            _actions.Add(action);
-        }
-
-        public void RemoveAction(Action action)
-        {
-            _actions.Remove(action);
         }
 
         public int Heal(int hitPoints, string reason = "")
@@ -451,26 +396,6 @@ namespace CombSim
             Console.WriteLine($"// {Name} doing {action.Name()}");
             action.DoAction(this);
             _actionsThisTurn.Remove(action.Category);
-        }
-
-        private IAction PickActionToDo(ActionCategory actionCategory)
-        {
-            if (!_actionsThisTurn.Contains(actionCategory)) return null;
-
-            var sortableActions = new List<(int heuristic, IAction action)>();
-            var possibleActions = PossibleActions(actionCategory);
-
-            foreach (var action in possibleActions)
-            {
-                var heuristic = action.GetHeuristic(this);
-                Console.WriteLine($"//\tHeuristic of {action.Name()} = {heuristic}");
-                if (heuristic > 0) sortableActions.Add((heuristic, action));
-            }
-
-            if (!sortableActions.Any()) return null;
-
-            sortableActions.Sort((x, y) => x.Item1.CompareTo(y.Item1));
-            return sortableActions.Last().Item2;
         }
 
         private void TakeDamage(Damage damage)
