@@ -51,6 +51,11 @@ namespace CombSim
             return _locations[creature];
         }
 
+        public List<Location> GetNeighbourLocations(Creature creature)
+        {
+            return _arena.GetNeighbours(_locations[creature]);
+        }
+
         public void RunGame()
         {
             int turn = 0;
