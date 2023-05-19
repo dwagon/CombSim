@@ -9,6 +9,7 @@ namespace CombSim.Spells
         {
             DmgRoll = new DamageRoll("3d6", DamageTypeEnums.Fire);
             SpellSavedEffect = SpellSavedEffect.DamageHalved;
+            SpellSaveAgainst = StatEnum.Dexterity;
             Reach = 15 / 5;
         }
 
@@ -81,7 +82,7 @@ namespace CombSim.Spells
                 {
                     Source = actor,
                     Action = this,
-                    Dc = (StatEnum.Dexterity, actor.SpellSaveDc()),
+                    Dc = (SpellSaveAgainst, actor.SpellSaveDc()),
                     DmgRoll = DmgRoll,
                     SpellSavedEffect = SpellSavedEffect,
                     CriticalHit = false,
