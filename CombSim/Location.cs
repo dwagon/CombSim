@@ -39,12 +39,6 @@ namespace CombSim
             return "(" + X + "," + Y + ")";
         }
 
-        public float DistanceBetween(Location other)
-        {
-            var distance = (float)Math.Sqrt(Math.Pow(X - other.X, 2f) + Math.Pow(Y - other.Y, 2f));
-            return distance;
-        }
-
         public static bool operator ==(Location lhs, Location rhs)
         {
             if (lhs is null && rhs is null) return true;

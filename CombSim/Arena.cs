@@ -14,6 +14,7 @@ namespace CombSim
         S = 180,
         SW = 225,
         W = 270,
+
         NW = 315
         // ReSharper restore All
     }
@@ -60,6 +61,13 @@ namespace CombSim
             }
 
             return output;
+        }
+
+
+        public float DistanceBetween(Location a, Location b)
+        {
+            var distance = (float)Math.Sqrt(Math.Pow(a.X - b.X, 2f) + Math.Pow(a.Y - b.Y, 2f));
+            return distance;
         }
 
         // Return an empty spot on the arena
