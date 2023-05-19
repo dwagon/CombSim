@@ -61,7 +61,7 @@ namespace CombSim
             int turn = 0;
             Console.WriteLine(_arena.ToString());
             foreach (var creature in _combatants) Console.WriteLine(creature.ToString());
-            
+
             while (!IsEndOfGame() && turn < 30) TakeTurn(turn++);
         }
 
@@ -89,6 +89,7 @@ namespace CombSim
             {
                 creature.TakeTurn();
             }
+
             Console.WriteLine(_arena.ToString());
             foreach (var creature in _combatants) Console.WriteLine(creature.ToString());
         }
@@ -138,7 +139,7 @@ namespace CombSim
         // Return the distance between creatures {one} and {two}
         public int DistanceTo(Creature one, Creature two)
         {
-            return (int)_locations[one].DistanceBetween(_locations[two]);
+            return (int)_arena.DistanceBetween(_locations[one], _locations[two]);
         }
 
         // Move {creature} to new {location}
@@ -148,7 +149,7 @@ namespace CombSim
             _locations[creature] = location;
             _arena.Set(location, creature);
         }
-        
+
         // {creature} no longer exists (i.e. died), remove them from the game
         public void Remove(Creature creature)
         {
@@ -220,7 +221,7 @@ namespace CombSim
             gScore[source] = 0;
 
             var fScore = new Dictionary<Location, float>();
-            fScore[source] = source.DistanceBetween(destination);
+            fScore[source] = _arena.DistanceBetween(source, destination);
             while (openSet.Any())
             {
                 var current = openSet.OrderBy(c => fScore[c]).First();
@@ -231,14 +232,14 @@ namespace CombSim
                 foreach (var neighbour in _arena.GetNeighbours(current))
                 {
                     if (closed.Contains(neighbour) || !IsWalkable(neighbour)) continue;
-                    var tentative = gScore[current] + current.DistanceBetween(neighbour);
+                    var tentative = gScore[current] + _arena.DistanceBetween(current, neighbour);
                     if (!openSet.Contains(neighbour))
                         openSet.Add(neighbour);
                     else if (tentative >= (gScore.ContainsKey(neighbour) ? gScore[neighbour] : 999999999)) continue;
 
                     path[neighbour] = current;
                     gScore[neighbour] = tentative;
-                    fScore[neighbour] = gScore[neighbour] + neighbour.DistanceBetween(destination);
+                    fScore[neighbour] = gScore[neighbour] + _arena.DistanceBetween(neighbour, destination);
                 }
             }
 

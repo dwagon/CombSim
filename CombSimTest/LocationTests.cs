@@ -29,14 +29,6 @@ namespace CombSimTest
         }
 
         [Test]
-        public void TestDistance()
-        {
-            var locationA = new Location(5, 5);
-            var locationB = new Location(5, 7);
-            Assert.AreEqual(locationA.DistanceBetween(locationB), 2f);
-        }
-
-        [Test]
         public void TestDblEquals()
         {
             var locationA = new Location(5, 5);
