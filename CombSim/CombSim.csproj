@@ -47,6 +47,7 @@
         <Compile Include="Action.cs" />
         <Compile Include="Arena.cs" />
         <Compile Include="Attack.cs" />
+        <Compile Include="Attribute.cs"/>
         <Compile Include="Character.cs" />
         <Compile Include="Characters\Fighter.cs" />
         <Compile Include="Characters\Warlock.cs" />

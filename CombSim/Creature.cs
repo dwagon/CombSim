@@ -6,15 +6,19 @@ namespace CombSim
 {
     public class Creature
     {
-        private readonly Dictionary<string, Spell> _spells;
         private readonly List<Action> _actions;
         private readonly HashSet<ActionCategory> _actionsThisTurn;
         private readonly List<Equipment> _equipment;
         private readonly int _speed;
+        private readonly Dictionary<string, Spell> _spells;
         protected readonly Conditions Conditions;
+        protected readonly List<Damage> DamageReceived;
+        private readonly Effects Effects;
+        protected readonly List<DamageTypeEnums> Immune;
+        private readonly List<DamageTypeEnums> Resistant;
         public readonly Dictionary<StatEnum, Stat> Stats;
+        protected readonly List<DamageTypeEnums> Vulnerable;
         private int _moves;
-        protected StatEnum SpellCastingAbility;
 
         private int _setArmourClass = -1;
         protected int HitPoints;
@@ -24,12 +28,7 @@ namespace CombSim
         public EventHandler<OnTurnStartEventArgs> OnTurnStart;
         public int ProficiencyBonus = 2;
         protected string Repr;
-        protected readonly List<DamageTypeEnums> Vulnerable;
-        private readonly List<DamageTypeEnums> Resistant;
-        protected readonly List<DamageTypeEnums> Immune;
-        private readonly Effects Effects;
-        protected readonly List<Damage> DamageReceived;
-        public int CriticalHitRoll { get; protected set; }
+        protected StatEnum SpellCastingAbility;
 
         protected Creature(string name, string team = "")
         {
@@ -48,7 +47,11 @@ namespace CombSim
             Immune = new List<DamageTypeEnums>();
             DamageReceived = new List<Damage>();
             CriticalHitRoll = 20;
+            Attributes = new HashSet<Attribute>();
         }
+
+        protected HashSet<Attribute> Attributes { get; private set; }
+        public int CriticalHitRoll { get; protected set; }
 
         public string Name { get; protected set; }
         public string Team { get; protected set; }
@@ -57,6 +60,13 @@ namespace CombSim
         {
             get => CalcArmourClass();
             protected set => _setArmourClass = value;
+        }
+
+        public Game Game { get; private set; }
+
+        public bool HasAttribute(Attribute attribute)
+        {
+            return Attributes.Contains(attribute);
         }
 
         public int HitPointsDown()
@@ -69,8 +79,6 @@ namespace CombSim
         {
             return (int)(100 * ((float)HitPoints / MaxHitPoints));
         }
-
-        public Game Game { get; private set; }
 
         public virtual void Initialise()
         {
@@ -93,7 +101,7 @@ namespace CombSim
         {
             return Game.GetNeighbourLocations(this);
         }
-        
+
         public List<Creature> GetNeighbourCreatures()
         {
             var creatures = new List<Creature>();
@@ -184,6 +192,7 @@ namespace CombSim
                 NarrationLog.LogMessage(e.AttackMessage.ToString());
                 return null;
             }
+
             if (e.CriticalHit)
             {
                 damageNote += " (Critical Hit) ";
@@ -193,6 +202,7 @@ namespace CombSim
             {
                 dmg = e.DmgRoll.Roll();
             }
+
             dmg = ModifyDamageForVulnerabilityOrResistance(dmg, out string dmgModifier);
             damageNote += dmgModifier;
             e.AttackMessage.Result = $"Hit for {dmg} damage ({e.DmgRoll}) {damageNote}";
@@ -201,7 +211,7 @@ namespace CombSim
 
         private void Attacked(object sender, OnAttackedEventArgs e)
         {
-            Damage dmg = e.Dc.Item2 != 0? DcAttack(e) : ToHitAttack(e);
+            Damage dmg = e.Dc.Item2 != 0 ? DcAttack(e) : ToHitAttack(e);
             if (dmg is null) return;
 
             NarrationLog.LogMessage(e.AttackMessage.ToString());
@@ -211,7 +221,7 @@ namespace CombSim
                 e.OnHitSideEffect(e.Source, this);
             }
         }
-        
+
         public virtual bool CanCastSpell(Spell spell)
         {
             throw new NotImplementedException();
@@ -221,7 +231,7 @@ namespace CombSim
         {
             throw new NotImplementedException();
         }
-        
+
         private Damage ModifyDamageForVulnerabilityOrResistance(Damage dmg, out string dmgModifier)
         {
             dmgModifier = "";
@@ -264,7 +274,7 @@ namespace CombSim
         {
             Conditions.RemoveCondition(condition);
         }
-        
+
         public void SetGame(Game gameGame)
         {
             Game = gameGame;
@@ -335,6 +345,7 @@ namespace CombSim
             {
                 actionList += action.Name() + "; ";
             }
+
             Console.WriteLine($"// {Name} Possible {actionCategory} Actions: {actionList}");
             return actions;
         }
@@ -351,13 +362,14 @@ namespace CombSim
 
         public int Heal(int hitPoints, string reason = "")
         {
-            string reasonString="";
+            string reasonString = "";
             hitPoints = Math.Min(hitPoints, HitPointsDown());
             HitPoints += hitPoints;
-            if(reason != "")
+            if (reason != "")
             {
                 reasonString = $" by {reason}";
             }
+
             NarrationLog.LogMessage($"{Name} healed {hitPoints}{reasonString}");
 
             if (Conditions.HasCondition(ConditionEnum.Stable))
@@ -420,6 +432,7 @@ namespace CombSim
                 DoActionCategory(ActionCategory.Supplemental);
                 DoActionCategory(ActionCategory.Bonus);
             }
+
             TurnEnd();
         }
 
@@ -485,6 +498,7 @@ namespace CombSim
                 Console.WriteLine($"{roll} Success");
                 return true;
             }
+
             Console.WriteLine($"{roll} Failure");
             return false;
         }
@@ -492,7 +506,7 @@ namespace CombSim
         // Called when we have died
         protected void Died()
         {
-            if(!HasCondition(ConditionEnum.Dead)) NarrationLog.LogMessage($"{Name} has died");
+            if (!HasCondition(ConditionEnum.Dead)) NarrationLog.LogMessage($"{Name} has died");
             Conditions.RemoveAllConditions();
             Conditions.SetCondition(ConditionEnum.Dead);
             Game.Remove(this);
@@ -529,11 +543,14 @@ namespace CombSim
         public class OnAttackedEventArgs : EventArgs
         {
             public IAction Action;
+            public AttackMessage AttackMessage;
             public bool CriticalHit;
             public bool CriticalMiss;
+            public (StatEnum, int) Dc;
             public DamageRoll DmgRoll;
-            public SpellSavedEffect SpellSavedEffect;
+            public Action<Creature, Creature> OnHitSideEffect;
             public Creature Source;
+            public SpellSavedEffect SpellSavedEffect;
             public int ToHit;
         }
 
