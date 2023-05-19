@@ -4,6 +4,7 @@ namespace CombSim.Gear
     {
         // Light
         public static readonly Armour Leather = new Armour("Leather", 11, dexBonus: true);
+        public static readonly Armour StuddedLeather = new Armour("Studded Leather", 12, dexBonus: true);
 
         // Medium
         public static readonly Armour Hide = new Armour("Hide", 12, dexBonus: true);

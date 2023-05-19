@@ -36,6 +36,7 @@ namespace CombSim
 
             _game.Add_Creature( new Fighter("Frank", level: 3, "humans"));
             _game.Add_Creature( new Wizard("Wizard", level: 3, "humans"));
+            _game.Add_Creature( new Warlock("Warlock", level: 1, "humans"));
         }
     }
 }

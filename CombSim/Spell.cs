@@ -87,6 +87,7 @@ namespace CombSim
     public class DcSaveSpell: Spell
     {
         protected SpellSavedEffect SpellSavedEffect;
+        protected StatEnum SpellSaveAgainst;
         
         protected DcSaveSpell(string name, int level, ActionCategory actionCategory) : base(name, level, actionCategory)
         {
@@ -100,7 +101,7 @@ namespace CombSim
             {
                 Source = actor,
                 Action = this,
-                Dc = (StatEnum.Constitution, actor.SpellSaveDc()),
+                Dc = (SpellSaveAgainst, actor.SpellSaveDc()),
                 DmgRoll = DmgRoll,
                 SpellSavedEffect = SpellSavedEffect,
                 CriticalHit = false,

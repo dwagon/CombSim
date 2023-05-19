@@ -89,6 +89,26 @@ namespace CombSim
             return 8 + SpellAttackModifier();
         }
 
+        public List<Location> GetNeighbourLocations()
+        {
+            return Game.GetNeighbourLocations(this);
+        }
+        
+        public List<Creature> GetNeighbourCreatures()
+        {
+            var creatures = new List<Creature>();
+            foreach (var location in GetNeighbourLocations())
+            {
+                var critter = Game.GetCreatureAtLocation(location);
+                if (critter != null)
+                {
+                    creatures.Add(critter);
+                }
+            }
+
+            return creatures;
+        }
+
         private int CalcArmourClass()
         {
             if (_setArmourClass >= 0) return _setArmourClass;
