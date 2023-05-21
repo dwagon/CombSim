@@ -56,16 +56,15 @@ namespace CombSim.Spells
             }
         }
 
-        public override bool DoAction(Creature actor)
+        public override void DoAction(Creature actor)
         {
-            if (!actor.CanCastSpell(this)) return false;
+            if (!actor.CanCastSpell(this)) return;
             var enemy = actor.PickClosestEnemy();
-            if (enemy == null) return false;
+            if (enemy == null) return;
             actor.MoveWithinReachOfEnemy(1, enemy);
-            if (actor.DistanceTo(actor.PickClosestEnemy()) > Reach) return false;
+            if (actor.DistanceTo(actor.PickClosestEnemy()) > Reach) return;
             actor.DoCastSpell(this);
             DoBurningHandsAttack(actor);
-            return true;
         }
 
         private void DoBurningHandsAttack(Creature actor)
@@ -78,15 +77,13 @@ namespace CombSim.Spells
                 if (target is null) continue;
                 var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name());
 
-                target.OnAttacked?.Invoke(this, new Creature.OnAttackedEventArgs
+                target.OnSpellDcAttacked?.Invoke(this, new Creature.OnSpellDcAttackedEventArgs()
                 {
                     Source = actor,
-                    Action = this,
-                    Dc = (SpellSaveAgainst, actor.SpellSaveDc()),
+                    DcSaveStat = SpellSaveAgainst,
+                    DcSaveDc = actor.SpellSaveDc(),
                     DmgRoll = DmgRoll,
                     SpellSavedEffect = SpellSavedEffect,
-                    CriticalHit = false,
-                    CriticalMiss = false,
                     AttackMessage = attackMessage,
                     OnHitSideEffect = SideEffect
                 });

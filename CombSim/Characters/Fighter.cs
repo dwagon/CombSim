@@ -7,7 +7,7 @@ namespace CombSim.Characters
     {
         private readonly Dictionary<int, int> _hitPointsAtLevel = new Dictionary<int, int>()
         {
-            { 1, 12 }, { 2, 20 }, {3, 28}
+            { 1, 12 }, { 2, 20 }, { 3, 28 }
         };
 
         public Fighter(string name, int level = 1, string team = "Fighters") : base(name, team)
@@ -62,12 +62,11 @@ namespace CombSim.Characters
                 return result;
             }
 
-            public override bool DoAction(Creature actor)
+            public override void DoAction(Creature actor)
             {
                 Fighter f = (Fighter)actor;
                 actor.Heal(Dice.Roll("d10") + f.Level, "Second Wind");
                 actor.RemoveAction(this);
-                return true;
             }
         }
 
@@ -86,12 +85,12 @@ namespace CombSim.Characters
                 return 0;
             }
 
-            public override bool DoAction(Creature actor)
+            public override void DoAction(Creature actor)
             {
                 NarrationLog.LogMessage($"{actor.Name} uses Action Surge");
-                actor.DoActionCategory(ActionCategory.Action, force:true);
+                actor.DoActionCategory(ActionCategory.Action, force: true);
                 actor.RemoveAction(this);
-                return base.DoAction(actor);
+                base.DoAction(actor);
             }
         }
     }

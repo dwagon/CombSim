@@ -11,7 +11,7 @@ namespace CombSim
             _dmgRoll = damageRoll;
         }
 
-        public new bool DoAction(Creature actor)
+        public override void DoAction(Creature actor)
         {
             throw new NotImplementedException();
         }
@@ -26,15 +26,13 @@ namespace CombSim
         {
             if (target.HasCondition(ConditionEnum.Paralyzed) && actor.DistanceTo(target) < 2) hasAdvantage = true;
 
-            var roll = RollToHit(hasAdvantage: hasAdvantage,
-                hasDisadvantage: hasDisadvantage);
+            var roll = RollToHit(hasAdvantage: hasAdvantage, hasDisadvantage: hasDisadvantage);
             var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name(),
                 roll: roll, mods: attackBonus);
 
-            target.OnAttacked?.Invoke(this, new Creature.OnAttackedEventArgs
+            target.OnToHitAttacked?.Invoke(this, new Creature.OnToHitAttackedEventArgs
             {
                 Source = actor,
-                Action = this,
                 ToHit = roll + attackBonus,
                 DmgRoll = _dmgRoll + damageBonus,
                 CriticalHit = IsCriticalHit(actor, target, roll),
