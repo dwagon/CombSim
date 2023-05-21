@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace CombSim
@@ -6,11 +5,11 @@ namespace CombSim
     public class Equipment
     {
         private readonly List<Action> _actions = new List<Action>();
-        protected string _name;
+        protected readonly string Name;
 
-        public Equipment(string name)
+        protected Equipment(string name)
         {
-            _name = name;
+            Name = name;
         }
 
         protected void AddAction(Action act)
@@ -32,38 +31,81 @@ namespace CombSim
         {
             dmgRoll = dmgroll;
         }
+
+        public virtual void UseWeapon()
+        {
+        }
     }
-    
+
     public class MeleeWeapon : Weapon
     {
-        private int reach;
+        private int _reach;
 
         public MeleeWeapon(string name, DamageRoll dmgroll, int reach) : base(name, dmgroll)
         {
-            this.reach = reach;
-            AddAction(new MeleeAttack(name, dmgroll, reach));
+            _reach = reach;
+            AddAction(new MeleeAttack(name, dmgroll, reach, this));
         }
     }
 
     public class RangedWeapon : Weapon
     {
-        private int long_range;
-        private int short_range;
+        private int _ammunition;
+        private int _longRange;
+        private int _shortRange;
 
-        public RangedWeapon(string name, DamageRoll dmgroll, int short_range, int long_range) : base(name, dmgroll)
+        public RangedWeapon(string name, DamageRoll dmgroll, int shortRange, int longRange, int ammunition = -1) : base(
+            name, dmgroll)
         {
-            this.short_range = short_range;
-            this.long_range = long_range;
-            AddAction(new RangedAttack(name, dmgroll, short_range, long_range));
+            _shortRange = shortRange;
+            _longRange = longRange;
+            _ammunition = ammunition;
+            AddAction(new RangedAttack(name, dmgroll, shortRange, longRange, this));
+        }
+
+        public void AddAmmunition(int amount)
+        {
+            if (_ammunition < 0)
+            {
+                _ammunition = 0;
+            }
+
+            _ammunition += amount;
+        }
+
+        public bool HasAmmunition()
+        {
+            return _ammunition > 0;
+        }
+
+        public int GetAmmunition()
+        {
+            return _ammunition;
+        }
+
+        public bool UseAmmunition()
+        {
+            if (_ammunition <= 0)
+            {
+                return false;
+            }
+
+            _ammunition--;
+            return true;
+        }
+
+        public override void UseWeapon()
+        {
+            UseAmmunition();
         }
     }
 
     public class Armour : Equipment
     {
-        public int ArmourClass;
-        public int ArmourClassBonus;
-        public bool DexBonus;
-        public int MaxDexBonus;
+        public readonly int ArmourClass;
+        public readonly int ArmourClassBonus;
+        public readonly bool DexBonus;
+        public readonly int MaxDexBonus;
 
         public Armour(string name, int armourClass = 0, int armourClassBonus = 0, bool dexBonus = false,
             int maxDexBonus = 2) : base(name)
