@@ -4,6 +4,7 @@ namespace CombSim
     {
         private readonly int _reach;
         private readonly MeleeWeapon weapon;
+        protected bool Versatile;
 
         public MeleeAttack(string name, DamageRoll damageRoll, int reach = 1, MeleeWeapon weapon = null) : base(name,
             damageRoll)

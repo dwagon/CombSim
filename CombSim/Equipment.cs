@@ -26,10 +26,12 @@ namespace CombSim
     public class Weapon : Equipment
     {
         private DamageRoll dmgRoll;
+        protected bool Versatile;
 
         protected Weapon(string name, DamageRoll dmgroll) : base(name)
         {
             dmgRoll = dmgroll;
+            Versatile = false;
         }
 
         public virtual void UseWeapon()
