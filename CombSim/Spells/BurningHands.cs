@@ -15,6 +15,7 @@ namespace CombSim.Spells
 
         public override int GetHeuristic(Creature actor)
         {
+            if (!actor.CanCastSpell(this)) return 0;
             var enemy = actor.PickClosestEnemy();
             if (enemy == null) return 0;
             GetBestDirection(actor, out var numEnemiesCovered);
