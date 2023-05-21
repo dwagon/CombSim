@@ -14,7 +14,7 @@ namespace CombSim
         protected readonly List<Damage> DamageReceived;
         private readonly Effects Effects;
         protected readonly List<DamageTypeEnums> Immune;
-        private readonly List<DamageTypeEnums> Resistant;
+        protected readonly List<DamageTypeEnums> Resistant;
         public readonly Dictionary<StatEnum, Stat> Stats;
         protected readonly List<DamageTypeEnums> Vulnerable;
         private int _moves;
@@ -372,7 +372,6 @@ namespace CombSim
             TurnStart();
             if (IsAlive())
             {
-                DoActionCategory(ActionCategory.Bonus);
                 DoActionCategory(ActionCategory.Action);
                 DoActionCategory(ActionCategory.Supplemental);
                 DoActionCategory(ActionCategory.Bonus);
