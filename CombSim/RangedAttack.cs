@@ -28,23 +28,22 @@ namespace CombSim
             return result;
         }
 
-        public new bool DoAction(Creature actor)
+        public override void DoAction(Creature actor)
         {
             var enemy = actor.PickClosestEnemy();
-            if (enemy == null) return false;
+            if (enemy == null) return;
             var hasDisadvantage = false;
             actor.MoveWithinReachOfEnemy(_sRange, enemy);
 
             var distance = actor.DistanceTo(enemy);
             if (distance <= 1) hasDisadvantage = true;
             else if (distance <= _lRange) hasDisadvantage = true;
-            else if (distance > _lRange) return false;
+            else if (distance > _lRange) return;
 
             weapon.UseWeapon();
             DoAttack(actor, enemy, hasDisadvantage: hasDisadvantage,
                 attackBonus: actor.ProficiencyBonus + actor.Stats[StatEnum.Dexterity].Bonus(),
                 damageBonus: actor.Stats[StatEnum.Dexterity].Bonus());
-            return true;
         }
     }
 }

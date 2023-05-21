@@ -25,7 +25,9 @@ namespace CombSim.Monsters
         protected override void FallenUnconscious()
         {
             var lastDamage = DamageReceived.Last();
-            if(lastDamage.type != DamageTypeEnums.Radiant && MakeSavingThrow(StatEnum.Constitution, 5+lastDamage.hits))
+            if (HasCondition(ConditionEnum.Dead)) return;
+            if (lastDamage.type != DamageTypeEnums.Radiant &&
+                MakeSavingThrow(StatEnum.Constitution, 5 + lastDamage.hits))
             {
                 HitPoints = 1;
                 Console.WriteLine($"// {Name} uses Undead Fortitude to not fall unconscious");
@@ -34,12 +36,13 @@ namespace CombSim.Monsters
             {
                 base.FallenUnconscious();
             }
-            
         }
 
         private class ZombieSlam : MeleeAttack
         {
-            public ZombieSlam() : base("Slam", new DamageRoll("1d6", DamageTypeEnums.Bludgeoning)) {} 
+            public ZombieSlam() : base("Slam", new DamageRoll("1d6", DamageTypeEnums.Bludgeoning))
+            {
+            }
         }
     }
 }

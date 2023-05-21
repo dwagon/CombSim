@@ -1,8 +1,6 @@
-using System.Collections.Generic;
-
 namespace CombSim.Spells
 {
-    public class Thunderclap: DcSaveSpell
+    public class Thunderclap : DcSaveSpell
     {
         public Thunderclap() : base("Thunderclap", 0, ActionCategory.Action)
         {
@@ -25,30 +23,27 @@ namespace CombSim.Spells
             return 2 + numEnemies * 2;
         }
 
-        public override bool DoAction(Creature actor)
+        public override void DoAction(Creature actor)
         {
-            if (!actor.CanCastSpell(this)) return false;
+            if (!actor.CanCastSpell(this)) return;
             actor.DoCastSpell(this);
             foreach (var target in actor.GetNeighbourCreatures())
             {
                 DoThunderclapAttack(actor, target);
             }
-            return true;
         }
 
         private void DoThunderclapAttack(Creature actor, Creature target)
         {
             var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name());
 
-            target.OnAttacked?.Invoke(this, new Creature.OnAttackedEventArgs
+            target.OnSpellDcAttacked?.Invoke(this, new Creature.OnSpellDcAttackedEventArgs()
             {
                 Source = actor,
-                Action = this,
-                Dc = (SpellSaveAgainst, actor.SpellSaveDc()),
+                DcSaveStat = SpellSaveAgainst,
+                DcSaveDc = actor.SpellSaveDc(),
                 DmgRoll = DmgRoll,
                 SpellSavedEffect = SpellSavedEffect,
-                CriticalHit = false,
-                CriticalMiss = false,
                 AttackMessage = attackMessage,
                 OnHitSideEffect = SideEffect
             });

@@ -22,7 +22,6 @@ namespace CombSim
         private int _setArmourClass = -1;
         protected int HitPoints;
         protected int MaxHitPoints;
-        public EventHandler<OnAttackedEventArgs> OnAttacked;
         public EventHandler<OnTurnEndEventArgs> OnTurnEnd;
         public EventHandler<OnTurnStartEventArgs> OnTurnStart;
         public int ProficiencyBonus = 2;
@@ -83,7 +82,7 @@ namespace CombSim
         {
             HitPoints = MaxHitPoints;
             Conditions.SetCondition(ConditionEnum.Ok);
-            OnAttacked += Attacked;
+            BeingAttackedInitialise();
         }
 
         public List<Location> GetNeighbourLocations()
@@ -139,98 +138,6 @@ namespace CombSim
         {
             if (!dexBonus) return 0;
             return Math.Min(Stats[StatEnum.Dexterity].Bonus(), maxDexBonus);
-        }
-
-        // Attack that is a DC challenge
-        private Damage DcAttack(OnAttackedEventArgs e)
-        {
-            var dmg = e.DmgRoll.Roll();
-
-            bool save = MakeSavingThrow(e.Dc.Item1, e.Dc.Item2);
-            if (save)
-            {
-                switch (e.SpellSavedEffect)
-                {
-                    case SpellSavedEffect.DamageHalved:
-                        dmg /= 2;
-                        e.AttackMessage.Result = $"Saved for {dmg}";
-                        break;
-                    case SpellSavedEffect.NoDamage:
-                        e.AttackMessage.Result = $"Saved for no damage";
-                        dmg = new Damage(0, DamageTypeEnums.None);
-                        break;
-                }
-            }
-            else
-            {
-                e.AttackMessage.Result = $"Failed save for {dmg}";
-            }
-
-            return dmg;
-        }
-
-        // Attack that is a To Hit challenge
-        private Damage ToHitAttack(OnAttackedEventArgs e)
-        {
-            Damage dmg;
-            string damageNote = "";
-
-            if (e.CriticalMiss || e.ToHit <= ArmourClass)
-            {
-                e.AttackMessage.Result = "Miss";
-                NarrationLog.LogMessage(e.AttackMessage.ToString());
-                return null;
-            }
-
-            if (e.CriticalHit)
-            {
-                damageNote += " (Critical Hit) ";
-                dmg = e.DmgRoll.Roll(max: true) + e.DmgRoll.Roll();
-            }
-            else
-            {
-                dmg = e.DmgRoll.Roll();
-            }
-
-            dmg = ModifyDamageForVulnerabilityOrResistance(dmg, out string dmgModifier);
-            damageNote += dmgModifier;
-            e.AttackMessage.Result = $"Hit for {dmg} damage ({e.DmgRoll}) {damageNote}";
-            return dmg;
-        }
-
-        private void Attacked(object sender, OnAttackedEventArgs e)
-        {
-            Damage dmg = e.Dc.Item2 != 0 ? DcAttack(e) : ToHitAttack(e);
-            if (dmg is null) return;
-
-            NarrationLog.LogMessage(e.AttackMessage.ToString());
-            TakeDamage(dmg);
-            if (e.OnHitSideEffect != null)
-            {
-                e.OnHitSideEffect(e.Source, this);
-            }
-        }
-
-        private Damage ModifyDamageForVulnerabilityOrResistance(Damage dmg, out string dmgModifier)
-        {
-            dmgModifier = "";
-            if (Vulnerable.Contains(dmg.type))
-            {
-                dmgModifier = " (Vulnerable) ";
-                dmg *= 2;
-            }
-            else if (Resistant.Contains(dmg.type))
-            {
-                dmgModifier = " (Resistant) ";
-                dmg /= 2;
-            }
-            else if (Immune.Contains(dmg.type))
-            {
-                dmg = new Damage(0, dmg.type);
-                dmgModifier = " (Immune) ";
-            }
-
-            return dmg;
         }
 
         public bool HasCondition(ConditionEnum condition)
@@ -332,24 +239,6 @@ namespace CombSim
             return hitPoints;
         }
 
-        public void MoveWithinReachOfEnemy(int reach, Creature enemy)
-        {
-            var oldLocation = GetLocation();
-            if (enemy == null) return;
-            while (DistanceTo(enemy) > reach)
-                if (!MoveTowards(enemy))
-                    break;
-            if (oldLocation != GetLocation())
-            {
-                Console.WriteLine($"// {Name} moved from {oldLocation} to {GetLocation()}");
-            }
-        }
-
-        public Creature PickClosestEnemy()
-        {
-            return Game.PickClosestEnemy(this);
-        }
-
         public float DistanceTo(Creature enemy)
         {
             return Game.DistanceTo(this, enemy);
@@ -395,13 +284,6 @@ namespace CombSim
             Console.WriteLine($"// {Name} doing {action.Name()}");
             action.DoAction(this);
             _actionsThisTurn.Remove(action.Category);
-        }
-
-        private void TakeDamage(Damage damage)
-        {
-            HitPoints -= damage.hits;
-            DamageReceived.Add(damage);
-            if (HitPoints <= 0) FallenUnconscious();
         }
 
         protected virtual void FallenUnconscious()
@@ -462,20 +344,6 @@ namespace CombSim
         {
             Effects.Remove(effect);
             effect.End(this);
-        }
-
-        public class OnAttackedEventArgs : EventArgs
-        {
-            public IAction Action;
-            public AttackMessage AttackMessage;
-            public bool CriticalHit;
-            public bool CriticalMiss;
-            public (StatEnum, int) Dc;
-            public DamageRoll DmgRoll;
-            public Action<Creature, Creature> OnHitSideEffect;
-            public Creature Source;
-            public SpellSavedEffect SpellSavedEffect;
-            public int ToHit;
         }
 
         public class OnTurnEndEventArgs : EventArgs

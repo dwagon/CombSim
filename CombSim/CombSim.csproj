@@ -55,6 +55,7 @@
         <Compile Include="Conditions.cs"/>
         <Compile Include="Creature.cs"/>
         <Compile Include="CreatureAction.cs"/>
+        <Compile Include="CreatureAttacked.cs"/>
         <Compile Include="CreatureSpell.cs"/>
         <Compile Include="Damage.cs"/>
         <Compile Include="DamageRoll.cs"/>

@@ -91,7 +91,7 @@ namespace CombSim
             _grid[x, y] = thing;
         }
 
-        public void Set(Location location, Creature thing)
+        public void Set(Location location, object thing)
         {
             var x = location.X;
             var y = location.Y;

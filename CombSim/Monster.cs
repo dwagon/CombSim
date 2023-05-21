@@ -8,7 +8,7 @@ namespace CombSim
         {
         }
 
-        public string HitDice { get; protected set; }
+        protected string HitDice { get; set; }
 
         public override void Initialise()
         {

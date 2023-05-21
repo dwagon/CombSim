@@ -7,12 +7,12 @@ namespace CombSim.Spells
             Reach = 120 / 5;
         }
 
-        public override bool DoAction(Creature actor)
+        public override void DoAction(Creature actor)
         {
             var numMissiles = 3;
 
             var enemy = actor.PickClosestEnemy();
-            if (enemy == null) return false;
+            if (enemy == null) return;
             actor.MoveWithinReachOfEnemy(Reach, enemy);
 
             if (actor.Game.DistanceTo(actor, enemy) <= Reach)
@@ -23,20 +23,18 @@ namespace CombSim.Spells
                 }
 
                 actor.DoCastSpell(this);
-                return true;
             }
-
-            return false;
         }
 
         private void DoMissile(Creature actor, Creature target)
         {
-            var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name());
             var roll = RollToHit();
-            target.OnAttacked?.Invoke(this, new Creature.OnAttackedEventArgs
+            var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name(),
+                roll: roll, mods: actor.SpellAttackModifier());
+
+            target.OnToHitAttacked?.Invoke(this, new Creature.OnToHitAttackedEventArgs()
             {
                 Source = actor,
-                Action = this,
                 ToHit = roll + actor.SpellAttackModifier(),
                 DmgRoll = new DamageRoll("2d6", DamageTypeEnums.Fire),
                 CriticalHit = IsCriticalHit(actor, target, roll),

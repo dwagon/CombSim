@@ -34,7 +34,7 @@ namespace CombSim
 
         private class DrinkPotion : Action
         {
-            private Potion _potion;
+            private readonly Potion _potion;
 
             public DrinkPotion(string name, Potion potion) : base(name, ActionCategory.Bonus)
             {
@@ -47,13 +47,11 @@ namespace CombSim
                 return _potion.GetHeuristic(actor);
             }
 
-            public override bool DoAction(Creature actor)
+            public override void DoAction(Creature actor)
             {
-                if (_potion.IsConsumed())
-                    return false;
+                if (_potion.IsConsumed()) return;
                 _potion.PotionEffect(actor);
                 _potion.Consume();
-                return true;
             }
         }
     }
