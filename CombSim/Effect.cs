@@ -1,5 +1,3 @@
-using System;
-
 namespace CombSim
 {
     public class Effect
@@ -10,12 +8,15 @@ namespace CombSim
         {
             Name = name;
         }
-        
-        // Override for when the effect starts
-        public  virtual void Start(Creature target) {}
-        
-        // Override for when the effect ends
-        public virtual void End(Creature target) {}
 
+        // Override for when the effect starts
+        public virtual void Start(Creature target)
+        {
+        }
+
+        // Override for when the effect ends
+        public virtual void End(Creature target)
+        {
+        }
     }
 }

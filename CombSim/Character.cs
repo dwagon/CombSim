@@ -2,15 +2,16 @@ namespace CombSim
 {
     public class Character : Creature
     {
-        protected int Level { get;  set; }
-        private int _deathSavesGood;
         private int _deathSavesBad;
+        private int _deathSavesGood;
 
         protected Character(string name, string team = "Characters") : base(name, team)
         {
             _deathSavesGood = 0;
             _deathSavesBad = 0;
         }
+
+        protected int Level { get; set; }
 
         protected override void FallenUnconscious()
         {
@@ -26,9 +27,10 @@ namespace CombSim
         {
             base.TurnStart();
 
-            if (HasCondition(ConditionEnum.Unconscious) && !HasCondition(ConditionEnum.Stable) && !HasCondition(ConditionEnum.Dead))
+            if (HasCondition(ConditionEnum.Unconscious) && !HasCondition(ConditionEnum.Stable) &&
+                !HasCondition(ConditionEnum.Dead))
             {
-                int roll = Dice.RollD20();
+                var roll = Dice.RollD20();
 
                 if (roll == 1)
                 {
@@ -45,16 +47,18 @@ namespace CombSim
                     HitPoints = 1;
                     Conditions.RemoveCondition(ConditionEnum.Unconscious);
                     Conditions.SetCondition(ConditionEnum.Ok);
-                    NarrationLog.LogMessage($"{Name} has critically succeeded at a Death Saving Throw and is now conscious");
+                    NarrationLog.LogMessage(
+                        $"{Name} has critically succeeded at a Death Saving Throw and is now conscious");
                     _deathSavesGood = 0;
                     _deathSavesBad = 0;
                 }
                 else
                 {
                     _deathSavesGood++;
-                    NarrationLog.LogMessage($"{Name} has succeeded at a Death Saving Throw ({_deathSavesGood} Successes)");
+                    NarrationLog.LogMessage(
+                        $"{Name} has succeeded at a Death Saving Throw ({_deathSavesGood} Successes)");
                 }
-                
+
                 if (_deathSavesBad >= 3) Died();
                 if (_deathSavesGood >= 3) Conditions.SetCondition(ConditionEnum.Stable);
             }

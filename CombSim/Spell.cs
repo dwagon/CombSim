@@ -17,7 +17,7 @@ namespace CombSim
             Level = level;
         }
 
-        public DamageRoll DmgRoll { get; protected set; }
+        protected DamageRoll DmgRoll { get; set; }
         public int Reach { get; protected set; }
 
         // Overwrite if the attack has a side effect
@@ -25,19 +25,16 @@ namespace CombSim
         {
         }
 
-        public override bool DoAction(Creature actor)
+        public override void DoAction(Creature actor)
         {
-            if (!actor.CanCastSpell(this)) return false;
+            if (!actor.CanCastSpell(this)) return;
             var enemy = actor.PickClosestEnemy();
             actor.MoveWithinReachOfEnemy(Reach, enemy);
             if (actor.Game.DistanceTo(actor, enemy) <= Reach)
             {
                 actor.DoCastSpell(this);
                 DoAttack(actor, enemy);
-                return true;
             }
-
-            return false;
         }
 
         public override int GetHeuristic(Creature actor)
@@ -68,15 +65,13 @@ namespace CombSim
         {
             if (target.HasCondition(ConditionEnum.Paralyzed) && actor.DistanceTo(target) < 2) hasAdvantage = true;
 
-            var roll = RollToHit(hasAdvantage: hasAdvantage,
-                hasDisadvantage: hasDisadvantage);
+            var roll = RollToHit(hasAdvantage: hasAdvantage, hasDisadvantage: hasDisadvantage);
             var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name(),
                 roll: roll, mods: actor.SpellAttackModifier());
 
-            target.OnAttacked?.Invoke(this, new Creature.OnAttackedEventArgs
+            target.OnToHitAttacked?.Invoke(this, new Creature.OnToHitAttackedEventArgs()
             {
                 Source = actor,
-                Action = this,
                 ToHit = roll + actor.SpellAttackModifier(),
                 DmgRoll = DmgRoll,
                 CriticalHit = IsCriticalHit(actor, target, roll),
@@ -101,15 +96,13 @@ namespace CombSim
         {
             var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name());
 
-            target.OnAttacked?.Invoke(this, new Creature.OnAttackedEventArgs
+            target.OnSpellDcAttacked?.Invoke(this, new Creature.OnSpellDcAttackedEventArgs()
             {
                 Source = actor,
-                Action = this,
-                Dc = (SpellSaveAgainst, actor.SpellSaveDc()),
+                DcSaveStat = SpellSaveAgainst,
+                DcSaveDc = actor.SpellSaveDc(),
                 DmgRoll = DmgRoll,
                 SpellSavedEffect = SpellSavedEffect,
-                CriticalHit = false,
-                CriticalMiss = false,
                 AttackMessage = attackMessage,
                 OnHitSideEffect = SideEffect
             });
