@@ -1,6 +1,6 @@
 namespace CombSim
 {
-    public class RangedAttack : Attack, IAction
+    public class RangedAttack : Attack
     {
         private readonly int _lRange;
         private readonly int _sRange;

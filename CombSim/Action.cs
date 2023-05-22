@@ -11,15 +11,7 @@ namespace CombSim
         Supplemental // Things like Action Surge which don't actually take up anything
     }
 
-    public interface IAction
-    {
-        ActionCategory Category { get; set; }
-        void DoAction(Creature actor);
-        string Name();
-        int GetHeuristic(Creature actor);
-    }
-
-    public class Action : IAction
+    public class Action
     {
         private readonly string _name;
 
