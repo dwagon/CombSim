@@ -60,6 +60,7 @@
         <Compile Include="Damage.cs"/>
         <Compile Include="DamageRoll.cs"/>
         <Compile Include="DamageType.cs"/>
+        <Compile Include="DashAction.cs"/>
         <Compile Include="DcAttack.cs"/>
         <Compile Include="DcChallenge.cs"/>
         <Compile Include="Dice.cs"/>

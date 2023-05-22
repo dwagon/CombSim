@@ -45,6 +45,7 @@ namespace CombSim
             DamageReceived = new List<Damage>();
             CriticalHitRoll = 20;
             Attributes = new HashSet<Attribute>();
+            AddAction(new DashAction());
         }
 
         public int Speed { get; protected set; }
