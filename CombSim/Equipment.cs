@@ -26,13 +26,14 @@ namespace CombSim
     public class Weapon : Equipment
     {
         private DamageRoll dmgRoll;
-        protected bool Versatile;
 
         protected Weapon(string name, DamageRoll dmgroll) : base(name)
         {
             dmgRoll = dmgroll;
             Versatile = false;
         }
+
+        public bool Versatile { get; protected set; }
 
         public virtual void UseWeapon()
         {
@@ -46,7 +47,8 @@ namespace CombSim
         public MeleeWeapon(string name, DamageRoll dmgroll, int reach) : base(name, dmgroll)
         {
             _reach = reach;
-            AddAction(new MeleeAttack(name, dmgroll, reach, this));
+            var action = new MeleeAttack(name, dmgroll, reach, this);
+            AddAction(action);
         }
     }
 

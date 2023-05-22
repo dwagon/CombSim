@@ -28,5 +28,20 @@ namespace CombSim
         {
             return Dice.RollD20(hasAdvantage, hasDisadvantage) + Bonus();
         }
+
+        public int CompareTo(Stat obj)
+        {
+            return _value.CompareTo(obj._value);
+        }
+
+        public static bool operator <(Stat one, Stat two)
+        {
+            return one._value < two._value;
+        }
+
+        public static bool operator >(Stat one, Stat two)
+        {
+            return one._value > two._value;
+        }
     }
 }

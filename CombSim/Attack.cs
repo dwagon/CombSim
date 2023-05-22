@@ -2,13 +2,15 @@ using System;
 
 namespace CombSim
 {
-    public class Attack : Action, IAction
+    public class Attack : Action
     {
-        private readonly DamageRoll _dmgRoll;
+        protected readonly DamageRoll _dmgRoll;
+        protected bool Versatile;
 
         protected Attack(string name, DamageRoll damageRoll) : base(name, ActionCategory.Action)
         {
             _dmgRoll = damageRoll;
+            Versatile = false;
         }
 
         public override void DoAction(Creature actor)

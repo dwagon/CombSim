@@ -49,7 +49,7 @@ namespace CombSim.Monsters
             protected override void SideEffect(Creature actor, Creature target)
             {
                 Console.WriteLine($"// Ghoul Claw Side Effect");
-                if (!target.MakeSavingThrow(StatEnum.Constitution, 10))
+                if (!target.MakeSavingThrow(StatEnum.Constitution, 10, out _))
                 {
                     target.AddEffect(new GhoulParalyzation(target));
                 }
@@ -65,7 +65,7 @@ namespace CombSim.Monsters
 
             private void TurnEnd(Object sender, OnTurnEndEventArgs e)
             {
-                if (e.Creature.MakeSavingThrow(StatEnum.Constitution, 10))
+                if (e.Creature.MakeSavingThrow(StatEnum.Constitution, 10, out _))
                 {
                     Console.WriteLine("// Remove Effect Ghoul Para");
                     e.Creature.RemoveEffect(this);

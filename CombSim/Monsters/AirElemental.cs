@@ -20,8 +20,67 @@ namespace CombSim.Monsters
             Resistant.Add(DamageTypeEnums.Slashing);
             Immune.Add(DamageTypeEnums.Poison);
             ProficiencyBonus = 3;
+            Speed = 90 / 5;
 
-            AddAction(new ElementalSlap());
+            var multiAttack = new MultiAttack("Multi Attack", ActionCategory.Action);
+            multiAttack.AddAttack(new ElementalSlap());
+            multiAttack.AddAttack(new ElementalSlap());
+
+            AddAction(multiAttack);
+            var whirlWind = new Whirlwind();
+            AddAction(whirlWind);
+            this.OnTurnStart += whirlWind.TurnStart;
+        }
+
+        private class Whirlwind : DcAttack
+        {
+            private bool HasCharge;
+
+            public Whirlwind() : base("Whirlwind", StatEnum.Strength, 13,
+                new DamageRoll("3d8+2", DamageTypeEnums.Bludgeoning), SpellSavedEffect.DamageHalved)
+            {
+                HasCharge = true;
+            }
+
+            protected override void FailSideEffect(Creature actor, Creature target)
+            {
+                target.AddCondition(ConditionEnum.Prone);
+            }
+
+            public void TurnStart(object sender, OnTurnStartEventArgs e)
+            {
+                if (!HasCharge)
+                {
+                    var roll = Dice.Roll("1d6");
+                    if (roll >= 4)
+                    {
+                        HasCharge = true;
+                    }
+                }
+            }
+
+            public override int GetHeuristic(Creature actor)
+            {
+                var enemy = actor.PickClosestEnemy();
+                if (enemy == null) return 0;
+                if (!HasCharge) return 0;
+                if (actor.DistanceTo(enemy) <= 2) return 4;
+                if (actor.DistanceTo(enemy) <= 2 + actor.Speed) return 3;
+                return 1;
+            }
+
+            public override void DoAction(Creature actor)
+            {
+                var enemy = actor.PickClosestEnemy();
+                if (enemy == null) return;
+                actor.MoveWithinReachOfEnemy(1, enemy);
+
+                if (actor.Game.DistanceTo(actor, enemy) <= 1)
+                {
+                    DoAttack(actor, enemy);
+                    HasCharge = false;
+                }
+            }
         }
 
         private class ElementalSlap : MeleeAttack

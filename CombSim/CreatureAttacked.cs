@@ -4,13 +4,13 @@ namespace CombSim
 {
     public partial class Creature
     {
-        public EventHandler<OnSpellDcAttackedEventArgs> OnSpellDcAttacked;
+        public EventHandler<OnDcAttackedEventArgs> OnDcAttacked;
         public EventHandler<OnToHitAttackedEventArgs> OnToHitAttacked;
 
         private void BeingAttackedInitialise()
         {
-            OnToHitAttacked += WeaponAttacked;
-            OnSpellDcAttacked += SpellDcAttack;
+            OnToHitAttacked += AttackedByWeapon;
+            OnDcAttacked += AttackedbyDc;
         }
 
         private void TakeDamage(Damage damage)
@@ -18,24 +18,6 @@ namespace CombSim
             HitPoints -= damage.hits;
             DamageReceived.Add(damage);
             if (HitPoints <= 0) FallenUnconscious();
-        }
-
-        public void MoveWithinReachOfEnemy(int reach, Creature enemy)
-        {
-            var oldLocation = GetLocation();
-            if (enemy == null) return;
-            while (DistanceTo(enemy) > reach)
-                if (!MoveTowards(enemy))
-                    break;
-            if (oldLocation != GetLocation())
-            {
-                Console.WriteLine($"// {Name} moved from {oldLocation} to {GetLocation()}");
-            }
-        }
-
-        public Creature PickClosestEnemy()
-        {
-            return Game.PickClosestEnemy(this);
         }
 
         private Damage ModifyDamageForVulnerabilityOrResistance(Damage dmg, out string dmgModifier)
@@ -60,7 +42,7 @@ namespace CombSim
             return dmg;
         }
 
-        private void WeaponAttacked(object sender, OnToHitAttackedEventArgs e)
+        private void AttackedByWeapon(object sender, OnToHitAttackedEventArgs e)
         {
             if (e.CriticalMiss || e.ToHit <= ArmourClass)
             {
@@ -90,34 +72,42 @@ namespace CombSim
         }
 
         // Attack that is a DC challenge
-        private void SpellDcAttack(object sender, OnSpellDcAttackedEventArgs e)
+        private void AttackedbyDc(object sender, OnDcAttackedEventArgs e)
         {
             var dmg = e.DmgRoll.Roll();
+            string message = "";
 
-            if (MakeSavingThrow(e.DcSaveStat, e.DcSaveDc))
+            void Failed(Creature actor, Creature cause)
+            {
+                message = $"Failed save for {dmg}";
+                if (e.OnFailEffect != null) e.OnFailEffect(e.Source, this);
+            }
+
+            void Saved(Creature actor, Creature cause)
             {
                 switch (e.SpellSavedEffect)
                 {
                     case SpellSavedEffect.DamageHalved:
                         dmg /= 2;
-                        e.AttackMessage.Result = $"Saved for {dmg}";
+                        message = $"Saved for {dmg}";
                         break;
                     case SpellSavedEffect.NoDamage:
-                        e.AttackMessage.Result = $"Saved for no damage";
+                        message = $"Saved for no damage";
                         dmg = new Damage(0, DamageTypeEnums.None);
                         break;
                 }
-            }
-            else
-            {
-                e.AttackMessage.Result = $"Failed save for {dmg}";
+
+                if (e.OnSucceedEffect != null) e.OnSucceedEffect(e.Source, this);
             }
 
+            var dcChallenge = new DcChallenge(e.DcSaveStat, e.DcSaveDc, Saved, Failed);
+            Console.WriteLine($"// MakeSave({this}, {sender})");
+            dcChallenge.MakeSave(this, e.Source, out int roll);
+
             dmg = ModifyDamageForVulnerabilityOrResistance(dmg, out string dmgModifier);
-            e.AttackMessage.Result = $"Hit for {dmg} damage ({e.DmgRoll}) {dmgModifier}";
+            e.AttackMessage.Result = $"{message} :{roll} vs {e.DcSaveStat} DC {e.DcSaveDc} ({e.DmgRoll}) {dmgModifier}";
             NarrationLog.LogMessage(e.AttackMessage.ToString());
             TakeDamage(dmg);
-            if (e.OnHitSideEffect != null) e.OnHitSideEffect(e.Source, this);
         }
 
         public class OnToHitAttackedEventArgs : EventArgs
@@ -131,13 +121,14 @@ namespace CombSim
             public int ToHit;
         }
 
-        public class OnSpellDcAttackedEventArgs : EventArgs
+        public class OnDcAttackedEventArgs : EventArgs
         {
             public AttackMessage AttackMessage;
             public int DcSaveDc;
             public StatEnum DcSaveStat;
             public DamageRoll DmgRoll;
-            public Action<Creature, Creature> OnHitSideEffect;
+            public Action<Creature, Creature> OnFailEffect;
+            public Action<Creature, Creature> OnSucceedEffect;
             public Creature Source;
             public SpellSavedEffect SpellSavedEffect;
         }
