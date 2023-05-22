@@ -34,12 +34,12 @@ namespace CombSim.Monsters
 
         private class Whirlwind : DcAttack
         {
-            private bool HasCharge;
+            private bool _hasCharge;
 
             public Whirlwind() : base("Whirlwind", StatEnum.Strength, 13,
                 new DamageRoll("3d8+2", DamageTypeEnums.Bludgeoning), SpellSavedEffect.DamageHalved)
             {
-                HasCharge = true;
+                _hasCharge = true;
             }
 
             protected override void FailSideEffect(Creature actor, Creature target)
@@ -49,12 +49,12 @@ namespace CombSim.Monsters
 
             public void TurnStart(object sender, OnTurnStartEventArgs e)
             {
-                if (!HasCharge)
+                if (!_hasCharge)
                 {
                     var roll = Dice.Roll("1d6");
                     if (roll >= 4)
                     {
-                        HasCharge = true;
+                        _hasCharge = true;
                     }
                 }
             }
@@ -63,7 +63,7 @@ namespace CombSim.Monsters
             {
                 var enemy = actor.PickClosestEnemy();
                 if (enemy == null) return 0;
-                if (!HasCharge) return 0;
+                if (!_hasCharge) return 0;
                 if (actor.DistanceTo(enemy) <= 2) return 4;
                 if (actor.DistanceTo(enemy) <= 2 + actor.Speed) return 3;
                 return 1;
@@ -78,7 +78,7 @@ namespace CombSim.Monsters
                 if (actor.Game.DistanceTo(actor, enemy) <= 1)
                 {
                     DoAttack(actor, enemy);
-                    HasCharge = false;
+                    _hasCharge = false;
                 }
             }
         }

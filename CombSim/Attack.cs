@@ -23,10 +23,11 @@ namespace CombSim
         {
         }
 
-        protected void DoAttack(Creature actor, Creature target, bool hasAdvantage = false,
-            bool hasDisadvantage = false, int attackBonus = 0, int damageBonus = 0)
+        protected void DoAttack(Creature actor, Creature target, int attackBonus = 0, int damageBonus = 0)
         {
-            if (target.HasCondition(ConditionEnum.Paralyzed) && actor.DistanceTo(target) < 2) hasAdvantage = true;
+            var hasDisadvantage = false;
+            var hasAdvantage = false;
+            HasAdvantageDisadvantage(actor, target, ref hasAdvantage, ref hasDisadvantage);
 
             var roll = RollToHit(hasAdvantage: hasAdvantage, hasDisadvantage: hasDisadvantage);
             var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name(),

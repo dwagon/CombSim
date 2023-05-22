@@ -325,6 +325,12 @@ namespace CombSim
             {
                 Creature = this
             });
+            if (HasCondition(ConditionEnum.Prone))
+            {
+                _moves /= 2;
+                RemoveCondition(ConditionEnum.Prone);
+            }
+
             _actionsThisTurn.Clear();
             if (!Conditions.HasCondition(ConditionEnum.Ok)) return;
             if (Conditions.HasCondition(ConditionEnum.Paralyzed)) return;

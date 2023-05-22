@@ -32,16 +32,20 @@ namespace CombSim
         {
             var enemy = actor.PickClosestEnemy();
             if (enemy == null) return;
+            var hasAdvantage = false;
             var hasDisadvantage = false;
             actor.MoveWithinReachOfEnemy(_sRange, enemy);
 
             var distance = actor.DistanceTo(enemy);
+
             if (distance <= 1) hasDisadvantage = true;
             else if (distance <= _lRange) hasDisadvantage = true;
             else if (distance > _lRange) return;
 
+            HasAdvantageDisadvantage(actor, enemy, ref hasAdvantage, ref hasDisadvantage);
+
             weapon.UseWeapon();
-            DoAttack(actor, enemy, hasDisadvantage: hasDisadvantage,
+            DoAttack(actor, enemy,
                 attackBonus: actor.ProficiencyBonus + actor.Stats[StatEnum.Dexterity].Bonus(),
                 damageBonus: actor.Stats[StatEnum.Dexterity].Bonus());
         }

@@ -71,8 +71,7 @@ namespace CombSim
             return 0;
         }
 
-        protected virtual void DoAttack(Creature actor, Creature target, bool hasAdvantage = false,
-            bool hasDisadvantage = false)
+        protected virtual void DoAttack(Creature actor, Creature target)
         {
             throw new NotImplementedException();
         }
@@ -84,10 +83,12 @@ namespace CombSim
         {
         }
 
-        protected override void DoAttack(Creature actor, Creature target, bool hasAdvantage = false,
-            bool hasDisadvantage = false)
+        protected override void DoAttack(Creature actor, Creature target)
         {
-            if (target.HasCondition(ConditionEnum.Paralyzed) && actor.DistanceTo(target) < 2) hasAdvantage = true;
+            var hasAdvantage = false;
+            var hasDisadvantage = false;
+
+            HasAdvantageDisadvantage(actor, target, ref hasAdvantage, ref hasDisadvantage);
 
             var roll = RollToHit(hasAdvantage: hasAdvantage, hasDisadvantage: hasDisadvantage);
             var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name(),
@@ -115,8 +116,7 @@ namespace CombSim
         {
         }
 
-        protected override void DoAttack(Creature actor, Creature target, bool hasAdvantage = false,
-            bool hasDisadvantage = false)
+        protected override void DoAttack(Creature actor, Creature target)
         {
             var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name());
 

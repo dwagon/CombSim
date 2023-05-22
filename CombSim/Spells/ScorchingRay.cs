@@ -28,7 +28,11 @@ namespace CombSim.Spells
 
         private void DoMissile(Creature actor, Creature target)
         {
-            var roll = RollToHit();
+            var hasAdvantage = false;
+            var hasDisadvantage = false;
+
+            HasAdvantageDisadvantage(actor, target, ref hasAdvantage, ref hasDisadvantage);
+            var roll = RollToHit(hasAdvantage, hasDisadvantage);
             var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name(),
                 roll: roll, mods: actor.SpellAttackModifier());
 
