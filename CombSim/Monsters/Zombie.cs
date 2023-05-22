@@ -27,7 +27,7 @@ namespace CombSim.Monsters
             var lastDamage = DamageReceived.Last();
             if (HasCondition(ConditionEnum.Dead)) return;
             if (lastDamage.type != DamageTypeEnums.Radiant &&
-                MakeSavingThrow(StatEnum.Constitution, 5 + lastDamage.hits))
+                MakeSavingThrow(StatEnum.Constitution, 5 + lastDamage.hits, out _))
             {
                 HitPoints = 1;
                 Console.WriteLine($"// {Name} uses Undead Fortitude to not fall unconscious");

@@ -28,6 +28,7 @@ namespace CombSim
         public override void DoAction(Creature actor)
         {
             if (!actor.CanCastSpell(this)) return;
+
             var enemy = actor.PickClosestEnemy();
             actor.MoveWithinReachOfEnemy(Reach, enemy);
             if (actor.Game.DistanceTo(actor, enemy) <= Reach)
@@ -39,16 +40,38 @@ namespace CombSim
 
         public override int GetHeuristic(Creature actor)
         {
-            if (!actor.CanCastSpell(this)) return 0;
+            if (!actor.CanCastSpell(this))
+            {
+                Console.WriteLine($"//\t\t{actor.Name} can't cast");
+                return 0;
+            }
+
             var enemy = actor.PickClosestEnemy();
-            if (enemy == null) return 0;
+            if (enemy == null)
+            {
+                Console.WriteLine($"//\t\tNo enemy found");
+                return 0;
+            }
+
+            // Enemy is within range of spell
             if (actor.DistanceTo(enemy) <= Reach)
+            {
+                Console.WriteLine($"//\t\tEnemy {enemy.Name} within reach");
+                return 3 + 2 * Level;
+            }
+
+            // Enemy is within range of spell if we move
+            if (actor.DistanceTo(enemy) <= Reach + actor.Speed)
+            {
+                Console.WriteLine($"//\t\tEnemy {enemy.Name} within reach if we move");
                 return 2 + 2 * Level;
+            }
+
+            Console.WriteLine($"//\t\tNope");
             return 0;
         }
 
-        protected virtual void DoAttack(Creature actor, Creature target, bool hasAdvantage = false,
-            bool hasDisadvantage = false)
+        protected virtual void DoAttack(Creature actor, Creature target)
         {
             throw new NotImplementedException();
         }
@@ -60,10 +83,12 @@ namespace CombSim
         {
         }
 
-        protected override void DoAttack(Creature actor, Creature target, bool hasAdvantage = false,
-            bool hasDisadvantage = false)
+        protected override void DoAttack(Creature actor, Creature target)
         {
-            if (target.HasCondition(ConditionEnum.Paralyzed) && actor.DistanceTo(target) < 2) hasAdvantage = true;
+            var hasAdvantage = false;
+            var hasDisadvantage = false;
+
+            HasAdvantageDisadvantage(actor, target, ref hasAdvantage, ref hasDisadvantage);
 
             var roll = RollToHit(hasAdvantage: hasAdvantage, hasDisadvantage: hasDisadvantage);
             var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name(),
@@ -91,12 +116,11 @@ namespace CombSim
         {
         }
 
-        protected override void DoAttack(Creature actor, Creature target, bool hasAdvantage = false,
-            bool hasDisadvantage = false)
+        protected override void DoAttack(Creature actor, Creature target)
         {
             var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name());
 
-            target.OnSpellDcAttacked?.Invoke(this, new Creature.OnSpellDcAttackedEventArgs()
+            target.OnDcAttacked?.Invoke(this, new Creature.OnDcAttackedEventArgs()
             {
                 Source = actor,
                 DcSaveStat = SpellSaveAgainst,
@@ -104,7 +128,7 @@ namespace CombSim
                 DmgRoll = DmgRoll,
                 SpellSavedEffect = SpellSavedEffect,
                 AttackMessage = attackMessage,
-                OnHitSideEffect = SideEffect
+                OnFailEffect = SideEffect
             });
         }
     }

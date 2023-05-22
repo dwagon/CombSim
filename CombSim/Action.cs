@@ -1,3 +1,5 @@
+using System;
+
 namespace CombSim
 {
     public enum ActionCategory
@@ -64,6 +66,30 @@ namespace CombSim
         protected static bool IsCriticalMiss(Creature actor, Creature target, int roll)
         {
             return roll == 1;
+        }
+
+        protected void HasAdvantageDisadvantage(Creature actor, Creature target, ref bool hasAdvantage,
+            ref bool hasDisadvantage)
+        {
+            Console.WriteLine($"// Before Advantage: {hasAdvantage}\tDisadvantage: {hasDisadvantage}");
+            if (actor.DistanceTo(target) < 2)
+            {
+                if (target.HasCondition(ConditionEnum.Paralyzed)) hasAdvantage = true;
+                if (target.HasCondition(ConditionEnum.Prone)) hasAdvantage = true;
+                if (actor.HasCondition(ConditionEnum.Prone)) hasDisadvantage = true;
+            }
+            else
+            {
+                if (target.HasCondition(ConditionEnum.Prone)) hasDisadvantage = true;
+            }
+
+            if (hasAdvantage && hasDisadvantage)
+            {
+                hasAdvantage = false;
+                hasDisadvantage = false;
+            }
+
+            Console.WriteLine($"// After Advantage: {hasAdvantage}\tDisadvantage: {hasDisadvantage}");
         }
     }
 }

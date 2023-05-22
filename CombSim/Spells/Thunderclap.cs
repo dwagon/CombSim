@@ -37,7 +37,7 @@ namespace CombSim.Spells
         {
             var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name());
 
-            target.OnSpellDcAttacked?.Invoke(this, new Creature.OnSpellDcAttackedEventArgs()
+            target.OnDcAttacked?.Invoke(this, new Creature.OnDcAttackedEventArgs()
             {
                 Source = actor,
                 DcSaveStat = SpellSaveAgainst,
@@ -45,7 +45,7 @@ namespace CombSim.Spells
                 DmgRoll = DmgRoll,
                 SpellSavedEffect = SpellSavedEffect,
                 AttackMessage = attackMessage,
-                OnHitSideEffect = SideEffect
+                OnFailEffect = SideEffect
             });
         }
     }

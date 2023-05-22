@@ -60,6 +60,8 @@
         <Compile Include="Damage.cs"/>
         <Compile Include="DamageRoll.cs"/>
         <Compile Include="DamageType.cs"/>
+        <Compile Include="DcAttack.cs"/>
+        <Compile Include="DcChallenge.cs"/>
         <Compile Include="Dice.cs"/>
         <Compile Include="Effect.cs"/>
         <Compile Include="Effects.cs"/>
@@ -72,12 +74,14 @@
         <Compile Include="Location.cs"/>
         <Compile Include="MeleeAttack.cs"/>
         <Compile Include="Monster.cs"/>
+        <Compile Include="Monsters\AirElemental.cs"/>
         <Compile Include="Monsters\Ghoul.cs"/>
         <Compile Include="Monsters\Goblin.cs"/>
         <Compile Include="Monsters\Kobold.cs"/>
         <Compile Include="Monsters\Ogre.cs"/>
         <Compile Include="Monsters\Skeleton.cs"/>
         <Compile Include="Monsters\Zombie.cs"/>
+        <Compile Include="MultiAttack.cs"/>
         <Compile Include="NarrationLog.cs"/>
         <Compile Include="Potion.cs"/>
         <Compile Include="Program.cs"/>

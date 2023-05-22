@@ -1,6 +1,6 @@
 namespace CombSim
 {
-    public class MeleeAttack : Attack, IAction
+    public class MeleeAttack : Attack
     {
         private readonly int _reach;
         private readonly MeleeWeapon _weapon;
@@ -16,12 +16,23 @@ namespace CombSim
         {
             var enemy = actor.PickClosestEnemy();
             if (enemy == null) return 0;
-            if (actor.DistanceTo(enemy) <= 2)
+            if (actor.DistanceTo(enemy) <= 2) return 4;
+            return 1;
+        }
+
+        private StatEnum UseStatForAttack(Creature actor)
+        {
+            var bonusStat = StatEnum.Strength;
+            var weapVersatile = false;
+
+            if (_weapon != null) weapVersatile = _weapon.Versatile;
+
+            if ((Versatile || weapVersatile) && actor.Stats[StatEnum.Dexterity] > actor.Stats[StatEnum.Strength])
             {
-                return 4;
+                bonusStat = StatEnum.Dexterity;
             }
 
-            return 1;
+            return bonusStat;
         }
 
         public override void DoAction(Creature actor)
@@ -33,8 +44,11 @@ namespace CombSim
             if (actor.Game.DistanceTo(actor, enemy) <= _reach)
             {
                 _weapon?.UseWeapon();
-                DoAttack(actor, enemy, attackBonus: actor.ProficiencyBonus + actor.Stats[StatEnum.Strength].Bonus(),
-                    damageBonus: actor.Stats[StatEnum.Strength].Bonus());
+
+                var bonusStat = UseStatForAttack(actor);
+
+                DoAttack(actor, enemy, attackBonus: actor.ProficiencyBonus + actor.Stats[bonusStat].Bonus(),
+                    damageBonus: actor.Stats[bonusStat].Bonus());
             }
         }
     }

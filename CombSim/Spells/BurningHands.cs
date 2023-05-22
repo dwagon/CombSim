@@ -15,6 +15,7 @@ namespace CombSim.Spells
 
         public override int GetHeuristic(Creature actor)
         {
+            if (!actor.CanCastSpell(this)) return 0;
             var enemy = actor.PickClosestEnemy();
             if (enemy == null) return 0;
             GetBestDirection(actor, out var numEnemiesCovered);
@@ -77,7 +78,7 @@ namespace CombSim.Spells
                 if (target is null) continue;
                 var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name());
 
-                target.OnSpellDcAttacked?.Invoke(this, new Creature.OnSpellDcAttackedEventArgs()
+                target.OnDcAttacked?.Invoke(this, new Creature.OnDcAttackedEventArgs()
                 {
                     Source = actor,
                     DcSaveStat = SpellSaveAgainst,
@@ -85,7 +86,7 @@ namespace CombSim.Spells
                     DmgRoll = DmgRoll,
                     SpellSavedEffect = SpellSavedEffect,
                     AttackMessage = attackMessage,
-                    OnHitSideEffect = SideEffect
+                    OnFailEffect = SideEffect
                 });
             }
         }

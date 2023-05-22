@@ -8,13 +8,12 @@ namespace CombSim
         private readonly List<Action> _actions;
         private readonly HashSet<ActionCategory> _actionsThisTurn;
         private readonly List<Equipment> _equipment;
-        private readonly int _speed;
         private readonly Dictionary<string, Spell> _spells;
         protected readonly Conditions Conditions;
         protected readonly List<Damage> DamageReceived;
         private readonly Effects Effects;
         protected readonly List<DamageTypeEnums> Immune;
-        private readonly List<DamageTypeEnums> Resistant;
+        protected readonly List<DamageTypeEnums> Resistant;
         public readonly Dictionary<StatEnum, Stat> Stats;
         protected readonly List<DamageTypeEnums> Vulnerable;
         private int _moves;
@@ -32,7 +31,7 @@ namespace CombSim
         {
             Name = name;
             Team = team;
-            _speed = 6;
+            Speed = 6;
             Stats = new Dictionary<StatEnum, Stat>();
             Conditions = new Conditions();
             Effects = new Effects();
@@ -47,6 +46,8 @@ namespace CombSim
             CriticalHitRoll = 20;
             Attributes = new HashSet<Attribute>();
         }
+
+        public int Speed { get; protected set; }
 
         protected HashSet<Attribute> Attributes { get; private set; }
         public int CriticalHitRoll { get; protected set; }
@@ -261,7 +262,6 @@ namespace CombSim
             TurnStart();
             if (IsAlive())
             {
-                DoActionCategory(ActionCategory.Bonus);
                 DoActionCategory(ActionCategory.Action);
                 DoActionCategory(ActionCategory.Supplemental);
                 DoActionCategory(ActionCategory.Bonus);
@@ -291,15 +291,15 @@ namespace CombSim
         {
         }
 
-        public bool MakeSavingThrow(StatEnum stat, int dc)
+        public bool MakeSavingThrow(StatEnum stat, int dc, out int roll)
         {
             Console.Write($"// {Name} does {stat} saving vs DC {dc} - ");
+            roll = Stats[stat].Roll();
             if (HasCondition(ConditionEnum.Paralyzed))
             {
                 if (stat == StatEnum.Strength || stat == StatEnum.Dexterity) return false;
             }
 
-            var roll = Stats[stat].Roll();
             if (roll > dc)
             {
                 Console.WriteLine($"{roll} Success");
@@ -325,10 +325,16 @@ namespace CombSim
             {
                 Creature = this
             });
+            if (HasCondition(ConditionEnum.Prone))
+            {
+                _moves /= 2;
+                RemoveCondition(ConditionEnum.Prone);
+            }
+
             _actionsThisTurn.Clear();
             if (!Conditions.HasCondition(ConditionEnum.Ok)) return;
             if (Conditions.HasCondition(ConditionEnum.Paralyzed)) return;
-            _moves = _speed;
+            _moves = Speed;
             _actionsThisTurn.Add(ActionCategory.Action);
             _actionsThisTurn.Add(ActionCategory.Bonus);
             _actionsThisTurn.Add(ActionCategory.Reaction);
@@ -345,6 +351,25 @@ namespace CombSim
         {
             Effects.Remove(effect);
             effect.End(this);
+        }
+
+
+        public void MoveWithinReachOfEnemy(int reach, Creature enemy)
+        {
+            var oldLocation = GetLocation();
+            if (enemy == null) return;
+            while (DistanceTo(enemy) > reach)
+                if (!MoveTowards(enemy))
+                    break;
+            if (oldLocation != GetLocation())
+            {
+                Console.WriteLine($"// {Name} moved from {oldLocation} to {GetLocation()}");
+            }
+        }
+
+        public Creature PickClosestEnemy()
+        {
+            return Game.PickClosestEnemy(this);
         }
 
         public class OnTurnEndEventArgs : EventArgs
