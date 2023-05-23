@@ -8,18 +8,25 @@ namespace CombSim
         {
         }
 
-        public override int GetHeuristic(Creature actor)
+        public override int GetHeuristic(Creature actor, out string reason)
         {
             var enemy = actor.PickClosestEnemy();
-            if (actor.DistanceTo(enemy) > actor.Speed) return 1;
+            if (actor.DistanceTo(enemy) > actor.Speed)
+            {
+                reason = $"Enemy {enemy.Name} needs to be closer";
+                return 1;
+            }
+
+            reason = $"Enemy {enemy.Name} close enough";
             return 0;
         }
 
         public override void DoAction(Creature actor)
         {
-            Console.WriteLine($"// Dashing");
             var enemy = actor.PickClosestEnemy();
+            actor.Moves = Math.Max(actor.Moves, actor.Speed);
             actor.MoveWithinReachOfEnemy(actor.Speed, enemy);
+            actor.Moves = actor.Speed;
         }
     }
 }
