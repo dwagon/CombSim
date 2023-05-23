@@ -6,17 +6,18 @@ namespace CombSim.Characters
 {
     public class Warlock : Character
     {
-        private readonly Dictionary<int, int> _hitPointsAtLevel = new Dictionary<int, int>()
+        private readonly Dictionary<int, int> _hitPointsAtLevel = new Dictionary<int, int>
         {
-            { 1, 10 }, { 2, 18 }
+            { 1, 10 }, { 2, 18 }, { 3, 24 }
         };
 
         // CasterLevel: <SpellLevel: NumberOfSlots>
-        private readonly Dictionary<int, Dictionary<int, int>> _spellsAtLevel =
-            new Dictionary<int, Dictionary<int, int>>()
+        private readonly Dictionary<int, int> _spellsAtLevel =
+            new Dictionary<int, int>
             {
-                { 1, new Dictionary<int, int>() { { 1, 1 } } },
-                { 2, new Dictionary<int, int>() { { 1, 2 } } },
+                { 1, 1 },
+                { 2, 2 },
+                { 3, 2 }
             };
 
         public Warlock(string name, int level = 1, string team = "Warlocks") : base(name, team)
@@ -53,6 +54,13 @@ namespace CombSim.Characters
                 Attributes.Add(Attribute.EldritchSpear);
             }
 
+            if (Level >= 3) // Pact of the Tome
+            {
+                AddSpell(new FireBolt());
+                AddSpell(new ShockingGrasp());
+                // AddSpell(new ViciousMockery());
+            }
+
             if (HasAttribute(Attribute.EldritchSpear)) ebRange = 300 / 5;
             if (HasAttribute(Attribute.AgonizingBlast)) ebDmgBonus = Stats[StatEnum.Charisma].Bonus();
             AddSpell(new EldritchBlast(ebRange, ebDmgBonus));
@@ -61,26 +69,21 @@ namespace CombSim.Characters
         public override string ToString()
         {
             var baseString = base.ToString();
-            var spellString = "Spells: ";
-            foreach (var kvp in _spellsAtLevel[Level])
-            {
-                spellString += $"L{kvp.Key} = {kvp.Value}; ";
-            }
-
+            var spellString = $"Spells: {_spellsAtLevel[Level]}";
             return baseString + spellString;
         }
 
         public override bool CanCastSpell(Spell spell)
         {
             if (spell.Level == 0) return true;
-            if (_spellsAtLevel[Level][spell.Level] >= 1) return true;
+            if (_spellsAtLevel[Level] >= 1) return true;
             return false;
         }
 
         public override void DoCastSpell(Spell spell)
         {
             if (spell.Level == 0) return;
-            _spellsAtLevel[Level][spell.Level]--;
+            _spellsAtLevel[Level]--;
         }
     }
 }
