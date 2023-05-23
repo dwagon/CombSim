@@ -42,17 +42,11 @@ namespace CombSim
         {
             if (!actor.CanCastSpell(this))
             {
-                reason = $"{actor.Name} can't cast {this}";
+                reason = $"{actor.Name} can't cast {Name()}";
                 return 0;
             }
 
             var enemy = actor.PickClosestEnemy();
-            if (enemy == null)
-            {
-                reason = $"No enemy found";
-                return 0;
-            }
-
             // Enemy is within range of spell
             if (actor.DistanceTo(enemy) <= Reach)
             {
@@ -67,7 +61,7 @@ namespace CombSim
                 return 2 + 2 * Level;
             }
 
-            reason = $"Nothing within range";
+            reason = "Nothing within range";
             return 0;
         }
 

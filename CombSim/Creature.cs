@@ -53,8 +53,8 @@ namespace CombSim
         protected HashSet<Attribute> Attributes { get; private set; }
         public int CriticalHitRoll { get; protected set; }
 
-        public string Name { get; protected set; }
-        public string Team { get; protected set; }
+        public string Name { get; }
+        public string Team { get; }
 
         public int ArmourClass
         {
