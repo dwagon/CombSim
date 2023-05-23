@@ -16,11 +16,11 @@ namespace CombSim
         protected readonly List<DamageTypeEnums> Resistant;
         public readonly Dictionary<StatEnum, Stat> Stats;
         protected readonly List<DamageTypeEnums> Vulnerable;
-        private int _moves;
 
         private int _setArmourClass = -1;
         protected int HitPoints;
         protected int MaxHitPoints;
+        public int Moves;
         public EventHandler<OnTurnEndEventArgs> OnTurnEnd;
         public EventHandler<OnTurnStartEventArgs> OnTurnStart;
         public int ProficiencyBonus = 2;
@@ -181,11 +181,11 @@ namespace CombSim
         // Move towards a location
         private bool MoveTowards(Location destination)
         {
-            if (_moves <= 0)
+            if (Moves <= 0)
                 return false;
             var next = Game.NextLocationTowards(this, destination);
             Game.Move(this, next);
-            _moves--;
+            Moves--;
             return true;
         }
 
@@ -253,13 +253,16 @@ namespace CombSim
 
         public void DoActionCategory(ActionCategory actionCategory, bool force = false)
         {
+            var enemy = PickClosestEnemy();
+            if (enemy == null) return;
             if (force) _actionsThisTurn.Add(actionCategory);
             PerformAction(PickActionToDo(actionCategory));
         }
 
         public void TakeTurn()
         {
-            Console.WriteLine($"// {Name} -----------------------------------------------");
+            Console.WriteLine(
+                $"// {Name} -------------------------------------------------------------------------------------------");
             TurnStart();
             if (IsAlive())
             {
@@ -273,13 +276,27 @@ namespace CombSim
 
         private void TurnEnd()
         {
+            if (IsAlive())
+            {
+                SpendRestOfMove();
+            }
+
             OnTurnEnd?.Invoke(this, new OnTurnEndEventArgs
             {
                 Creature = this
             });
         }
 
-        private void PerformAction(IAction action)
+        // Spend unused moves to get close(ish) to enemies
+        private void SpendRestOfMove()
+        {
+            var enemy = PickClosestEnemy();
+            if (enemy == null) return;
+            Console.WriteLine($"// Spending rest of move {Moves} to get closer to {enemy.Name}");
+            MoveWithinReachOfEnemy(5, enemy);
+        }
+
+        private void PerformAction(Action action)
         {
             if (action is null) return;
 
@@ -328,14 +345,15 @@ namespace CombSim
             });
             if (HasCondition(ConditionEnum.Prone))
             {
-                _moves /= 2;
+                Moves /= 2;
                 RemoveCondition(ConditionEnum.Prone);
+                Console.WriteLine($"// Getting up from prone");
             }
 
             _actionsThisTurn.Clear();
             if (!Conditions.HasCondition(ConditionEnum.Ok)) return;
             if (Conditions.HasCondition(ConditionEnum.Paralyzed)) return;
-            _moves = Speed;
+            Moves = Speed;
             _actionsThisTurn.Add(ActionCategory.Action);
             _actionsThisTurn.Add(ActionCategory.Bonus);
             _actionsThisTurn.Add(ActionCategory.Reaction);

@@ -25,8 +25,8 @@ namespace CombSim
 
             foreach (var action in possibleActions)
             {
-                var heuristic = action.GetHeuristic(this);
-                Console.WriteLine($"//\tHeuristic of {action.Name()} = {heuristic}");
+                var heuristic = action.GetHeuristic(this, out string reason);
+                Console.WriteLine($"//\t{action.Name().PadLeft(30)} = {heuristic}\t{reason}");
                 if (heuristic > 0) sortableActions.Add((heuristic, action));
             }
 

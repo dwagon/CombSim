@@ -46,18 +46,19 @@ namespace CombSim.Characters
             {
             }
 
-            public override int GetHeuristic(Creature actor)
+            public override int GetHeuristic(Creature actor, out string reason)
             {
                 int result;
 
                 if (actor.PercentHitPoints() > 50)
                 {
-                    result = 0;
+                    reason = "Have most of our hitpoints";
+                    return 0;
                 }
-                else
-                {
-                    result = actor.HitPointsDown() / 10 + 1;
-                }
+
+                var magicFormula = actor.HitPointsDown() / 10 + 1;
+                reason = $"Down {actor.HitPointsDown()} HP";
+                result = magicFormula;
 
                 return result;
             }
@@ -76,12 +77,17 @@ namespace CombSim.Characters
             {
             }
 
-            public override int GetHeuristic(Creature actor)
+            public override int GetHeuristic(Creature actor, out string reason)
             {
                 // Only invoke it if we are next to an enemy
                 var enemy = actor.PickClosestEnemy();
                 if (actor.DistanceTo(enemy) < 2)
+                {
+                    reason = "Adjacent to enemy";
                     return 1;
+                }
+
+                reason = "Not close enough";
                 return 0;
             }
 

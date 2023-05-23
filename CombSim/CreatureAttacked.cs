@@ -101,7 +101,6 @@ namespace CombSim
             }
 
             var dcChallenge = new DcChallenge(e.DcSaveStat, e.DcSaveDc, Saved, Failed);
-            Console.WriteLine($"// MakeSave({this}, {sender})");
             dcChallenge.MakeSave(this, e.Source, out int roll);
 
             dmg = ModifyDamageForVulnerabilityOrResistance(dmg, out string dmgModifier);

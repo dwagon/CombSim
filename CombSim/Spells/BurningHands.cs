@@ -13,12 +13,16 @@ namespace CombSim.Spells
             Reach = 15 / 5;
         }
 
-        public override int GetHeuristic(Creature actor)
+        public override int GetHeuristic(Creature actor, out string reason)
         {
-            if (!actor.CanCastSpell(this)) return 0;
-            var enemy = actor.PickClosestEnemy();
-            if (enemy == null) return 0;
+            if (!actor.CanCastSpell(this))
+            {
+                reason = $"Can't cast {this}";
+                return 0;
+            }
+
             GetBestDirection(actor, out var numEnemiesCovered);
+            reason = $"{numEnemiesCovered} enemies would be affected";
             return numEnemiesCovered * 5;
         }
 
@@ -38,7 +42,6 @@ namespace CombSim.Spells
             }
 
             numEnemiesCovered = bestScore;
-            Console.WriteLine($"//\t\tBest Direction = {bestDirection} with {numEnemiesCovered} enemies");
 
             return bestDirection;
         }

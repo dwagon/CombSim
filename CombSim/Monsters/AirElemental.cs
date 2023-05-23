@@ -29,7 +29,7 @@ namespace CombSim.Monsters
             AddAction(multiAttack);
             var whirlWind = new Whirlwind();
             AddAction(whirlWind);
-            this.OnTurnStart += whirlWind.TurnStart;
+            OnTurnStart += whirlWind.TurnStart;
         }
 
         private class Whirlwind : DcAttack
@@ -59,14 +59,35 @@ namespace CombSim.Monsters
                 }
             }
 
-            public override int GetHeuristic(Creature actor)
+            public override int GetHeuristic(Creature actor, out string reason)
             {
                 var enemy = actor.PickClosestEnemy();
-                if (enemy == null) return 0;
-                if (!_hasCharge) return 0;
-                if (actor.DistanceTo(enemy) <= 2) return 4;
-                if (actor.DistanceTo(enemy) <= 2 + actor.Speed) return 3;
-                return 1;
+                if (enemy == null)
+                {
+                    reason = "No enemies";
+                    return 0;
+                }
+
+                if (!_hasCharge)
+                {
+                    reason = "Hasn't recharged";
+                    return 0;
+                }
+
+                if (actor.DistanceTo(enemy) <= 2)
+                {
+                    reason = "Enemy adjacent";
+                    return 5;
+                }
+
+                if (actor.DistanceTo(enemy) <= 2 + actor.Speed)
+                {
+                    reason = "Enemy within movement distance";
+                    return 4;
+                }
+
+                reason = "No good reason";
+                return 0;
             }
 
             public override void DoAction(Creature actor)

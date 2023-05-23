@@ -9,7 +9,7 @@ namespace CombSim.Spells
             SpellSavedEffect = SpellSavedEffect.NoDamage;
         }
 
-        public override int GetHeuristic(Creature actor)
+        public override int GetHeuristic(Creature actor, out string reason)
         {
             var numEnemies = 0;
             var numFriends = 0;
@@ -19,7 +19,13 @@ namespace CombSim.Spells
                 else numEnemies++;
             }
 
-            if (numFriends > 0) return 0;
+            if (numFriends > 0)
+            {
+                reason = $"Would affect {numFriends} allies";
+                return 0;
+            }
+
+            reason = $"Would affect {numEnemies} enemies";
             return 2 + numEnemies * 2;
         }
 
