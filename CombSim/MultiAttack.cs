@@ -23,5 +23,17 @@ namespace CombSim
                 attack.DoAction(actor);
             }
         }
+
+        public override int GetHeuristic(Creature actor, out string reason)
+        {
+            reason = "Undefined MultiAttack";
+            var result = 0;
+            foreach (var attack in Attacks)
+            {
+                result += attack.GetHeuristic(actor, out reason);
+            }
+
+            return result;
+        }
     }
 }

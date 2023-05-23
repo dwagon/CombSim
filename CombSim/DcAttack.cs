@@ -16,12 +16,22 @@ namespace CombSim
             _saveEffect = saveEffect;
         }
 
-        public override int GetHeuristic(Creature actor)
+        public override int GetHeuristic(Creature actor, out string reason)
         {
             var enemy = actor.PickClosestEnemy();
-            if (enemy == null) return 0;
-            if (actor.DistanceTo(enemy) <= 2) return 4;
-            return 1;
+            var distance = actor.DistanceTo(enemy);
+            if (distance <= _reach)
+            {
+                reason = $"Enemy {enemy} within range ({distance})";
+                return 4;
+            }
+            else if (distance <= _reach + actor.Speed)
+            {
+                reason = $"Enemy {enemy} within walking distance ({distance} + {actor.Speed})";
+            }
+
+            reason = $"Enemy {enemy} outside range";
+            return 0;
         }
 
         public override void DoAction(Creature actor)

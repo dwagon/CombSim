@@ -38,36 +38,36 @@ namespace CombSim
             }
         }
 
-        public override int GetHeuristic(Creature actor)
+        public override int GetHeuristic(Creature actor, out string reason)
         {
             if (!actor.CanCastSpell(this))
             {
-                Console.WriteLine($"//\t\t{actor.Name} can't cast");
+                reason = $"{actor.Name} can't cast {this}";
                 return 0;
             }
 
             var enemy = actor.PickClosestEnemy();
             if (enemy == null)
             {
-                Console.WriteLine($"//\t\tNo enemy found");
+                reason = $"No enemy found";
                 return 0;
             }
 
             // Enemy is within range of spell
             if (actor.DistanceTo(enemy) <= Reach)
             {
-                Console.WriteLine($"//\t\tEnemy {enemy.Name} within reach");
+                reason = $"Enemy {enemy.Name} within reach";
                 return 3 + 2 * Level;
             }
 
             // Enemy is within range of spell if we move
             if (actor.DistanceTo(enemy) <= Reach + actor.Speed)
             {
-                Console.WriteLine($"//\t\tEnemy {enemy.Name} within reach if we move");
+                reason = $"Enemy {enemy.Name} within reach if we move";
                 return 2 + 2 * Level;
             }
 
-            Console.WriteLine($"//\t\tNope");
+            reason = $"Nothing within range";
             return 0;
         }
 

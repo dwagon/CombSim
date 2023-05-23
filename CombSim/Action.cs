@@ -1,25 +1,14 @@
-using System;
-
 namespace CombSim
 {
     public enum ActionCategory
     {
         Action,
         Bonus,
-        Move,
         Reaction,
         Supplemental // Things like Action Surge which don't actually take up anything
     }
 
-    public interface IAction
-    {
-        ActionCategory Category { get; set; }
-        void DoAction(Creature actor);
-        string Name();
-        int GetHeuristic(Creature actor);
-    }
-
-    public class Action : IAction
+    public class Action
     {
         private readonly string _name;
 
@@ -31,9 +20,10 @@ namespace CombSim
 
         public ActionCategory Category { get; set; }
 
-        public virtual int GetHeuristic(Creature actor)
+        public virtual int GetHeuristic(Creature actor, out string reason)
         {
-            return 1;
+            reason = "Default Action";
+            return 0;
         }
 
         public string Name()
@@ -71,7 +61,6 @@ namespace CombSim
         protected void HasAdvantageDisadvantage(Creature actor, Creature target, ref bool hasAdvantage,
             ref bool hasDisadvantage)
         {
-            Console.WriteLine($"// Before Advantage: {hasAdvantage}\tDisadvantage: {hasDisadvantage}");
             if (actor.DistanceTo(target) < 2)
             {
                 if (target.HasCondition(ConditionEnum.Paralyzed)) hasAdvantage = true;
@@ -88,8 +77,6 @@ namespace CombSim
                 hasAdvantage = false;
                 hasDisadvantage = false;
             }
-
-            Console.WriteLine($"// After Advantage: {hasAdvantage}\tDisadvantage: {hasDisadvantage}");
         }
     }
 }

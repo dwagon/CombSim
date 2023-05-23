@@ -27,8 +27,9 @@ namespace CombSim
             _consumed = true;
         }
 
-        protected virtual int GetHeuristic(Creature drinker)
+        protected virtual int GetHeuristic(Creature drinker, out string reason)
         {
+            reason = "Undefined potion";
             return 0;
         }
 
@@ -41,10 +42,15 @@ namespace CombSim
                 _potion = potion;
             }
 
-            public override int GetHeuristic(Creature actor)
+            public override int GetHeuristic(Creature actor, out string reason)
             {
-                if (_potion.IsConsumed()) return 0;
-                return _potion.GetHeuristic(actor);
+                if (_potion.IsConsumed())
+                {
+                    reason = "Potion already consumed";
+                    return 0;
+                }
+
+                return _potion.GetHeuristic(actor, out reason);
             }
 
             public override void DoAction(Creature actor)

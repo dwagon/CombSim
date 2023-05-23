@@ -16,17 +16,17 @@ namespace CombSim
             _actions.Remove(action);
         }
 
-        private IAction PickActionToDo(ActionCategory actionCategory)
+        private Action PickActionToDo(ActionCategory actionCategory)
         {
             if (!_actionsThisTurn.Contains(actionCategory)) return null;
 
-            var sortableActions = new List<(int heuristic, IAction action)>();
+            var sortableActions = new List<(int heuristic, Action action)>();
             var possibleActions = PossibleActions(actionCategory);
 
             foreach (var action in possibleActions)
             {
-                var heuristic = action.GetHeuristic(this);
-                Console.WriteLine($"//\tHeuristic of {action.Name()} = {heuristic}");
+                var heuristic = action.GetHeuristic(this, out string reason);
+                Console.WriteLine($"//\t{action.Name().PadLeft(30)} = {heuristic}\t{reason}");
                 if (heuristic > 0) sortableActions.Add((heuristic, action));
             }
 
@@ -37,9 +37,9 @@ namespace CombSim
         }
 
         // Return all the possible actions
-        private List<IAction> PossibleActions(ActionCategory actionCategory)
+        private List<Action> PossibleActions(ActionCategory actionCategory)
         {
-            var actions = new List<IAction>();
+            var actions = new List<Action>();
             foreach (var action in _actions)
                 if (action.Category == actionCategory && _actionsThisTurn.Contains(actionCategory))
                     actions.Add(action);

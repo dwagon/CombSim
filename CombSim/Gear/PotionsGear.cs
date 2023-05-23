@@ -35,13 +35,24 @@ namespace CombSim.Gear
                 drinker.Heal(healed, Name);
             }
 
-            protected override int GetHeuristic(Creature drinker)
+            protected override int GetHeuristic(Creature drinker, out string reason)
             {
-                if (drinker.PercentHitPoints() > 50) return 0;
+                if (drinker.PercentHitPoints() > 50)
+                {
+                    reason = $"{drinker.Name} has greater than 50% hit points ({drinker.PercentHitPoints()}%)";
+                    return 0;
+                }
 
                 var avgHealing = Dice.Roll(_healingAmount, max: true) / 2;
-                if (drinker.HitPointsDown() > avgHealing) return 5;
-                return (100 - drinker.PercentHitPoints()) / 10 + 1;
+                if (drinker.HitPointsDown() > avgHealing)
+                {
+                    reason = $"{drinker.Name} is down more than {avgHealing}";
+                    return 5;
+                }
+
+                var magicFormula = (100 - drinker.PercentHitPoints()) / 10 + 1;
+                reason = $"{drinker.Name} is down {magicFormula}%";
+                return magicFormula;
             }
         }
     }

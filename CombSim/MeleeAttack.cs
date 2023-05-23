@@ -12,12 +12,24 @@ namespace CombSim
             _weapon = weapon;
         }
 
-        public override int GetHeuristic(Creature actor)
+        public override int GetHeuristic(Creature actor, out string reason)
         {
             var enemy = actor.PickClosestEnemy();
-            if (enemy == null) return 0;
-            if (actor.DistanceTo(enemy) <= 2) return 4;
-            return 1;
+            var distance = actor.DistanceTo(enemy);
+            if (distance <= 2)
+            {
+                reason = $"Enemy {enemy.Name} adjacent";
+                return 4;
+            }
+
+            if (distance <= actor.Speed)
+            {
+                reason = $"Enemy {enemy.Name} within reach if we move";
+                return 2;
+            }
+
+            reason = $"Enemy {enemy.Name} not within walking distance ({distance} > {actor.Speed})";
+            return 0;
         }
 
         private StatEnum UseStatForAttack(Creature actor)

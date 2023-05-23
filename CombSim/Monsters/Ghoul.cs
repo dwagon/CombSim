@@ -29,8 +29,9 @@ namespace CombSim.Monsters
             {
             }
 
-            public override int GetHeuristic(Creature actor)
+            public override int GetHeuristic(Creature actor, out string reason)
             {
+                reason = "Nom nom nom";
                 return 2;
             }
         }
@@ -41,9 +42,17 @@ namespace CombSim.Monsters
             {
             }
 
-            public override int GetHeuristic(Creature actor)
+            public override int GetHeuristic(Creature actor, out string reason)
             {
-                return 1 + (actor.HasCondition(ConditionEnum.Paralyzed) ? 0 : 2);
+                var enemy = actor.PickClosestEnemy();
+                if (enemy.HasCondition(ConditionEnum.Paralyzed))
+                {
+                    reason = $"Enemy {enemy} already paralyzed";
+                    return 1;
+                }
+
+                reason = $"Enemy {enemy} not paralyzed";
+                return 3;
             }
 
             protected override void SideEffect(Creature actor, Creature target)

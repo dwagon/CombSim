@@ -1,6 +1,6 @@
 namespace CombSim
 {
-    public class RangedAttack : Attack, IAction
+    public class RangedAttack : Attack
     {
         private readonly int _lRange;
         private readonly int _sRange;
@@ -14,17 +14,42 @@ namespace CombSim
             this.weapon = weapon;
         }
 
-        public override int GetHeuristic(Creature actor)
+        public override int GetHeuristic(Creature actor, out string reason)
         {
-            int result;
-            if (!weapon.HasAmmunition()) return 0;
+            int result = 0;
+            if (!weapon.HasAmmunition())
+            {
+                reason = "No ammunition";
+                return 0;
+            }
+
             var enemy = actor.PickClosestEnemy();
-            if (enemy == null) return 0;
             var distance = actor.DistanceTo(enemy);
-            if (distance <= 2) result = 1;
-            else if (distance < _sRange) result = 5;
-            else if (distance < _lRange) result = 3;
-            else result = 2;
+            if (distance <= 2)
+            {
+                reason = "Adjacent";
+                result = 1;
+            }
+            else if (distance < _sRange)
+            {
+                reason = $"Within Short range {_sRange}";
+                result = 5;
+            }
+            else if (distance < _lRange)
+            {
+                reason = $"Within Long range {_lRange}";
+                result = 3;
+            }
+            else if (distance < _lRange + actor.Speed)
+            {
+                reason = $"Within Long range if we move";
+                result = 1;
+            }
+            else
+            {
+                reason = "Nothing in range";
+            }
+
             return result;
         }
 
