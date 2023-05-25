@@ -27,7 +27,7 @@ namespace CombSim
         protected string Repr;
         protected StatEnum SpellCastingAbility;
 
-        protected Creature(string name, string team = "")
+        public Creature(string name, string team = "")
         {
             Name = name;
             Team = team;
@@ -111,7 +111,8 @@ namespace CombSim
         {
             if (_setArmourClass >= 0) return _setArmourClass;
 
-            var ac = 10;
+            var baseAc = 10; // AC you have just by default
+            var ac = baseAc;
             var acBonus = 0;
             var dexBonus = true;
             var maxDexBonus = 99;
@@ -126,14 +127,15 @@ namespace CombSim
                         ac = Math.Max(armour.ArmourClass, ac);
                     }
 
-                    acBonus += Math.Max(acBonus, armour.ArmourClassBonus);
+                    acBonus += armour.ArmourClassBonus;
                 }
 
-            var tmpAc = ac + acBonus + GetDexAcBonus(dexBonus, maxDexBonus);
+            var result = ac + acBonus + GetDexAcBonus(dexBonus, maxDexBonus);
 
-            if (tmpAc == 0) return 10 + Stats[StatEnum.Dexterity].Bonus();
-
-            return tmpAc;
+            // Not wearing any armour
+            if (result == 0) result = baseAc + Stats[StatEnum.Dexterity].Bonus();
+            _setArmourClass = result;
+            return result;
         }
 
         private int GetDexAcBonus(bool dexBonus, int maxDexBonus)
@@ -162,7 +164,7 @@ namespace CombSim
             Game = gameGame;
         }
 
-        protected void AddEquipment(Equipment gear)
+        public void AddEquipment(Equipment gear)
         {
             _equipment.Add(gear);
             foreach (var action in gear.GetActions()) _actions.Add(action);

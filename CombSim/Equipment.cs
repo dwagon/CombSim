@@ -5,7 +5,7 @@ namespace CombSim
     public class Equipment
     {
         private readonly List<Action> _actions = new List<Action>();
-        protected readonly string Name;
+        public readonly string Name;
 
         protected Equipment(string name)
         {

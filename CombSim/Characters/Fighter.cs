@@ -5,7 +5,9 @@ namespace CombSim.Characters
 {
     public class Fighter : Character
     {
-        private readonly Dictionary<int, int> _hitPointsAtLevel = new Dictionary<int, int>()
+        private static readonly Armour DefenceFightingStyle = new Armour("Defence Fighting Style", armourClassBonus: 1);
+
+        private readonly Dictionary<int, int> _hitPointsAtLevel = new Dictionary<int, int>
         {
             { 1, 12 }, { 2, 20 }, { 3, 28 }
         };
@@ -23,10 +25,12 @@ namespace CombSim.Characters
             Stats.Add(StatEnum.Intelligence, new Stat(11));
             Stats.Add(StatEnum.Wisdom, new Stat(13));
             Stats.Add(StatEnum.Charisma, new Stat(9));
+            AddEquipment(DefenceFightingStyle);
             AddEquipment(MeleeWeaponGear.Mace);
             AddEquipment(ArmourGear.Plate);
             AddEquipment(ArmourGear.Shield);
             AddEquipment(PotionsGear.HealingPotion);
+
             AddAction(new SecondWind());
             if (level >= 2)
             {
