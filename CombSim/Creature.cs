@@ -278,23 +278,10 @@ namespace CombSim
 
         private void TurnEnd()
         {
-            if (IsAlive())
-            {
-                // SpendRestOfMove();
-            }
-
             OnTurnEnd?.Invoke(this, new OnTurnEndEventArgs
             {
                 Creature = this
             });
-        }
-
-        // Spend unused moves to get close(ish) to enemies
-        private void SpendRestOfMove()
-        {
-            var enemy = PickClosestEnemy();
-            if (enemy == null) return;
-            MoveWithinReachOfEnemy(5, enemy);
         }
 
         private void PerformAction(Action action)
@@ -373,8 +360,12 @@ namespace CombSim
             effect.End(this);
         }
 
+        public virtual int HealingBonus()
+        {
+            return 0;
+        }
 
-        public void MoveWithinReachOfEnemy(int reach, Creature enemy)
+        public void MoveWithinReachOfCreature(int reach, Creature enemy)
         {
             var oldLocation = GetLocation();
             if (enemy == null) return;
@@ -390,6 +381,11 @@ namespace CombSim
         public Creature PickClosestEnemy()
         {
             return Game.PickClosestEnemy(this);
+        }
+
+        public List<Creature> GetAllAllies()
+        {
+            return Game.GetAllAllies(this);
         }
 
         public class OnTurnEndEventArgs : EventArgs

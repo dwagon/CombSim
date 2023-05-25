@@ -33,7 +33,7 @@ namespace CombSim
             if (enemy == null) return;
             var hasAdvantage = false;
             var hasDisadvantage = false;
-            actor.MoveWithinReachOfEnemy(ShortRange, enemy);
+            actor.MoveWithinReachOfCreature(ShortRange, enemy);
 
             var distance = actor.DistanceTo(enemy);
 

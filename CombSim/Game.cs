@@ -142,6 +142,19 @@ namespace CombSim
             return enemies.First().Item1;
         }
 
+        // Return all allies
+        public List<Creature> GetAllAllies(Creature actor)
+        {
+            var friends = new List<Creature>();
+            foreach (var critter in _combatants)
+            {
+                if (critter.Team == actor.Team && critter.IsAlive())
+                    friends.Add(critter);
+            }
+
+            return friends;
+        }
+
         // Return the distance between creatures {one} and {two}
         public int DistanceTo(Creature one, Creature two)
         {

@@ -50,7 +50,7 @@ namespace CombSim.Characters
             // AddSpell(new Bless());       // Life Domain
             // AddSpell(new CureWounds());  // Life Domain
             // AddSpell(new GuidingBolt());
-            // AddSpell(new HealingWord());
+            AddSpell(new HealingWord());
             AddSpell(new InflictWounds());
 
             // Disciple of Life: Healing Spells cure addition 2+Level HP
@@ -59,6 +59,11 @@ namespace CombSim.Characters
             {
                 // Preserve Life: Restore 5*level HP to any creatures in 30' - creature can not restore to more than 50% HP
             }
+        }
+
+        public override int HealingBonus()
+        {
+            return 2 + Level;
         }
 
         public override string ToString()
