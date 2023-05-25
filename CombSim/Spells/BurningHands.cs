@@ -65,7 +65,7 @@ namespace CombSim.Spells
             if (!actor.CanCastSpell(this)) return;
             var enemy = actor.PickClosestEnemy();
             if (enemy == null) return;
-            actor.MoveWithinReachOfEnemy(1, enemy);
+            actor.MoveWithinReachOfCreature(1, enemy);
             if (actor.DistanceTo(actor.PickClosestEnemy()) > Reach) return;
             actor.DoCastSpell(this);
             DoBurningHandsAttack(actor);

@@ -37,7 +37,7 @@ namespace CombSim
         {
             var enemy = actor.PickClosestEnemy();
             if (enemy == null) return;
-            actor.MoveWithinReachOfEnemy(_reach, enemy);
+            actor.MoveWithinReachOfCreature(_reach, enemy);
 
             if (actor.Game.DistanceTo(actor, enemy) <= _reach)
             {

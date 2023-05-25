@@ -25,7 +25,7 @@ namespace CombSim
         {
             var enemy = actor.PickClosestEnemy();
             actor.Moves = Math.Max(actor.Moves, actor.Speed);
-            actor.MoveWithinReachOfEnemy(actor.Speed, enemy);
+            actor.MoveWithinReachOfCreature(actor.Speed, enemy);
             actor.Moves = actor.Speed;
         }
     }

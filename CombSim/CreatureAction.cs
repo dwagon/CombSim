@@ -27,7 +27,7 @@ namespace CombSim
             foreach (var action in possibleActions)
             {
                 var heuristic = action.GetHeuristic(this, out string reason);
-                Console.WriteLine($"//\t{action.Name().PadLeft(25)} = {heuristic}\t{reason}");
+                Console.WriteLine($"// {action.Name().PadLeft(30)} = {heuristic}\t{reason}");
                 if (heuristic > 0) sortableActions.Add((heuristic + (float)rnd.NextDouble(), action));
             }
 
@@ -44,14 +44,6 @@ namespace CombSim
             foreach (var action in _actions)
                 if (action.Category == actionCategory && _actionsThisTurn.Contains(actionCategory))
                     actions.Add(action);
-
-            string actionList = "";
-            foreach (var action in actions)
-            {
-                actionList += action.Name() + "; ";
-            }
-
-            // Console.WriteLine($"// {Name} Possible {actionCategory} Actions: {actionList}");
             return actions;
         }
     }

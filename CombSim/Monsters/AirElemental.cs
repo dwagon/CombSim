@@ -86,7 +86,7 @@ namespace CombSim.Monsters
             {
                 var enemy = actor.PickClosestEnemy();
                 if (enemy == null) return;
-                actor.MoveWithinReachOfEnemy(1, enemy);
+                actor.MoveWithinReachOfCreature(1, enemy);
 
                 if (actor.Game.DistanceTo(actor, enemy) <= 1)
                 {
