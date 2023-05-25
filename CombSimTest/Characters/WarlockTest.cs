@@ -13,7 +13,7 @@ namespace CombSimTest.Characters
             w.Initialise();
             Assert.AreEqual(14, w.ArmourClass);
             Assert.True(w.ToString().Contains("HP: 10/10"));
-            Assert.True(w.ToString().Contains("Spells: L1 = 1;"));
+            Assert.True(w.ToString().Contains("Spells: 1"));
 
             Assert.IsNotNull(w.GetSpell("Thunderclap"));
 
@@ -29,7 +29,7 @@ namespace CombSimTest.Characters
             w.Initialise();
             Assert.AreEqual(14, w.ArmourClass);
             Assert.True(w.ToString().Contains("HP: 18/18"));
-            Assert.True(w.ToString().Contains("Spells: L1 = 2;"));
+            Assert.True(w.ToString().Contains("Spells: 2"));
 
             var eb = w.GetSpell("Eldritch Blast");
             Assert.AreEqual(0, eb.Level);
