@@ -2,15 +2,15 @@ namespace CombSim
 {
     public class DcAttack : Attack
     {
-        private readonly int _reach;
         private readonly SpellSavedEffect _saveEffect;
         private readonly int _savingDc;
         private readonly StatEnum _savingStat;
+        public readonly int Reach;
 
         public DcAttack(string name, StatEnum savingStat, int savingDc, DamageRoll damageRoll,
             SpellSavedEffect saveEffect) : base(name, damageRoll)
         {
-            _reach = 1;
+            Reach = 5 / 5;
             _savingStat = savingStat;
             _savingDc = savingDc;
             _saveEffect = saveEffect;
@@ -20,12 +20,12 @@ namespace CombSim
         {
             var enemy = actor.PickClosestEnemy();
             var distance = actor.DistanceTo(enemy);
-            if (distance <= _reach)
+            if (distance <= Reach)
             {
                 reason = $"Enemy {enemy} within range ({distance})";
                 return 4;
             }
-            else if (distance <= _reach + actor.Speed)
+            else if (distance <= Reach + actor.Speed)
             {
                 reason = $"Enemy {enemy} within walking distance ({distance} + {actor.Speed})";
             }
@@ -38,9 +38,9 @@ namespace CombSim
         {
             var enemy = actor.PickClosestEnemy();
             if (enemy == null) return;
-            actor.MoveWithinReachOfEnemy(_reach, enemy);
+            actor.MoveWithinReachOfEnemy(Reach, enemy);
 
-            if (actor.Game.DistanceTo(actor, enemy) <= _reach)
+            if (actor.Game.DistanceTo(actor, enemy) <= Reach)
             {
                 DoAttack(actor, enemy);
             }
@@ -65,7 +65,7 @@ namespace CombSim
                 Source = actor,
                 DcSaveStat = _savingStat,
                 DcSaveDc = _savingDc,
-                DmgRoll = _dmgRoll,
+                DmgRoll = DamageRoll,
                 SpellSavedEffect = _saveEffect,
                 AttackMessage = attackMessage,
                 OnFailEffect = FailSideEffect,

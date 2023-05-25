@@ -4,12 +4,12 @@ namespace CombSim
 {
     public class Attack : Action
     {
-        protected readonly DamageRoll _dmgRoll;
+        public readonly DamageRoll DamageRoll;
         protected bool Versatile;
 
         protected Attack(string name, DamageRoll damageRoll) : base(name, ActionCategory.Action)
         {
-            _dmgRoll = damageRoll;
+            DamageRoll = damageRoll;
             Versatile = false;
         }
 
@@ -37,7 +37,7 @@ namespace CombSim
             {
                 Source = actor,
                 ToHit = roll + attackBonus,
-                DmgRoll = _dmgRoll + damageBonus,
+                DmgRoll = DamageRoll + damageBonus,
                 CriticalHit = IsCriticalHit(actor, target, roll),
                 CriticalMiss = IsCriticalMiss(actor, target, roll),
                 AttackMessage = attackMessage,

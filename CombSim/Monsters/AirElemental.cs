@@ -61,33 +61,25 @@ namespace CombSim.Monsters
 
             public override int GetHeuristic(Creature actor, out string reason)
             {
-                var enemy = actor.PickClosestEnemy();
-                if (enemy == null)
-                {
-                    reason = "No enemies";
-                    return 0;
-                }
-
                 if (!_hasCharge)
                 {
                     reason = "Hasn't recharged";
                     return 0;
                 }
 
-                if (actor.DistanceTo(enemy) <= 2)
+                var heuristic = new Heuristic(actor, this);
+                /* This code only checks where we are, not where we could be:
+                var numEnemies = 0;
+                var numFriends = 0;
+                foreach (var creature in actor.GetNeighbourCreatures())
                 {
-                    reason = "Enemy adjacent";
-                    return 5;
+                    if (creature.Team == actor.Team) numFriends++;
+                    else numEnemies++;
                 }
-
-                if (actor.DistanceTo(enemy) <= 2 + actor.Speed)
-                {
-                    reason = "Enemy within movement distance";
-                    return 4;
-                }
-
-                reason = "No good reason";
-                return 0;
+                heuristic.AddEnemies(numEnemies);
+                heuristic.AddFriends(numFriends);
+                */
+                return heuristic.GetValue(out reason);
             }
 
             public override void DoAction(Creature actor)

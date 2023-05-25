@@ -11,6 +11,7 @@ namespace CombSim.Spells
 
         public override int GetHeuristic(Creature actor, out string reason)
         {
+            var heuristic = new Heuristic(actor, this);
             var numEnemies = 0;
             var numFriends = 0;
             foreach (var creature in actor.GetNeighbourCreatures())
@@ -19,14 +20,10 @@ namespace CombSim.Spells
                 else numEnemies++;
             }
 
-            if (numFriends > 0)
-            {
-                reason = $"Would affect {numFriends} allies";
-                return 0;
-            }
-
-            reason = $"Would affect {numEnemies} enemies";
-            return 2 + numEnemies * 2;
+            heuristic.AddFriends(numFriends);
+            heuristic.AddEnemies(numEnemies);
+            heuristic.AddDamageRoll(DmgRoll);
+            return heuristic.GetValue(out reason);
         }
 
         public override void DoAction(Creature actor)

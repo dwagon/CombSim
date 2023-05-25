@@ -278,7 +278,7 @@ namespace CombSim
         {
             if (IsAlive())
             {
-                SpendRestOfMove();
+                // SpendRestOfMove();
             }
 
             OnTurnEnd?.Invoke(this, new OnTurnEndEventArgs
@@ -292,7 +292,6 @@ namespace CombSim
         {
             var enemy = PickClosestEnemy();
             if (enemy == null) return;
-            Console.WriteLine($"// Spending rest of move {Moves} to get closer to {enemy.Name}");
             MoveWithinReachOfEnemy(5, enemy);
         }
 

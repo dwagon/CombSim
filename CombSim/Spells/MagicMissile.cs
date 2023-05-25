@@ -2,14 +2,29 @@ namespace CombSim.Spells
 {
     public class MagicMissile : Spell
     {
+        private DamageRoll _damageRoll = new DamageRoll("1d4+1", DamageTypeEnums.Force);
+
         public MagicMissile() : base("Magic Missile", 1, ActionCategory.Action)
         {
             Reach = 120 / 5;
         }
 
+        private int NumberOfMissiles()
+        {
+            return 3;
+        }
+
+        public override int GetHeuristic(Creature actor, out string reason)
+        {
+            var heuristic = new Heuristic(actor, this);
+            heuristic.AddDamageRoll(_damageRoll);
+            heuristic.AddRepeat(NumberOfMissiles());
+            return heuristic.GetValue(out reason);
+        }
+
         public override void DoAction(Creature actor)
         {
-            var numMissiles = 3;
+            var numMissiles = NumberOfMissiles();
             var hasCast = false;
             for (int i = 0; i < numMissiles; i++)
             {
@@ -36,7 +51,7 @@ namespace CombSim.Spells
             {
                 Source = actor,
                 ToHit = 999, // Autohit
-                DmgRoll = new DamageRoll("1d4+1", DamageTypeEnums.Force),
+                DmgRoll = _damageRoll,
                 CriticalHit = false,
                 CriticalMiss = false,
                 AttackMessage = attackMessage,

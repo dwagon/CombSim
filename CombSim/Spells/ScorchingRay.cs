@@ -4,26 +4,41 @@ namespace CombSim.Spells
     {
         public ScorchingRay() : base("Scorching Ray", 2, ActionCategory.Action)
         {
+            DmgRoll = new DamageRoll("2d6", DamageTypeEnums.Fire);
             Reach = 120 / 5;
         }
 
         public override void DoAction(Creature actor)
         {
-            var numMissiles = 3;
-
             var enemy = actor.PickClosestEnemy();
             if (enemy == null) return;
             actor.MoveWithinReachOfEnemy(Reach, enemy);
 
             if (actor.Game.DistanceTo(actor, enemy) <= Reach)
             {
-                for (int i = 0; i < numMissiles; i++)
+                for (int i = 0; i < NumberOfMissiles(); i++)
                 {
-                    DoMissile(actor, enemy);
+                    if (enemy.HasCondition(ConditionEnum.Ok))
+                    {
+                        DoMissile(actor, enemy);
+                    }
                 }
 
                 actor.DoCastSpell(this);
             }
+        }
+
+        private int NumberOfMissiles()
+        {
+            return 3;
+        }
+
+        public override int GetHeuristic(Creature actor, out string reason)
+        {
+            var heuristic = new Heuristic(actor, this);
+            heuristic.AddDamageRoll(DmgRoll);
+            heuristic.AddRepeat(NumberOfMissiles());
+            return heuristic.GetValue(out reason);
         }
 
         private void DoMissile(Creature actor, Creature target)
@@ -40,7 +55,7 @@ namespace CombSim.Spells
             {
                 Source = actor,
                 ToHit = roll + actor.SpellAttackModifier(),
-                DmgRoll = new DamageRoll("2d6", DamageTypeEnums.Fire),
+                DmgRoll = DmgRoll,
                 CriticalHit = IsCriticalHit(actor, target, roll),
                 CriticalMiss = IsCriticalMiss(actor, target, roll),
                 AttackMessage = attackMessage,
