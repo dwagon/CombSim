@@ -9,7 +9,7 @@ namespace CombSim.Characters
     {
         private readonly Dictionary<int, int> _hitPointsAtLevel = new Dictionary<int, int>
         {
-            { 1, 9 }, { 2, -1 }, { 3, -1 }, { 4, -1 }
+            { 1, 9 }, { 2, 15 }, { 3, -1 }, { 4, -1 }
         };
 
         // CasterLevel: <SpellLevel: NumberOfSlots>
@@ -17,7 +17,7 @@ namespace CombSim.Characters
             new Dictionary<int, Dictionary<int, int>>()
             {
                 { 1, new Dictionary<int, int>() { { 1, 2 } } },
-                { 2, new Dictionary<int, int>() { { 1, -1 } } },
+                { 2, new Dictionary<int, int>() { { 1, 3 } } },
                 { 3, new Dictionary<int, int>() { { 1, -1 }, { 2, -1 } } },
             };
 
@@ -47,11 +47,18 @@ namespace CombSim.Characters
 
             // Level 1
             // AddSpell(new Bane());
-            // AddSpell(new Bless());
-            // AddSpell(new CureWounds());
+            // AddSpell(new Bless());       // Life Domain
+            // AddSpell(new CureWounds());  // Life Domain
             // AddSpell(new GuidingBolt());
             // AddSpell(new HealingWord());
             AddSpell(new InflictWounds());
+
+            // Disciple of Life: Healing Spells cure addition 2+Level HP
+
+            if (Level >= 2)
+            {
+                // Preserve Life: Restore 5*level HP to any creatures in 30' - creature can not restore to more than 50% HP
+            }
         }
 
         public override string ToString()
