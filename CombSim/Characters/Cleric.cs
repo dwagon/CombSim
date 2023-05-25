@@ -7,18 +7,23 @@ namespace CombSim.Characters
 {
     public class Cleric : Character
     {
+        private readonly Dictionary<int, int> _channelDivinity = new Dictionary<int, int>
+        {
+            { 1, 1 }, { 2, 1 }, { 3, 1 }
+        };
+
         private readonly Dictionary<int, int> _hitPointsAtLevel = new Dictionary<int, int>
         {
-            { 1, 9 }, { 2, 15 }, { 3, -1 }, { 4, -1 }
+            { 1, 9 }, { 2, 15 }, { 3, 21 }, { 4, -1 }
         };
 
         // CasterLevel: <SpellLevel: NumberOfSlots>
         private readonly Dictionary<int, Dictionary<int, int>> _spellsAtLevel =
-            new Dictionary<int, Dictionary<int, int>>()
+            new Dictionary<int, Dictionary<int, int>>
             {
-                { 1, new Dictionary<int, int>() { { 1, 2 } } },
-                { 2, new Dictionary<int, int>() { { 1, 3 } } },
-                { 3, new Dictionary<int, int>() { { 1, -1 }, { 2, -1 } } },
+                { 1, new Dictionary<int, int> { { 1, 2 } } },
+                { 2, new Dictionary<int, int> { { 1, 3 } } },
+                { 3, new Dictionary<int, int> { { 1, 4 }, { 2, 2 } } }
             };
 
         public Cleric(string name, int level = 1, string team = "Clerics") : base(name, team)
@@ -53,14 +58,15 @@ namespace CombSim.Characters
             AddSpell(new HealingWord());
             AddSpell(new InflictWounds());
 
-            // Disciple of Life: Healing Spells cure addition 2+Level HP
-
             if (Level >= 2)
             {
                 // Preserve Life: Restore 5*level HP to any creatures in 30' - creature can not restore to more than 50% HP
+                AddAction(new PreserveLife(this));
+                // AddAction(new TurnUndead());
             }
         }
 
+        // Disciple of Life: Healing Spells cure addition 2+Level HP
         public override int HealingBonus()
         {
             return 2 + Level;
@@ -75,7 +81,9 @@ namespace CombSim.Characters
                 spellString += $"L{kvp.Key} = {kvp.Value}; ";
             }
 
-            return baseString + spellString;
+            var channelString = $"CD: {_channelDivinity[Level]};";
+
+            return baseString + spellString + channelString;
         }
 
         public override bool CanCastSpell(Spell spell)
@@ -90,6 +98,106 @@ namespace CombSim.Characters
             Console.WriteLine($"// DoCastSpell(spell={spell.Name()}) Level: {spell.Level}");
             if (spell.Level == 0) return;
             _spellsAtLevel[Level][spell.Level]--;
+        }
+
+        public bool CanChannelDivinity()
+        {
+            return _channelDivinity[Level] > 0;
+        }
+
+        public void DoChannelDivinity()
+        {
+            _channelDivinity[Level]--;
+        }
+
+        private class ChannelDivinity : Action
+        {
+            protected ChannelDivinity(string name) : base(name, ActionCategory.Action)
+            {
+            }
+
+            public override void DoAction(Creature actor)
+            {
+                var cleric = (Cleric)actor;
+                cleric.DoChannelDivinity();
+            }
+        }
+
+        private class PreserveLife : ChannelDivinity
+        {
+            private readonly int _maxHpToHeal;
+            private readonly int _reach;
+
+            public PreserveLife(Cleric actor) : base("Preserve Life")
+            {
+                _reach = 30 / 5;
+                _maxHpToHeal = actor.Level * 5;
+            }
+
+            private List<Creature> NearbyAlliesNeedingHealing(Creature actor, out int hpToHeal)
+            {
+                hpToHeal = 0;
+                var allAlliesNeedingHealing = new List<Creature>();
+
+                foreach (var friend in actor.GetAllAllies())
+                {
+                    if (friend.HitPointsDown() > 0 && actor.DistanceTo(friend) <= _reach)
+                    {
+                        allAlliesNeedingHealing.Add(friend);
+                        hpToHeal += friend.HitPointsDown();
+                    }
+                }
+
+                return allAlliesNeedingHealing;
+            }
+
+            public override int GetHeuristic(Creature actor, out string reason)
+            {
+                var cleric = (Cleric)actor;
+                if (!cleric.CanChannelDivinity())
+                {
+                    reason = "No Channel Divinities left";
+                    return 0;
+                }
+
+                var allAlliesNeedingHealing = NearbyAlliesNeedingHealing(actor, out int hpToHeal);
+                if (allAlliesNeedingHealing.Count == 0)
+                {
+                    reason = "No one needs healing";
+                    return 0;
+                }
+
+                reason = $"Can cure {allAlliesNeedingHealing.Count} ally of {hpToHeal} HP";
+
+                return Math.Min(_maxHpToHeal, hpToHeal);
+            }
+
+            public override void DoAction(Creature actor)
+            {
+                var cleric = (Cleric)actor;
+                cleric.DoChannelDivinity();
+                var allAlliesNeedingHealing = NearbyAlliesNeedingHealing(actor, out int _);
+                var hpHealed = 0;
+                foreach (var creature in allAlliesNeedingHealing)
+                {
+                    var hpToHeal = Math.Min(creature.HitPointsDown(), _maxHpToHeal - hpHealed);
+                    creature.Heal(hpToHeal, "Preserve Life");
+                    hpHealed += hpToHeal;
+                }
+            }
+        }
+
+        private class TurnUndead : ChannelDivinity
+        {
+            public TurnUndead() : base("Turn Undead")
+            {
+            }
+
+            public override int GetHeuristic(Creature actor, out string reason)
+            {
+                reason = "Unimplemented";
+                return 0;
+            }
         }
     }
 }

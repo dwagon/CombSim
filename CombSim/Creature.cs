@@ -192,11 +192,18 @@ namespace CombSim
         }
 
         // Is this creature able to continue participating in combat
-        public bool IsAlive()
+        public bool IsOK()
         {
             if (Conditions.HasCondition(ConditionEnum.Dead)) return false;
             if (Conditions.HasCondition(ConditionEnum.Unconscious)) return false;
             if (Conditions.HasCondition(ConditionEnum.Stable)) return false;
+            return true;
+        }
+
+        // Is this creature alive?
+        public bool IsAlive()
+        {
+            if (Conditions.HasCondition(ConditionEnum.Dead)) return false;
             return true;
         }
 
@@ -216,17 +223,17 @@ namespace CombSim
             return $"{Name} AC: {ArmourClass}; HP: {HitPoints}/{MaxHitPoints}; {Conditions}; {Effects}";
         }
 
-        public int Heal(int hitPoints, string reason = "")
+        public void Heal(int hitPoints, string reason = "")
         {
             string reasonString = "";
             hitPoints = Math.Min(hitPoints, HitPointsDown());
             HitPoints += hitPoints;
             if (reason != "")
             {
-                reasonString = $" by {reason}";
+                reasonString = $"by {reason}";
             }
 
-            NarrationLog.LogMessage($"{Name} healed {hitPoints}{reasonString}");
+            NarrationLog.LogMessage($"{Name} healed {hitPoints} {reasonString}");
 
             if (Conditions.HasCondition(ConditionEnum.Stable))
             {
@@ -239,8 +246,6 @@ namespace CombSim
                 Conditions.RemoveCondition(ConditionEnum.Unconscious);
                 Conditions.SetCondition(ConditionEnum.Ok);
             }
-
-            return hitPoints;
         }
 
         public float DistanceTo(Creature enemy)
@@ -266,7 +271,7 @@ namespace CombSim
             Console.WriteLine(
                 $"\n// {Name} -------------------------------------------------------------------------------------------");
             TurnStart();
-            if (IsAlive())
+            if (IsOK())
             {
                 DoActionCategory(ActionCategory.Action);
                 DoActionCategory(ActionCategory.Supplemental);
