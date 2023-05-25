@@ -49,6 +49,7 @@
         <Compile Include="Attack.cs"/>
         <Compile Include="Attribute.cs"/>
         <Compile Include="Character.cs"/>
+        <Compile Include="Characters\Cleric.cs"/>
         <Compile Include="Characters\Fighter.cs"/>
         <Compile Include="Characters\Warlock.cs"/>
         <Compile Include="Characters\Wizard.cs"/>
@@ -95,9 +96,11 @@
         <Compile Include="Spells\EldritchBlast.cs"/>
         <Compile Include="Spells\FireBolt.cs"/>
         <Compile Include="Spells\HellishRebuke.cs"/>
+        <Compile Include="Spells\InflictWounds.cs"/>
         <Compile Include="Spells\MagicMissile.cs"/>
         <Compile Include="Spells\PoisonSpray.cs"/>
         <Compile Include="Spells\RayOfFrost.cs"/>
+        <Compile Include="Spells\SacredFlame.cs"/>
         <Compile Include="Spells\ScorchingRay.cs"/>
         <Compile Include="Spells\ShockingGrasp.cs"/>
         <Compile Include="Spells\Thunderclap.cs"/>
