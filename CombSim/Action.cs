@@ -42,7 +42,6 @@ namespace CombSim
             return roll;
         }
 
-
         protected static bool IsCriticalHit(Creature actor, Creature target, int roll)
         {
             if (target.HasCondition(ConditionEnum.Paralyzed) && actor.DistanceTo(target) < 2)

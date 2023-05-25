@@ -50,7 +50,7 @@ namespace CombSim
                 actionList += action.Name() + "; ";
             }
 
-            Console.WriteLine($"// {Name} Possible {actionCategory} Actions: {actionList}");
+            // Console.WriteLine($"// {Name} Possible {actionCategory} Actions: {actionList}");
             return actions;
         }
     }

@@ -47,11 +47,11 @@ namespace CombSim.Monsters
                 var enemy = actor.PickClosestEnemy();
                 if (enemy.HasCondition(ConditionEnum.Paralyzed))
                 {
-                    reason = $"Enemy {enemy} already paralyzed";
+                    reason = $"Enemy {enemy.Name} already paralyzed";
                     return 1;
                 }
 
-                reason = $"Enemy {enemy} not paralyzed";
+                reason = $"Enemy {enemy.Name} not paralyzed";
                 return 3;
             }
 
