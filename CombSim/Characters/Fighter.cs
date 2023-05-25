@@ -7,7 +7,7 @@ namespace CombSim.Characters
     {
         private readonly Dictionary<int, int> _hitPointsAtLevel = new Dictionary<int, int>()
         {
-            { 1, 12 }, { 2, 20 }, { 3, 28 }
+            { 1, 12 }, { 2, 20 }, { 3, 28 }, { 4, 36 }
         };
 
         public Fighter(string name, int level = 1, string team = "Fighters") : base(name, team)
@@ -37,6 +37,11 @@ namespace CombSim.Characters
             {
                 // Champion Martial Archetype
                 CriticalHitRoll = 19;
+            }
+
+            if (level >= 4)
+            {
+                Stats[StatEnum.Strength] = new Stat(18);
             }
         }
 
