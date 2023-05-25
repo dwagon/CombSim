@@ -17,7 +17,6 @@ namespace CombSim
 
         public override int GetHeuristic(Creature actor, out string reason)
         {
-            int result = 0;
             var heuristic = new Heuristic(actor, this);
             if (!weapon.HasAmmunition())
             {

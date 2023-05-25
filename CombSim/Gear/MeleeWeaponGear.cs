@@ -14,6 +14,9 @@ namespace CombSim.Gear
         public static readonly MeleeWeapon Mace =
             new MeleeWeapon("Mace", new DamageRoll("1d6", 0, DamageTypeEnums.Bludgeoning), 5 / 5);
 
+        public static readonly MeleeWeapon Flail =
+            new MeleeWeapon("Flail", new DamageRoll("1d8", 0, DamageTypeEnums.Bludgeoning), 5 / 5);
+
         public static readonly MeleeWeapon Scimitar =
             new MeleeWeapon("Scimitar", new DamageRoll("1d6", 0, DamageTypeEnums.Slashing), 5 / 5);
 
