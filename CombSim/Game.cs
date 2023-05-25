@@ -84,12 +84,18 @@ namespace CombSim
 
         private void TakeTurn(int turn)
         {
-            Console.WriteLine($"\n# {turn} ####################################################");
+            Console.WriteLine($"\n# {turn} ##########################################################################");
             foreach (var creature in _initiativeOrder)
             {
                 creature.TakeTurn();
+                if (creature.IsAlive()) GameReport();
             }
 
+            GameReport();
+        }
+
+        private void GameReport()
+        {
             Console.WriteLine(_arena.ToString());
             foreach (var creature in _combatants) Console.WriteLine(creature.ToString());
         }

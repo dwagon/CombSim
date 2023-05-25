@@ -18,16 +18,17 @@ namespace CombSim
 
         private Action PickActionToDo(ActionCategory actionCategory)
         {
+            var rnd = new Random();
             if (!_actionsThisTurn.Contains(actionCategory)) return null;
 
-            var sortableActions = new List<(int heuristic, Action action)>();
+            var sortableActions = new List<(float heuristic, Action action)>();
             var possibleActions = PossibleActions(actionCategory);
 
             foreach (var action in possibleActions)
             {
                 var heuristic = action.GetHeuristic(this, out string reason);
-                Console.WriteLine($"//\t{action.Name().PadLeft(30)} = {heuristic}\t{reason}");
-                if (heuristic > 0) sortableActions.Add((heuristic, action));
+                Console.WriteLine($"//\t{action.Name().PadLeft(25)} = {heuristic}\t{reason}");
+                if (heuristic > 0) sortableActions.Add((heuristic + (float)rnd.NextDouble(), action));
             }
 
             if (!sortableActions.Any()) return null;
@@ -50,7 +51,7 @@ namespace CombSim
                 actionList += action.Name() + "; ";
             }
 
-            Console.WriteLine($"// {Name} Possible {actionCategory} Actions: {actionList}");
+            // Console.WriteLine($"// {Name} Possible {actionCategory} Actions: {actionList}");
             return actions;
         }
     }

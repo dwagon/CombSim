@@ -5,25 +5,25 @@ namespace CombSim.Spells
 {
     public class BurningHands : DcSaveSpell
     {
+        private int _arcSize = 15 / 5;
+
         public BurningHands() : base("Burning Hands", 1, ActionCategory.Action)
         {
             DmgRoll = new DamageRoll("3d6", DamageTypeEnums.Fire);
             SpellSavedEffect = SpellSavedEffect.DamageHalved;
             SpellSaveAgainst = StatEnum.Dexterity;
-            Reach = 15 / 5;
+            Reach = 5 / 5;
+            TouchSpell = true;
         }
 
         public override int GetHeuristic(Creature actor, out string reason)
         {
-            if (!actor.CanCastSpell(this))
-            {
-                reason = $"Can't cast {this}";
-                return 0;
-            }
+            var heuristic = new Heuristic(actor, this);
 
             GetBestDirection(actor, out var numEnemiesCovered);
-            reason = $"{numEnemiesCovered} enemies would be affected";
-            return numEnemiesCovered * 5;
+            heuristic.AddEnemies(numEnemiesCovered);
+            heuristic.AddDamageRoll(DmgRoll);
+            return heuristic.GetValue(out reason);
         }
 
         private GridDirection GetBestDirection(Creature actor, out int numEnemiesCovered)
@@ -33,7 +33,7 @@ namespace CombSim.Spells
 
             foreach (var direction in Enum.GetValues(typeof(GridDirection)).Cast<GridDirection>())
             {
-                FriendEnemyCount(actor, Reach, direction, out var numFriends, out var numEnemies);
+                FriendEnemyCount(actor, _arcSize, direction, out var numFriends, out var numEnemies);
 
                 if (numFriends != 0) continue;
                 if (bestScore > numEnemies) continue;
@@ -74,7 +74,7 @@ namespace CombSim.Spells
         private void DoBurningHandsAttack(Creature actor)
         {
             var bestDirection = GetBestDirection(actor, out _);
-            foreach (var location in actor.GetConeLocations(Reach, bestDirection))
+            foreach (var location in actor.GetConeLocations(_arcSize, bestDirection))
             {
                 if (location == actor.GetLocation()) continue;
                 var target = actor.Game.GetCreatureAtLocation(location);

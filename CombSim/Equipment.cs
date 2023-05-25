@@ -79,7 +79,7 @@ namespace CombSim
 
         public bool HasAmmunition()
         {
-            return _ammunition > 0;
+            return _ammunition != 0;
         }
 
         public int GetAmmunition()

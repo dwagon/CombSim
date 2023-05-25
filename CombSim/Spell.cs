@@ -11,6 +11,7 @@ namespace CombSim
     public class Spell : Action
     {
         public readonly int Level;
+        public bool TouchSpell = false;
 
         protected Spell(string name, int level, ActionCategory actionCategory) : base(name, actionCategory)
         {
@@ -40,29 +41,9 @@ namespace CombSim
 
         public override int GetHeuristic(Creature actor, out string reason)
         {
-            if (!actor.CanCastSpell(this))
-            {
-                reason = $"{actor.Name} can't cast {Name()}";
-                return 0;
-            }
-
-            var enemy = actor.PickClosestEnemy();
-            // Enemy is within range of spell
-            if (actor.DistanceTo(enemy) <= Reach)
-            {
-                reason = $"Enemy {enemy.Name} within reach";
-                return 3 + 2 * Level;
-            }
-
-            // Enemy is within range of spell if we move
-            if (actor.DistanceTo(enemy) <= Reach + actor.Speed)
-            {
-                reason = $"Enemy {enemy.Name} within reach if we move";
-                return 2 + 2 * Level;
-            }
-
-            reason = "Nothing within range";
-            return 0;
+            var heuristic = new Heuristic(actor, this);
+            heuristic.AddDamageRoll(DmgRoll);
+            return heuristic.GetValue(out reason);
         }
 
         protected virtual void DoAttack(Creature actor, Creature target)

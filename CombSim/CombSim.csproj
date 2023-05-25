@@ -72,6 +72,7 @@
         <Compile Include="Gear\PotionsGear.cs"/>
         <Compile Include="Gear\MeleeWeaponGear.cs"/>
         <Compile Include="Gear\RangedWeaponGear.cs"/>
+        <Compile Include="Heuristic.cs"/>
         <Compile Include="Location.cs"/>
         <Compile Include="MeleeAttack.cs"/>
         <Compile Include="Monster.cs"/>

@@ -14,32 +14,18 @@ namespace CombSim
 
         public override int GetHeuristic(Creature actor, out string reason)
         {
-            var enemy = actor.PickClosestEnemy();
-            var distance = actor.DistanceTo(enemy);
-            if (distance <= 2)
-            {
-                reason = $"Enemy {enemy.Name} adjacent";
-                return 4;
-            }
-
-            if (distance <= actor.Speed)
-            {
-                reason = $"Enemy {enemy.Name} within reach if we move";
-                return 2;
-            }
-
-            reason = $"Enemy {enemy.Name} not within walking distance ({distance} > {actor.Speed})";
-            return 0;
+            var heuristic = new Heuristic(actor, this);
+            return heuristic.GetValue(out reason);
         }
 
         private StatEnum UseStatForAttack(Creature actor)
         {
             var bonusStat = StatEnum.Strength;
-            var weapVersatile = false;
+            var versatileWeapon = false;
 
-            if (_weapon != null) weapVersatile = _weapon.Versatile;
+            if (_weapon != null) versatileWeapon = _weapon.Versatile;
 
-            if ((Versatile || weapVersatile) && actor.Stats[StatEnum.Dexterity] > actor.Stats[StatEnum.Strength])
+            if ((Versatile || versatileWeapon) && actor.Stats[StatEnum.Dexterity] > actor.Stats[StatEnum.Strength])
             {
                 bonusStat = StatEnum.Dexterity;
             }

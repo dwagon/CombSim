@@ -65,7 +65,7 @@ namespace CombSim
 
             dmg = ModifyDamageForVulnerabilityOrResistance(dmg, out string dmgModifier);
             damageNote += dmgModifier;
-            e.AttackMessage.Result = $"Hit for {dmg} damage ({e.DmgRoll}) {damageNote}";
+            e.AttackMessage.Result = $"Hit for ({e.DmgRoll}) {damageNote}:  {dmg}";
             NarrationLog.LogMessage(e.AttackMessage.ToString());
             TakeDamage(dmg);
             if (e.OnHitSideEffect != null) e.OnHitSideEffect(e.Source, this);
@@ -89,7 +89,7 @@ namespace CombSim
                 {
                     case SpellSavedEffect.DamageHalved:
                         dmg /= 2;
-                        message = $"Saved for {dmg}";
+                        message = $"Saved for half damage";
                         break;
                     case SpellSavedEffect.NoDamage:
                         message = $"Saved for no damage";
@@ -104,7 +104,8 @@ namespace CombSim
             dcChallenge.MakeSave(this, e.Source, out int roll);
 
             dmg = ModifyDamageForVulnerabilityOrResistance(dmg, out string dmgModifier);
-            e.AttackMessage.Result = $"{message} :{roll} vs {e.DcSaveStat} DC {e.DcSaveDc} ({e.DmgRoll}) {dmgModifier}";
+            e.AttackMessage.Result =
+                $"{message} :{roll} vs {e.DcSaveStat} DC {e.DcSaveDc} ({e.DmgRoll}) {dmgModifier}: {dmg}";
             NarrationLog.LogMessage(e.AttackMessage.ToString());
             TakeDamage(dmg);
         }
