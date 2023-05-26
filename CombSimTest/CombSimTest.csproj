@@ -43,6 +43,7 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="ArenaTests.cs"/>
+        <Compile Include="Characters\ClericTest.cs"/>
         <Compile Include="Characters\WarlockTest.cs"/>
         <Compile Include="CreatureTest.cs"/>
         <Compile Include="EquipmentTest.cs"/>

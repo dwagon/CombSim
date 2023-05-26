@@ -73,7 +73,7 @@ namespace CombSim
             foreach (var combatant in _combatants)
             {
                 if (!sides.ContainsKey(combatant.Team)) sides[combatant.Team] = 0;
-                if (combatant.IsAlive()) sides[combatant.Team]++;
+                if (combatant.IsOK()) sides[combatant.Team]++;
             }
 
             foreach (var side in sides.Keys)
@@ -88,7 +88,7 @@ namespace CombSim
             foreach (var creature in _initiativeOrder)
             {
                 creature.TakeTurn();
-                if (creature.IsAlive()) GameReport();
+                if (creature.IsOK()) GameReport();
             }
 
             GameReport();
@@ -135,14 +135,14 @@ namespace CombSim
         {
             var enemies = new List<(Creature, float)>();
             foreach (var critter in _combatants)
-                if (critter.Team != actor.Team && critter.IsAlive())
+                if (critter.Team != actor.Team && critter.IsOK())
                     enemies.Add((critter, DistanceTo(actor, critter)));
             if (enemies.Count == 0) return null;
             enemies.Sort((a, b) => a.Item2.CompareTo(b.Item2));
             return enemies.First().Item1;
         }
 
-        // Return all allies
+        // Return all allies - even unconscious ones
         public List<Creature> GetAllAllies(Creature actor)
         {
             var friends = new List<Creature>();
