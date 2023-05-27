@@ -45,6 +45,7 @@ namespace CombSim.Spells
             public override bool HasAdvantageAgainstMe(Creature target, Creature attacker)
             {
                 Console.WriteLine($"// Advantage from Guiding Bolt for attack on {target.Name} from {attacker.Name}");
+                target.RemoveEffect(this);
                 return true;
             }
 

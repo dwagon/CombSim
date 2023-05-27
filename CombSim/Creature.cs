@@ -404,6 +404,11 @@ namespace CombSim
             return Game.GetAllAllies(this);
         }
 
+        public bool HasEffect(string name)
+        {
+            return Effects.HasEffect(name);
+        }
+
         public class OnTurnEndEventArgs : EventArgs
         {
             public Creature Creature;

@@ -53,5 +53,15 @@ namespace CombSim
 
             return false;
         }
+
+        public bool HasEffect(string name)
+        {
+            foreach (var effect in _effects)
+            {
+                if (effect.Name == name) return true;
+            }
+
+            return false;
+        }
     }
 }
