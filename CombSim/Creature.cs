@@ -87,6 +87,16 @@ namespace CombSim
             BeingAttackedInitialise();
         }
 
+        public bool HasAdvantageAgainstMe(Creature target)
+        {
+            return Effects.HasAdvantageAgainstMe(this, target);
+        }
+
+        public bool HasDisadvantageAgainstMe(Creature target)
+        {
+            return Effects.HasDisadvantageAgainstMe(this, target);
+        }
+
         public List<Location> GetNeighbourLocations()
         {
             return Game.GetNeighbourLocations(this);

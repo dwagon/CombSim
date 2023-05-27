@@ -21,5 +21,31 @@ namespace CombSim
         {
             _effects.Remove(effect);
         }
+
+        public bool HasAdvantageAgainstMe(Creature actor, Creature victim)
+        {
+            foreach (var effect in _effects)
+            {
+                if (effect.HasAdvantageAgainstMe(actor, victim))
+                {
+                    Console.WriteLine(
+                        $"// Effect {effect.Name} causing advantage against {actor.Name} from {victim.Name}");
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool HasDisadvantageAgainstMe(Creature actor, Creature victim)
+        {
+            foreach (var effect in _effects)
+            {
+                if (effect.HasDisadvantageAgainstMe(actor, victim))
+                    return true;
+            }
+
+            return false;
+        }
     }
 }

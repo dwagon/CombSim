@@ -60,6 +60,16 @@ namespace CombSim
         protected void HasAdvantageDisadvantage(Creature actor, Creature target, ref bool hasAdvantage,
             ref bool hasDisadvantage)
         {
+            if (target.HasAdvantageAgainstMe(actor))
+            {
+                hasAdvantage = true;
+            }
+
+            if (target.HasDisadvantageAgainstMe(actor))
+            {
+                hasDisadvantage = true;
+            }
+
             if (actor.DistanceTo(target) < 2)
             {
                 if (target.HasCondition(ConditionEnum.Paralyzed)) hasAdvantage = true;

@@ -18,5 +18,15 @@ namespace CombSim
         public virtual void End(Creature target)
         {
         }
+
+        public virtual bool HasAdvantageAgainstMe(Creature target, Creature attacker)
+        {
+            return false;
+        }
+
+        public virtual bool HasDisadvantageAgainstMe(Creature actor, Creature victim)
+        {
+            return false;
+        }
     }
 }
