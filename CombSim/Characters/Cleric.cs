@@ -54,7 +54,7 @@ namespace CombSim.Characters
             // AddSpell(new Bane());
             // AddSpell(new Bless());       // Life Domain
             // AddSpell(new CureWounds());  // Life Domain
-            // AddSpell(new GuidingBolt());
+            AddSpell(new GuidingBolt());
             AddSpell(new HealingWord());
             AddSpell(new InflictWounds());
 
