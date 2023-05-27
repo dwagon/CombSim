@@ -98,6 +98,7 @@
         <Compile Include="Spells\ChillTouch.cs"/>
         <Compile Include="Spells\EldritchBlast.cs"/>
         <Compile Include="Spells\FireBolt.cs"/>
+        <Compile Include="Spells\GuidingBolt.cs"/>
         <Compile Include="Spells\HealingWord.cs"/>
         <Compile Include="Spells\HellishRebuke.cs"/>
         <Compile Include="Spells\InflictWounds.cs"/>

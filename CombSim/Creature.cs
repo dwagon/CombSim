@@ -64,7 +64,7 @@ namespace CombSim
 
         public Game Game { get; private set; }
 
-        public bool HasAttribute(Attribute attribute)
+        protected bool HasAttribute(Attribute attribute)
         {
             return Attributes.Contains(attribute);
         }
@@ -85,6 +85,16 @@ namespace CombSim
             HitPoints = MaxHitPoints;
             Conditions.SetCondition(ConditionEnum.Ok);
             BeingAttackedInitialise();
+        }
+
+        public bool HasAdvantageAgainstMe(Creature target)
+        {
+            return Effects.HasAdvantageAgainstMe(this, target);
+        }
+
+        public bool HasDisadvantageAgainstMe(Creature target)
+        {
+            return Effects.HasDisadvantageAgainstMe(this, target);
         }
 
         public List<Location> GetNeighbourLocations()
@@ -192,7 +202,7 @@ namespace CombSim
         }
 
         // Is this creature able to continue participating in combat
-        public bool IsOK()
+        public bool IsOk()
         {
             if (Conditions.HasCondition(ConditionEnum.Dead)) return false;
             if (Conditions.HasCondition(ConditionEnum.Unconscious)) return false;
@@ -208,7 +218,7 @@ namespace CombSim
         }
 
         // Move towards a creature
-        public bool MoveTowards(Creature creature)
+        private bool MoveTowards(Creature creature)
         {
             return MoveTowards(creature.GetLocation());
         }
@@ -220,7 +230,7 @@ namespace CombSim
 
         public new virtual string ToString()
         {
-            return $"{Name} AC: {ArmourClass}; HP: {HitPoints}/{MaxHitPoints}; {Conditions}; {Effects}";
+            return $"{Name} AC: {ArmourClass}; HP: {HitPoints}/{MaxHitPoints}; {Conditions}; {Effects}; ";
         }
 
         public void Heal(int hitPoints, string reason = "")
@@ -271,7 +281,7 @@ namespace CombSim
             Console.WriteLine(
                 $"\n// {Name} -------------------------------------------------------------------------------------------");
             TurnStart();
-            if (IsOK())
+            if (IsOk())
             {
                 DoActionCategory(ActionCategory.Action);
                 DoActionCategory(ActionCategory.Supplemental);
@@ -362,6 +372,7 @@ namespace CombSim
         public void RemoveEffect(Effect effect)
         {
             Effects.Remove(effect);
+            Console.WriteLine($"// Removing effect {effect.Name}");
             effect.End(this);
         }
 
@@ -391,6 +402,11 @@ namespace CombSim
         public List<Creature> GetAllAllies()
         {
             return Game.GetAllAllies(this);
+        }
+
+        public bool HasEffect(string name)
+        {
+            return Effects.HasEffect(name);
         }
 
         public class OnTurnEndEventArgs : EventArgs

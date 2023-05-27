@@ -46,5 +46,16 @@ namespace CombSim
                     actions.Add(action);
             return actions;
         }
+
+        // Pick an action by name alone - useful for testing
+        public Action PickActionByName(string name)
+        {
+            foreach (var action in _actions)
+            {
+                if (action.Name() == name) return action;
+            }
+
+            return null;
+        }
     }
 }

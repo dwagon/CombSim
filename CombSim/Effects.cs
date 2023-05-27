@@ -5,11 +5,17 @@ namespace CombSim
 {
     public class Effects
     {
-        private readonly List<Effect> _effects = new List<Effect>();        
+        private readonly List<Effect> _effects = new List<Effect>();
 
         public override string ToString()
         {
-            return string.Join(", ", _effects);
+            var names = new List<string>();
+            foreach (var effect in _effects)
+            {
+                names.Add(effect.Name);
+            }
+
+            return string.Join(", ", names);
         }
 
         public void Add(Effect effect)
@@ -20,6 +26,42 @@ namespace CombSim
         public void Remove(Effect effect)
         {
             _effects.Remove(effect);
+        }
+
+        public bool HasAdvantageAgainstMe(Creature actor, Creature victim)
+        {
+            foreach (var effect in _effects)
+            {
+                if (effect.HasAdvantageAgainstMe(actor, victim))
+                {
+                    Console.WriteLine(
+                        $"// Effect {effect.Name} causing advantage against {actor.Name} from {victim.Name}");
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool HasDisadvantageAgainstMe(Creature actor, Creature victim)
+        {
+            foreach (var effect in _effects)
+            {
+                if (effect.HasDisadvantageAgainstMe(actor, victim))
+                    return true;
+            }
+
+            return false;
+        }
+
+        public bool HasEffect(string name)
+        {
+            foreach (var effect in _effects)
+            {
+                if (effect.Name == name) return true;
+            }
+
+            return false;
         }
     }
 }

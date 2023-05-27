@@ -54,7 +54,7 @@ namespace CombSim.Characters
             // AddSpell(new Bane());
             // AddSpell(new Bless());       // Life Domain
             // AddSpell(new CureWounds());  // Life Domain
-            // AddSpell(new GuidingBolt());
+            AddSpell(new GuidingBolt());
             AddSpell(new HealingWord());
             AddSpell(new InflictWounds());
 
@@ -81,7 +81,7 @@ namespace CombSim.Characters
                 spellString += $"L{kvp.Key} = {kvp.Value}; ";
             }
 
-            var channelString = $"CD: {_channelDivinity[Level]};";
+            var channelString = $"ChDiv: {_channelDivinity[Level]};";
 
             return baseString + spellString + channelString;
         }

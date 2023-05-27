@@ -73,7 +73,7 @@ namespace CombSim
             foreach (var combatant in _combatants)
             {
                 if (!sides.ContainsKey(combatant.Team)) sides[combatant.Team] = 0;
-                if (combatant.IsOK()) sides[combatant.Team]++;
+                if (combatant.IsOk()) sides[combatant.Team]++;
             }
 
             foreach (var side in sides.Keys)
@@ -88,7 +88,7 @@ namespace CombSim
             foreach (var creature in _initiativeOrder)
             {
                 creature.TakeTurn();
-                if (creature.IsOK()) GameReport();
+                if (creature.IsOk()) GameReport();
             }
 
             GameReport();
@@ -135,7 +135,7 @@ namespace CombSim
         {
             var enemies = new List<(Creature, float)>();
             foreach (var critter in _combatants)
-                if (critter.Team != actor.Team && critter.IsOK())
+                if (critter.Team != actor.Team && critter.IsOk())
                     enemies.Add((critter, DistanceTo(actor, critter)));
             if (enemies.Count == 0) return null;
             enemies.Sort((a, b) => a.Item2.CompareTo(b.Item2));

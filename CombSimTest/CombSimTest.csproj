@@ -43,13 +43,14 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="ArenaTests.cs"/>
-        <Compile Include="Characters\ClericTest.cs"/>
-        <Compile Include="Characters\WarlockTest.cs"/>
+        <Compile Include="CharactersTest\ClericTest.cs"/>
+        <Compile Include="CharactersTest\WarlockTest.cs"/>
         <Compile Include="CreatureTest.cs"/>
         <Compile Include="EquipmentTest.cs"/>
         <Compile Include="GameTest.cs"/>
         <Compile Include="LocationTests.cs"/>
         <Compile Include="Properties\AssemblyInfo.cs"/>
+        <Compile Include="SpellsTests\GuidingBoltTest.cs"/>
         <Compile Include="SpellTest.cs"/>
         <Compile Include="StatTest.cs"/>
     </ItemGroup>

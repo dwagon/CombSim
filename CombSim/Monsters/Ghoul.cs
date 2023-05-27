@@ -83,7 +83,7 @@ namespace CombSim.Monsters
 
             public override void Start(Creature target)
             {
-                Console.WriteLine($"// {target} now has ghoul effect");
+                Console.WriteLine($"// {target.Name} now has ghoul effect");
                 target.AddCondition(ConditionEnum.Paralyzed);
             }
 
