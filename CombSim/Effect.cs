@@ -2,12 +2,12 @@ namespace CombSim
 {
     public class Effect
     {
-        protected string Name;
-
         public Effect(string name)
         {
             Name = name;
         }
+
+        public string Name { get; protected set; }
 
         // Override for when the effect starts
         public virtual void Start(Creature target)

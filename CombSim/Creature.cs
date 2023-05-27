@@ -230,7 +230,7 @@ namespace CombSim
 
         public new virtual string ToString()
         {
-            return $"{Name} AC: {ArmourClass}; HP: {HitPoints}/{MaxHitPoints}; {Conditions}; {Effects}";
+            return $"{Name} AC: {ArmourClass}; HP: {HitPoints}/{MaxHitPoints}; {Conditions}; {Effects}; ";
         }
 
         public void Heal(int hitPoints, string reason = "")
@@ -372,6 +372,7 @@ namespace CombSim
         public void RemoveEffect(Effect effect)
         {
             Effects.Remove(effect);
+            Console.WriteLine($"// Removing effect {effect.Name}");
             effect.End(this);
         }
 

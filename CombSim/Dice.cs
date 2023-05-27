@@ -35,7 +35,7 @@ namespace CombSim
             return result;
         }
 
-        public static int RollD20(bool hasAdvantage = false, bool hasDisadvantage = false, string reason="")
+        public static int RollD20(bool hasAdvantage = false, bool hasDisadvantage = false, string reason = "")
         {
             if (hasAdvantage && hasDisadvantage)
             {
@@ -50,10 +50,12 @@ namespace CombSim
             if (hasAdvantage)
             {
                 roll = Math.Max(d1, d2);
+                Console.WriteLine($"// With advantage {roll} = {d1}, {d2}");
             }
             else if (hasDisadvantage)
             {
                 roll = Math.Min(d1, d2);
+                Console.WriteLine($"// With disadvantage {roll} = {d1}, {d2}");
             }
             else
             {

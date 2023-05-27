@@ -81,7 +81,7 @@ namespace CombSim.Characters
                 spellString += $"L{kvp.Key} = {kvp.Value}; ";
             }
 
-            var channelString = $"CD: {_channelDivinity[Level]};";
+            var channelString = $"ChDiv: {_channelDivinity[Level]};";
 
             return baseString + spellString + channelString;
         }

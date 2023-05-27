@@ -5,11 +5,17 @@ namespace CombSim
 {
     public class Effects
     {
-        private readonly List<Effect> _effects = new List<Effect>();        
+        private readonly List<Effect> _effects = new List<Effect>();
 
         public override string ToString()
         {
-            return string.Join(", ", _effects);
+            var names = new List<string>();
+            foreach (var effect in _effects)
+            {
+                names.Add(effect.Name);
+            }
+
+            return string.Join(", ", names);
         }
 
         public void Add(Effect effect)
