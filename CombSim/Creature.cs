@@ -64,7 +64,7 @@ namespace CombSim
 
         public Game Game { get; private set; }
 
-        public bool HasAttribute(Attribute attribute)
+        protected bool HasAttribute(Attribute attribute)
         {
             return Attributes.Contains(attribute);
         }
@@ -202,7 +202,7 @@ namespace CombSim
         }
 
         // Is this creature able to continue participating in combat
-        public bool IsOK()
+        public bool IsOk()
         {
             if (Conditions.HasCondition(ConditionEnum.Dead)) return false;
             if (Conditions.HasCondition(ConditionEnum.Unconscious)) return false;
@@ -218,7 +218,7 @@ namespace CombSim
         }
 
         // Move towards a creature
-        public bool MoveTowards(Creature creature)
+        private bool MoveTowards(Creature creature)
         {
             return MoveTowards(creature.GetLocation());
         }
@@ -281,7 +281,7 @@ namespace CombSim
             Console.WriteLine(
                 $"\n// {Name} -------------------------------------------------------------------------------------------");
             TurnStart();
-            if (IsOK())
+            if (IsOk())
             {
                 DoActionCategory(ActionCategory.Action);
                 DoActionCategory(ActionCategory.Supplemental);
