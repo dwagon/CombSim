@@ -3,13 +3,12 @@ namespace CombSim
     public class MeleeAttack : Attack
     {
         private readonly int _reach;
-        private readonly MeleeWeapon _weapon;
+        private readonly Weapon _weapon;
 
-        public MeleeAttack(string name, DamageRoll damageRoll, int reach = 1, MeleeWeapon weapon = null) : base(name,
-            damageRoll)
+        public MeleeAttack(string name, DamageRoll damageRoll, int reach = 1, Weapon weapon = null) : base(name,
+            damageRoll, weapon)
         {
             _reach = reach;
-            _weapon = weapon;
         }
 
         public override int GetHeuristic(Creature actor, out string reason)
@@ -21,11 +20,11 @@ namespace CombSim
         private StatEnum UseStatForAttack(Creature actor)
         {
             var bonusStat = StatEnum.Strength;
-            var versatileWeapon = false;
+            var finesseWeapon = false;
 
-            if (_weapon != null) versatileWeapon = _weapon.Versatile;
+            if (_weapon != null) finesseWeapon = _weapon.Finesse;
 
-            if ((Versatile || versatileWeapon) && actor.Stats[StatEnum.Dexterity] > actor.Stats[StatEnum.Strength])
+            if ((Finesse || finesseWeapon) && actor.Stats[StatEnum.Dexterity] > actor.Stats[StatEnum.Strength])
             {
                 bonusStat = StatEnum.Dexterity;
             }

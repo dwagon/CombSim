@@ -5,19 +5,23 @@ namespace CombSim
     public partial class Creature
     {
         public EventHandler<OnDcAttackedEventArgs> OnDcAttacked;
+        public EventHandler<OnHitEventArgs> OnHitAttacked;
         public EventHandler<OnToHitAttackedEventArgs> OnToHitAttacked;
 
         private void BeingAttackedInitialise()
         {
             OnToHitAttacked += AttackedByWeapon;
             OnDcAttacked += AttackedbyDc;
+            OnHitAttacked += BeingHit;
         }
 
-        private void TakeDamage(Damage damage)
+        private Damage TakeDamage(Damage damage, out string dmgModifier)
         {
+            damage = ModifyDamageForVulnerabilityOrResistance(damage, out dmgModifier);
             HitPoints -= damage.hits;
             DamageReceived.Add(damage);
             if (HitPoints <= 0) FallenUnconscious();
+            return damage;
         }
 
         private Damage ModifyDamageForVulnerabilityOrResistance(Damage dmg, out string dmgModifier)
@@ -42,6 +46,20 @@ namespace CombSim
             return dmg;
         }
 
+        // You just took damage
+        private void BeingHit(object sender, OnHitEventArgs e)
+        {
+            var dmg = e.DmgRoll.Roll();
+            ;
+            var damageNote = "";
+
+            dmg = TakeDamage(dmg, out string dmgModifier);
+            damageNote += dmgModifier;
+            e.AttackMessage.Result = $"Hit for ({e.DmgRoll}) {damageNote}:  {dmg}";
+            NarrationLog.LogMessage(e.AttackMessage.ToString());
+            if (e.OnHitSideEffect != null) e.OnHitSideEffect(e.Source, this);
+        }
+
         private void AttackedByWeapon(object sender, OnToHitAttackedEventArgs e)
         {
             if (e.CriticalMiss || e.ToHit <= ArmourClass)
@@ -63,11 +81,10 @@ namespace CombSim
                 dmg = e.DmgRoll.Roll();
             }
 
-            dmg = ModifyDamageForVulnerabilityOrResistance(dmg, out string dmgModifier);
+            dmg = TakeDamage(dmg, out string dmgModifier);
             damageNote += dmgModifier;
             e.AttackMessage.Result = $"Hit for ({e.DmgRoll}) {damageNote}:  {dmg}";
             NarrationLog.LogMessage(e.AttackMessage.ToString());
-            TakeDamage(dmg);
             if (e.OnHitSideEffect != null) e.OnHitSideEffect(e.Source, this);
         }
 
@@ -103,11 +120,18 @@ namespace CombSim
             var dcChallenge = new DcChallenge(e.DcSaveStat, e.DcSaveDc, Saved, Failed);
             dcChallenge.MakeSave(this, e.Source, out int roll);
 
-            dmg = ModifyDamageForVulnerabilityOrResistance(dmg, out string dmgModifier);
+            dmg = TakeDamage(dmg, out string dmgModifier);
             e.AttackMessage.Result =
                 $"{message} :{roll} vs {e.DcSaveStat} DC {e.DcSaveDc} ({e.DmgRoll}) {dmgModifier}: {dmg}";
             NarrationLog.LogMessage(e.AttackMessage.ToString());
-            TakeDamage(dmg);
+        }
+
+        public class OnHitEventArgs : EventArgs
+        {
+            public AttackMessage AttackMessage;
+            public DamageRoll DmgRoll;
+            public Action<Creature, Creature> OnHitSideEffect;
+            public Creature Source;
         }
 
         public class OnToHitAttackedEventArgs : EventArgs

@@ -7,8 +7,8 @@ namespace CombSim
         private readonly StatEnum _savingStat;
         public readonly int Reach;
 
-        public DcAttack(string name, StatEnum savingStat, int savingDc, DamageRoll damageRoll,
-            SpellSavedEffect saveEffect) : base(name, damageRoll)
+        protected DcAttack(string name, StatEnum savingStat, int savingDc, DamageRoll damageRoll,
+            SpellSavedEffect saveEffect) : base(name, damageRoll, null)
         {
             Reach = 5 / 5;
             _savingStat = savingStat;

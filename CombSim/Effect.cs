@@ -2,10 +2,13 @@ namespace CombSim
 {
     public class Effect
     {
-        public Effect(string name)
+        public Effect(string name, bool hidden = false)
         {
             Name = name;
+            Hidden = hidden;
         }
+
+        public bool Hidden { get; protected set; }
 
         public string Name { get; protected set; }
 
@@ -27,6 +30,10 @@ namespace CombSim
         public virtual bool HasDisadvantageAgainstMe(Creature actor, Creature victim)
         {
             return false;
+        }
+
+        public virtual void DoAttack(Attack attackAction, Creature actor, Creature victim)
+        {
         }
     }
 }

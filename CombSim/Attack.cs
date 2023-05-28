@@ -5,13 +5,18 @@ namespace CombSim
     public class Attack : Action
     {
         public readonly DamageRoll DamageRoll;
+        protected bool Finesse;
         protected bool Versatile;
 
-        protected Attack(string name, DamageRoll damageRoll) : base(name, ActionCategory.Action)
+        protected Attack(string name, DamageRoll damageRoll, Weapon weapon) : base(name, ActionCategory.Action)
         {
             DamageRoll = damageRoll;
+            Finesse = false;
             Versatile = false;
+            Weapon = weapon;
         }
+
+        public Weapon Weapon { get; }
 
         public override void DoAction(Creature actor)
         {
@@ -21,6 +26,14 @@ namespace CombSim
         // Overwrite if the attack has a side effect
         protected virtual void SideEffect(Creature actor, Creature target)
         {
+        }
+
+        // Do all the Side Effects
+        protected void SideEffects(Creature actor, Creature target)
+        {
+            Console.WriteLine($"// SideEffects of {Name()}");
+            actor.Effects.DoAttack(this, actor, target);
+            SideEffect(actor, target);
         }
 
         protected void DoAttack(Creature actor, Creature target, int attackBonus = 0, int damageBonus = 0)
@@ -41,7 +54,7 @@ namespace CombSim
                 CriticalHit = IsCriticalHit(actor, target, roll),
                 CriticalMiss = IsCriticalMiss(actor, target, roll),
                 AttackMessage = attackMessage,
-                OnHitSideEffect = SideEffect
+                OnHitSideEffect = SideEffects
             });
         }
     }

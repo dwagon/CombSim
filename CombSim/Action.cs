@@ -57,6 +57,22 @@ namespace CombSim
             return roll == 1;
         }
 
+        public bool HasAdvantage(Creature actor, Creature target)
+        {
+            bool hasAdvantage = false;
+            bool hasDisadvantage = false;
+            HasAdvantageDisadvantage(actor, target, ref hasAdvantage, ref hasDisadvantage);
+            return hasAdvantage;
+        }
+
+        public bool HasDisadvantage(Creature actor, Creature target)
+        {
+            bool hasAdvantage = false;
+            bool hasDisadvantage = false;
+            HasAdvantageDisadvantage(actor, target, ref hasAdvantage, ref hasDisadvantage);
+            return hasDisadvantage;
+        }
+
         protected void HasAdvantageDisadvantage(Creature actor, Creature target, ref bool hasAdvantage,
             ref bool hasDisadvantage)
         {
