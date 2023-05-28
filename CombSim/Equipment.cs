@@ -5,7 +5,7 @@ namespace CombSim
     public class Equipment
     {
         private readonly List<Action> _actions = new List<Action>();
-        public readonly string Name;
+        protected readonly string Name;
 
         protected Equipment(string name)
         {
@@ -25,15 +25,17 @@ namespace CombSim
 
     public class Weapon : Equipment
     {
-        private DamageRoll dmgRoll;
-
         protected Weapon(string name, DamageRoll dmgroll) : base(name)
         {
-            dmgRoll = dmgroll;
+            DamageRoll = dmgroll;
             Versatile = false;
+            Finesse = false;
         }
 
+        public DamageRoll DamageRoll { get; }
+
         public bool Versatile { get; protected set; }
+        public bool Finesse { get; protected set; }
 
         public virtual void UseWeapon()
         {
@@ -87,7 +89,7 @@ namespace CombSim
             return _ammunition;
         }
 
-        public bool UseAmmunition()
+        private bool UseAmmunition()
         {
             if (_ammunition <= 0)
             {

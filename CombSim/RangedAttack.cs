@@ -4,21 +4,20 @@ namespace CombSim
     {
         public readonly int LongRange;
         public readonly int ShortRange;
-        private readonly RangedWeapon weapon;
 
         public RangedAttack(string name, DamageRoll damageRoll, int shortRange, int longRange,
-            RangedWeapon weapon = null) :
-            base(name, damageRoll)
+            Weapon weapon = null) :
+            base(name, damageRoll, weapon)
         {
             ShortRange = shortRange;
             LongRange = longRange;
-            this.weapon = weapon;
         }
 
         public override int GetHeuristic(Creature actor, out string reason)
         {
             var heuristic = new Heuristic(actor, this);
-            if (!weapon.HasAmmunition())
+            RangedWeapon rangedWeapon = (RangedWeapon)Weapon;
+            if (!rangedWeapon.HasAmmunition())
             {
                 reason = "No ammunition";
                 return 0;
@@ -43,7 +42,7 @@ namespace CombSim
 
             HasAdvantageDisadvantage(actor, enemy, ref hasAdvantage, ref hasDisadvantage);
 
-            weapon.UseWeapon();
+            Weapon.UseWeapon();
             DoAttack(actor, enemy,
                 attackBonus: actor.ProficiencyBonus + actor.Stats[StatEnum.Dexterity].Bonus(),
                 damageBonus: actor.Stats[StatEnum.Dexterity].Bonus());

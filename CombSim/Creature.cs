@@ -11,7 +11,6 @@ namespace CombSim
         private readonly Dictionary<string, Spell> _spells;
         protected readonly Conditions Conditions;
         protected readonly List<Damage> DamageReceived;
-        private readonly Effects Effects;
         protected readonly List<DamageTypeEnums> Immune;
         protected readonly List<DamageTypeEnums> Resistant;
         public readonly Dictionary<StatEnum, Stat> Stats;
@@ -47,6 +46,8 @@ namespace CombSim
             Attributes = new HashSet<Attribute>();
             AddAction(new DashAction());
         }
+
+        public Effects Effects { get; }
 
         public int Speed { get; protected set; }
 
@@ -230,7 +231,10 @@ namespace CombSim
 
         public new virtual string ToString()
         {
-            return $"{Name} AC: {ArmourClass}; HP: {HitPoints}/{MaxHitPoints}; {Conditions}; {Effects}; ";
+            var output = $"{Name} AC: {ArmourClass}; HP: {HitPoints}/{MaxHitPoints};";
+            output += $" {Conditions};";
+            output += $" {Effects}";
+            return output;
         }
 
         public void Heal(int hitPoints, string reason = "")

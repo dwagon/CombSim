@@ -52,6 +52,7 @@
         <Compile Include="Character.cs"/>
         <Compile Include="Characters\Cleric.cs"/>
         <Compile Include="Characters\Fighter.cs"/>
+        <Compile Include="Characters\Rogue.cs"/>
         <Compile Include="Characters\Warlock.cs"/>
         <Compile Include="Characters\Wizard.cs"/>
         <Compile Include="Conditions.cs"/>

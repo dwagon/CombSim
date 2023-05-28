@@ -51,7 +51,7 @@ namespace CombSim.Gear
                 }
 
                 var magicFormula = (100 - drinker.PercentHitPoints()) / 10 + 1;
-                reason = $"{drinker.Name} is down {magicFormula}%";
+                reason = $"{drinker.Name} is at {drinker.PercentHitPoints()}%";
                 return magicFormula;
             }
         }

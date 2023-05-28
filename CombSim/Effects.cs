@@ -12,7 +12,8 @@ namespace CombSim
             var names = new List<string>();
             foreach (var effect in _effects)
             {
-                names.Add(effect.Name);
+                if (!effect.Hidden)
+                    names.Add(effect.Name);
             }
 
             return string.Join(", ", names);
@@ -62,6 +63,16 @@ namespace CombSim
             }
 
             return false;
+        }
+
+        public void DoAttack(Attack attackAction, Creature actor, Creature victim)
+        {
+            if (!victim.IsAlive()) return;
+            Console.WriteLine($"// Effects.DoAttack()");
+            foreach (var effect in _effects)
+            {
+                effect.DoAttack(attackAction, actor, victim);
+            }
         }
     }
 }
