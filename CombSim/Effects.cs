@@ -68,7 +68,6 @@ namespace CombSim
         public void DoAttack(Attack attackAction, Creature actor, Creature victim)
         {
             if (!victim.IsAlive()) return;
-            Console.WriteLine($"// Effects.DoAttack()");
             foreach (var effect in _effects)
             {
                 effect.DoAttack(attackAction, actor, victim);

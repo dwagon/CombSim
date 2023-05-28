@@ -31,7 +31,6 @@ namespace CombSim
         // Do all the Side Effects
         protected void SideEffects(Creature actor, Creature target)
         {
-            Console.WriteLine($"// SideEffects of {Name()}");
             actor.Effects.DoAttack(this, actor, target);
             SideEffect(actor, target);
         }
