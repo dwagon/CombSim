@@ -3,7 +3,6 @@ namespace CombSim
     public class MeleeAttack : Attack
     {
         private readonly int _reach;
-        private readonly Weapon _weapon;
 
         public MeleeAttack(string name, DamageRoll damageRoll, int reach = 1, Weapon weapon = null) : base(name,
             damageRoll, weapon)
@@ -22,7 +21,7 @@ namespace CombSim
             var bonusStat = StatEnum.Strength;
             var finesseWeapon = false;
 
-            if (_weapon != null) finesseWeapon = _weapon.Finesse;
+            if (Weapon != null) finesseWeapon = Weapon.Finesse;
 
             if ((Finesse || finesseWeapon) && actor.Stats[StatEnum.Dexterity] > actor.Stats[StatEnum.Strength])
             {
@@ -40,7 +39,7 @@ namespace CombSim
 
             if (actor.Game.DistanceTo(actor, enemy) <= _reach)
             {
-                _weapon?.UseWeapon();
+                Weapon?.UseWeapon();
 
                 var bonusStat = UseStatForAttack(actor);
 

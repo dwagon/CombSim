@@ -65,7 +65,7 @@ namespace CombSim.Characters
                     return 0;
                 }
 
-                var magicFormula = actor.HitPointsDown() / 10 + 1;
+                var magicFormula = actor.HitPointsDown() / 5 + 1;
                 reason = $"Down {actor.HitPointsDown()} HP";
                 result = magicFormula;
 
