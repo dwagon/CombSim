@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using CombSim.Gear;
 
@@ -91,15 +90,13 @@ namespace CombSim.Characters
             {
                 if (!IsStealthAttack(attackAction, actor, target))
                 {
-                    Console.WriteLine($"// Not a valid sneak attack");
                     return;
                 }
 
                 SetDamageType(attackAction.Weapon);
-                Console.WriteLine($"// Sneak Attack");
 
                 var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name,
-                    attackName: "Stealth Attack");
+                    attackName: "Sneak Attack");
                 target.OnHitAttacked?.Invoke(this, new OnHitEventArgs
                 {
                     Source = actor,
