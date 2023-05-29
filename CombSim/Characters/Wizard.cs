@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using CombSim.Gear;
 using CombSim.Spells;
+using Pastel;
 
 namespace CombSim.Characters
 {
@@ -24,7 +25,7 @@ namespace CombSim.Characters
 
         public Wizard(string name, int level = 1, string team = "Wizards") : base(name, team)
         {
-            Repr = "W";
+            Repr = "W".Pastel(ConsoleColor.Magenta).PastelBg(ConsoleColor.DarkBlue);
             SpellCastingAbility = StatEnum.Intelligence;
             Level = level;
             MaxHitPoints = _hitPointsAtLevel[level];

@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using CombSim.Gear;
+using Pastel;
 
 namespace CombSim.Characters
 {
@@ -12,7 +14,7 @@ namespace CombSim.Characters
 
         public Rogue(string name, int level = 1, string team = "Rogues") : base(name, team)
         {
-            Repr = "R";
+            Repr = "R".Pastel(ConsoleColor.Red).PastelBg(ConsoleColor.DarkBlue);
 
             Level = level;
             MaxHitPoints = _hitPointsAtLevel[level];

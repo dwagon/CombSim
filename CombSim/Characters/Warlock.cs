@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using CombSim.Gear;
 using CombSim.Spells;
+using Pastel;
 
 namespace CombSim.Characters
 {
@@ -22,7 +24,7 @@ namespace CombSim.Characters
 
         public Warlock(string name, int level = 1, string team = "Warlocks") : base(name, team)
         {
-            Repr = "w";
+            Repr = "W".Pastel(ConsoleColor.Red).PastelBg(ConsoleColor.DarkBlue);
 
             Level = level;
             MaxHitPoints = _hitPointsAtLevel[level];

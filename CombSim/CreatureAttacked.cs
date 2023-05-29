@@ -50,7 +50,6 @@ namespace CombSim
         private void BeingHit(object sender, OnHitEventArgs e)
         {
             var dmg = e.DmgRoll.Roll();
-            ;
             var damageNote = "";
 
             dmg = TakeDamage(dmg, out string dmgModifier);
@@ -106,10 +105,10 @@ namespace CombSim
                 {
                     case SpellSavedEffect.DamageHalved:
                         dmg /= 2;
-                        message = $"Saved for half damage";
+                        message = "Saved for half damage";
                         break;
                     case SpellSavedEffect.NoDamage:
-                        message = $"Saved for no damage";
+                        message = "Saved for no damage";
                         dmg = new Damage(0, DamageTypeEnums.None);
                         break;
                 }
