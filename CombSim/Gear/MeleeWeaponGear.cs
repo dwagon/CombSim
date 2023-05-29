@@ -21,7 +21,7 @@ namespace CombSim.Gear
             new MeleeWeapon("Scimitar", new DamageRoll("1d6", 0, DamageTypeEnums.Slashing), 5 / 5);
 
         public static readonly MeleeWeapon Shortsword =
-            new MeleeWeapon("Shortsword", new DamageRoll("1d4", 0, DamageTypeEnums.Piercing), 5 / 5);
+            new MeleeWeapon("Shortsword", new DamageRoll("1d6", 0, DamageTypeEnums.Piercing), 5 / 5);
 
         public static readonly MeleeWeapon Quarterstaff =
             new MeleeWeapon("Quarterstaff", new DamageRoll("1d6", 0, DamageTypeEnums.Bludgeoning), 5 / 5);
