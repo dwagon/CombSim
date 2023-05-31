@@ -28,6 +28,12 @@ namespace CombSim
 
         public override int GetHeuristic(Creature actor, out string reason)
         {
+            if (!actor.CanCastSpell(this))
+            {
+                reason = $"{actor.Name} can't cast {Name()}";
+                return 0;
+            }
+
             var friend = PickClosestFriendNearingHealing(actor, Reach + actor.Speed);
             if (friend == null)
             {
