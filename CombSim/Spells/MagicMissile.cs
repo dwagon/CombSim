@@ -46,16 +46,7 @@ namespace CombSim.Spells
 
         private void DoMissile(Creature actor, Creature target)
         {
-            var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name());
-
-            target.OnHitAttacked?.Invoke(this, new Creature.OnHitEventArgs()
-            {
-                Source = actor,
-                DmgRoll = _damageRoll,
-                AttackMessage = attackMessage,
-                OnHitSideEffect = SideEffect,
-                Attack = this
-            });
+            DoHit(actor, target, _damageRoll);
         }
     }
 }
