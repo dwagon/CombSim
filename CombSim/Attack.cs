@@ -53,7 +53,8 @@ namespace CombSim
                 CriticalHit = IsCriticalHit(actor, target, roll),
                 CriticalMiss = IsCriticalMiss(actor, target, roll),
                 AttackMessage = attackMessage,
-                OnHitSideEffect = SideEffects
+                OnHitSideEffect = SideEffects,
+                Attack = this
             });
         }
     }

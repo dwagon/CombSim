@@ -11,11 +11,12 @@ namespace CombSim
         private void BeingAttackedInitialise()
         {
             OnToHitAttacked += AttackedByWeapon;
-            OnDcAttacked += AttackedbyDc;
+            OnDcAttacked += AttackedByDc;
             OnHitAttacked += BeingHit;
         }
 
-        private Damage TakeDamage(Damage damage, out string dmgModifier)
+        // This creature has taken {damage} from an {action} by {source}
+        private Damage TakeDamage(Damage damage, Creature source, Action action, out string dmgModifier)
         {
             damage = ModifyDamageForVulnerabilityOrResistance(damage, out dmgModifier);
             HitPoints -= damage.hits;
@@ -52,7 +53,7 @@ namespace CombSim
             var dmg = e.DmgRoll.Roll();
             var damageNote = "";
 
-            dmg = TakeDamage(dmg, out string dmgModifier);
+            dmg = TakeDamage(dmg, e.Source, e.Attack, out string dmgModifier);
             damageNote += dmgModifier;
             e.AttackMessage.Result = $"Hit for ({e.DmgRoll}) {damageNote}:  {dmg}";
             NarrationLog.LogMessage(e.AttackMessage.ToString());
@@ -80,7 +81,7 @@ namespace CombSim
                 dmg = e.DmgRoll.Roll();
             }
 
-            dmg = TakeDamage(dmg, out string dmgModifier);
+            dmg = TakeDamage(dmg, e.Source, e.Attack, out string dmgModifier);
             damageNote += dmgModifier;
             e.AttackMessage.Result = $"Hit for ({e.DmgRoll}) {damageNote}:  {dmg}";
             NarrationLog.LogMessage(e.AttackMessage.ToString());
@@ -88,10 +89,10 @@ namespace CombSim
         }
 
         // Attack that is a DC challenge
-        private void AttackedbyDc(object sender, OnDcAttackedEventArgs e)
+        private void AttackedByDc(object sender, OnDcAttackedEventArgs e)
         {
             var dmg = e.DmgRoll.Roll();
-            string message = "";
+            var message = "";
 
             void Failed(Creature actor, Creature cause)
             {
@@ -119,7 +120,7 @@ namespace CombSim
             var dcChallenge = new DcChallenge(e.DcSaveStat, e.DcSaveDc, Saved, Failed);
             dcChallenge.MakeSave(this, e.Source, out int roll);
 
-            dmg = TakeDamage(dmg, out string dmgModifier);
+            dmg = TakeDamage(dmg, e.Source, e.Attack, out string dmgModifier);
             e.AttackMessage.Result =
                 $"{message} :{roll} vs {e.DcSaveStat} DC {e.DcSaveDc} ({e.DmgRoll}) {dmgModifier}: {dmg}";
             NarrationLog.LogMessage(e.AttackMessage.ToString());
@@ -127,6 +128,7 @@ namespace CombSim
 
         public class OnHitEventArgs : EventArgs
         {
+            public Action Attack;
             public AttackMessage AttackMessage;
             public DamageRoll DmgRoll;
             public Action<Creature, Creature> OnHitSideEffect;
@@ -135,6 +137,7 @@ namespace CombSim
 
         public class OnToHitAttackedEventArgs : EventArgs
         {
+            public Action Attack;
             public AttackMessage AttackMessage;
             public bool CriticalHit;
             public bool CriticalMiss;
@@ -146,6 +149,7 @@ namespace CombSim
 
         public class OnDcAttackedEventArgs : EventArgs
         {
+            public Action Attack;
             public AttackMessage AttackMessage;
             public int DcSaveDc;
             public StatEnum DcSaveStat;
