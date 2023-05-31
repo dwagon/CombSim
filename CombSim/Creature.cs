@@ -5,6 +5,7 @@ namespace CombSim
 {
     public partial class Creature
     {
+        public static EventHandler<OnAnyBeingKilledEventArgs> OnAnyBeingKilled;
         private readonly List<Action> _actions;
         private readonly HashSet<ActionCategory> _actionsThisTurn;
         private readonly List<Equipment> _equipment;
@@ -354,7 +355,7 @@ namespace CombSim
             {
                 Moves /= 2;
                 RemoveCondition(ConditionEnum.Prone);
-                Console.WriteLine($"// Getting up from prone");
+                Console.WriteLine("// Getting up from prone");
             }
 
             _actionsThisTurn.Clear();
@@ -421,6 +422,13 @@ namespace CombSim
         public class OnTurnStartEventArgs : EventArgs
         {
             public Creature Creature;
+        }
+
+        public class OnAnyBeingKilledEventArgs : EventArgs
+        {
+            public Action action;
+            public Creature source;
+            public Creature victim;
         }
     }
 }

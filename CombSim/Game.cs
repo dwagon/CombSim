@@ -169,6 +169,16 @@ namespace CombSim
             _arena.Set(location, creature);
         }
 
+        public void CreatureFallenUnconscious(Creature cause, Creature victim, Action action)
+        {
+            Creature.OnAnyBeingKilled?.Invoke(this, new Creature.OnAnyBeingKilledEventArgs
+            {
+                source = cause,
+                victim = victim,
+                action = action
+            });
+        }
+
         // {creature} no longer exists (i.e. died), remove them from the game
         public void Remove(Creature creature)
         {

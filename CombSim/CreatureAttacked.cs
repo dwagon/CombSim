@@ -21,7 +21,12 @@ namespace CombSim
             damage = ModifyDamageForVulnerabilityOrResistance(damage, out dmgModifier);
             HitPoints -= damage.hits;
             DamageReceived.Add(damage);
-            if (HitPoints <= 0) FallenUnconscious();
+            if (HitPoints <= 0)
+            {
+                FallenUnconscious();
+                Game.CreatureFallenUnconscious(source, this, action);
+            }
+
             return damage;
         }
 
