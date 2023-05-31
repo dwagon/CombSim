@@ -25,5 +25,8 @@ namespace CombSim.Gear
 
         public static readonly MeleeWeapon Quarterstaff =
             new MeleeWeapon("Quarterstaff", new DamageRoll("1d6", 0, DamageTypeEnums.Bludgeoning), 5 / 5);
+
+        public static readonly MeleeWeapon Spear =
+            new MeleeWeapon("Spear", new DamageRoll("1d6", 0, DamageTypeEnums.Piercing), 5 / 5);
     }
 }

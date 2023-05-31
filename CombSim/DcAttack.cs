@@ -69,7 +69,8 @@ namespace CombSim
                 SpellSavedEffect = _saveEffect,
                 AttackMessage = attackMessage,
                 OnFailEffect = FailSideEffect,
-                OnSucceedEffect = SucceedSideEffect
+                OnSucceedEffect = SucceedSideEffect,
+                Attack = this
             });
         }
     }

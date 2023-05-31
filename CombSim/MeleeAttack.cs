@@ -1,3 +1,5 @@
+using System;
+
 namespace CombSim
 {
     public class MeleeAttack : Attack
@@ -34,18 +36,26 @@ namespace CombSim
         public override void DoAction(Creature actor)
         {
             var enemy = actor.PickClosestEnemy();
-            if (enemy == null) return;
+            if (enemy == null)
+            {
+                Console.WriteLine("No enemies left");
+                return;
+            }
+
             actor.MoveWithinReachOfCreature(_reach, enemy);
 
-            if (actor.Game.DistanceTo(actor, enemy) <= _reach)
+            if (actor.Game.DistanceTo(actor, enemy) > _reach)
             {
-                Weapon?.UseWeapon();
-
-                var bonusStat = UseStatForAttack(actor);
-
-                DoAttack(actor, enemy, attackBonus: actor.ProficiencyBonus + actor.Stats[bonusStat].Bonus(),
-                    damageBonus: actor.Stats[bonusStat].Bonus());
+                Console.WriteLine($"// {enemy.Name} still out of reach {actor.DistanceTo(enemy)} > {_reach}");
+                return;
             }
+
+            Weapon?.UseWeapon();
+
+            var bonusStat = UseStatForAttack(actor);
+
+            DoAttack(actor, enemy, attackBonus: actor.ProficiencyBonus + actor.Stats[bonusStat].Bonus(),
+                damageBonus: actor.Stats[bonusStat].Bonus());
         }
     }
 }
