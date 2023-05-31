@@ -19,7 +19,7 @@ namespace CombSim.Spells
             var heuristic = new Heuristic(actor, this);
             heuristic.AddDamageRoll(_damageRoll);
             heuristic.AddRepeat(NumberOfMissiles());
-            heuristic.IgnoreRange();
+            heuristic.NoRangeDisadvantage();
             return heuristic.GetValue(out reason);
         }
 
