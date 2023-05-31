@@ -14,6 +14,7 @@ namespace CombSim
         private int _friends = 0;
         private bool _hasAdvantage = false;
         private bool _hasDisadvantage = false;
+        private bool _ignoreRange = false;
 
         private int _maxDamage;
         private MeleeAttack _meleeAttack;
@@ -109,6 +110,12 @@ namespace CombSim
         {
             var enemy = _actor.PickClosestEnemy();
             var distance = _actor.DistanceTo(enemy);
+            if (_ignoreRange)
+            {
+                addendum = "Range not an issue";
+                return true;
+            }
+
             addendum = $"[distance: {distance}] ";
 
             switch (_attackType)
@@ -197,6 +204,11 @@ namespace CombSim
         public void AddDamageRoll(DamageRoll damageRoll)
         {
             _maxDamage = damageRoll.Roll(max: true).hits;
+        }
+
+        public void IgnoreRange()
+        {
+            _ignoreRange = true;
         }
 
         public void AddDamage(int damage)

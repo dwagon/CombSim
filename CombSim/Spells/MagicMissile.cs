@@ -19,6 +19,7 @@ namespace CombSim.Spells
             var heuristic = new Heuristic(actor, this);
             heuristic.AddDamageRoll(_damageRoll);
             heuristic.AddRepeat(NumberOfMissiles());
+            heuristic.IgnoreRange();
             return heuristic.GetValue(out reason);
         }
 
@@ -47,15 +48,13 @@ namespace CombSim.Spells
         {
             var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name());
 
-            target.OnToHitAttacked?.Invoke(this, new Creature.OnToHitAttackedEventArgs()
+            target.OnHitAttacked?.Invoke(this, new Creature.OnHitEventArgs()
             {
                 Source = actor,
-                ToHit = 999, // Autohit
                 DmgRoll = _damageRoll,
-                CriticalHit = false,
-                CriticalMiss = false,
                 AttackMessage = attackMessage,
-                OnHitSideEffect = SideEffect
+                OnHitSideEffect = SideEffect,
+                Attack = this
             });
         }
     }
