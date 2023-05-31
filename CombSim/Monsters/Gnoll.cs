@@ -21,7 +21,7 @@ namespace CombSim.Monsters
             AddEquipment(ArmourGear.Hide);
             AddEquipment(ArmourGear.Shield);
             AddEquipment(MeleeWeaponGear.Spear);
-            // AddEquipment(RangedWeaponGear.Longbow);
+            AddEquipment(RangedWeaponGear.Longbow);
             AddAction(new GnollBite());
 
             ProficiencyBonus = 2;
