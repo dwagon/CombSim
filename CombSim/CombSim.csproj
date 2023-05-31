@@ -89,6 +89,7 @@
         <Compile Include="MeleeAttack.cs"/>
         <Compile Include="Monster.cs"/>
         <Compile Include="Monsters\AirElemental.cs"/>
+        <Compile Include="Monsters\Bugbear.cs"/>
         <Compile Include="Monsters\Ghoul.cs"/>
         <Compile Include="Monsters\Gnoll.cs"/>
         <Compile Include="Monsters\Goblin.cs"/>
