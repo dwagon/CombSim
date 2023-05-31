@@ -33,12 +33,8 @@ namespace CombSim
             _game.Add_Creature(new Zombie("Zombie1", monsters));
             _game.Add_Creature(new Skeleton("Skeleton1", monsters));
             _game.Add_Creature(new AirElemental("AirElemental1", monsters));
-
-            var gnolls = "gnolls";
-            for (var i = 0; i < 5; i++)
-            {
-                _game.Add_Creature(new Gnoll($"Gnoll{i}", gnolls));
-            }
+            _game.Add_Creature(new Gnoll("Gnoll1", monsters));
+            _game.Add_Creature(new Bugbear("Bugbear1", monsters));
 
             var humans = "humans";
             _game.Add_Creature(new Fighter("Fighter", level: 4, humans));

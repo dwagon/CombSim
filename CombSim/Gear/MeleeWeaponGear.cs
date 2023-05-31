@@ -28,5 +28,8 @@ namespace CombSim.Gear
 
         public static readonly MeleeWeapon Spear =
             new MeleeWeapon("Spear", new DamageRoll("1d6", 0, DamageTypeEnums.Piercing), 5 / 5);
+
+        public static readonly MeleeWeapon Morningstar =
+            new MeleeWeapon("Morningstar", new DamageRoll("1d8", 0, DamageTypeEnums.Piercing), 5 / 5);
     }
 }
