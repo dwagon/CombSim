@@ -56,7 +56,7 @@ namespace CombSim
         {
         }
 
-        protected void DoAttack(Creature actor, Creature target)
+        public void DoAttack(Creature actor, Creature target)
         {
             var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name());
 
