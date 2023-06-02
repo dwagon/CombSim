@@ -58,7 +58,7 @@ namespace CombSim.Characters
         public override string ToString()
         {
             var baseString = base.ToString();
-            var spellString = "Spells: ";
+            var spellString = "; Spells: ";
             foreach (var kvp in _spellsAtLevel[Level])
             {
                 spellString += $"L{kvp.Key} = {kvp.Value}; ";

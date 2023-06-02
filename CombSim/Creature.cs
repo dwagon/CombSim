@@ -304,10 +304,35 @@ namespace CombSim
 
         private void TurnEnd()
         {
+            if (IsOk())
+            {
+                SpendRestOfMovement();
+            }
+
             OnTurnEnd?.Invoke(this, new OnTurnEndEventArgs
             {
                 Creature = this
             });
+        }
+
+        // Spend remaining movement moving closer to enemies, but don't get too close
+        private void SpendRestOfMovement()
+        {
+            const int minimumDistance = 5;
+            var originalLocation = GetLocation();
+            var enemy = PickClosestEnemy();
+            if (enemy is null) return;
+            var distance = DistanceTo(enemy);
+            while (Moves > 0 && distance >= minimumDistance)
+            {
+                MoveTowards(enemy);
+                distance = DistanceTo(enemy);
+            }
+
+            if (GetLocation() != originalLocation)
+            {
+                Console.WriteLine($"// Moved from {originalLocation} to {GetLocation()}");
+            }
         }
 
         private void PerformAction(Action action)
@@ -363,6 +388,8 @@ namespace CombSim
 
         protected virtual void TurnStart()
         {
+            Moves = Speed;
+
             OnTurnStart?.Invoke(this, new OnTurnStartEventArgs
             {
                 Creature = this
@@ -382,7 +409,6 @@ namespace CombSim
             _actionsThisTurn.Clear();
             if (!Conditions.HasCondition(ConditionEnum.Ok)) return;
             if (Conditions.HasCondition(ConditionEnum.Paralyzed)) return;
-            Moves = Speed;
             _actionsThisTurn.Add(ActionCategory.Action);
             _actionsThisTurn.Add(ActionCategory.Bonus);
             _actionsThisTurn.Add(ActionCategory.Reaction);
