@@ -116,6 +116,8 @@ namespace CombSim
                 if (target.HasCondition(ConditionEnum.Prone)) hasDisadvantage = true;
             }
 
+            if (actor.HasCondition(ConditionEnum.Restrained)) hasDisadvantage = true;
+
             if (hasAdvantage && hasDisadvantage)
             {
                 hasAdvantage = false;
