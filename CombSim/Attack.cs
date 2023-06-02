@@ -23,11 +23,6 @@ namespace CombSim
             throw new NotImplementedException();
         }
 
-        // Overwrite if the attack has a side effect
-        protected virtual void SideEffect(Creature actor, Creature target)
-        {
-        }
-
         // Do all the Side Effects
         protected void SideEffects(Creature actor, Creature target)
         {

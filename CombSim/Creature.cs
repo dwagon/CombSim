@@ -91,6 +91,12 @@ namespace CombSim
 
         public bool HasAdvantageAgainstMe(Creature target)
         {
+            if (HasCondition(ConditionEnum.Restrained))
+            {
+                Console.WriteLine($"// Advantage due to being restrained");
+                return true;
+            }
+
             return Effects.HasAdvantageAgainstMe(this, target);
         }
 
@@ -326,6 +332,16 @@ namespace CombSim
                 if (stat == StatEnum.Strength || stat == StatEnum.Dexterity) return false;
             }
 
+            if (HasCondition(ConditionEnum.Restrained))
+            {
+                if (stat == StatEnum.Dexterity)
+                {
+                    var roll2 = Stats[stat].Roll();
+                    Console.WriteLine($"// Dex saved with disadvantage due to restrained");
+                    roll = Math.Min(roll2, roll);
+                }
+            }
+
             if (roll > dc)
             {
                 Console.WriteLine($"{roll} Success");
@@ -356,6 +372,11 @@ namespace CombSim
                 Moves /= 2;
                 RemoveCondition(ConditionEnum.Prone);
                 Console.WriteLine("// Getting up from prone");
+            }
+
+            if (HasCondition(ConditionEnum.Restrained))
+            {
+                Moves = 0;
             }
 
             _actionsThisTurn.Clear();

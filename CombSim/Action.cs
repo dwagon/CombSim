@@ -73,6 +73,25 @@ namespace CombSim
             return hasDisadvantage;
         }
 
+        // Overwrite if the attack has a side effect
+        protected virtual void SideEffect(Creature actor, Creature target)
+        {
+        }
+
+        protected void DoHit(Creature actor, Creature target, DamageRoll damageRoll)
+        {
+            var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name());
+
+            target.OnHitAttacked?.Invoke(this, new Creature.OnHitEventArgs()
+            {
+                Source = actor,
+                DmgRoll = damageRoll,
+                AttackMessage = attackMessage,
+                OnHitSideEffect = SideEffect,
+                Attack = this
+            });
+        }
+
         protected void HasAdvantageDisadvantage(Creature actor, Creature target, ref bool hasAdvantage,
             ref bool hasDisadvantage)
         {
@@ -96,6 +115,8 @@ namespace CombSim
             {
                 if (target.HasCondition(ConditionEnum.Prone)) hasDisadvantage = true;
             }
+
+            if (actor.HasCondition(ConditionEnum.Restrained)) hasDisadvantage = true;
 
             if (hasAdvantage && hasDisadvantage)
             {

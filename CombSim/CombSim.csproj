@@ -91,6 +91,7 @@
         <Compile Include="Monsters\AirElemental.cs"/>
         <Compile Include="Monsters\Bugbear.cs"/>
         <Compile Include="Monsters\Ghoul.cs"/>
+        <Compile Include="Monsters\GiantSpider.cs"/>
         <Compile Include="Monsters\Gnoll.cs"/>
         <Compile Include="Monsters\Goblin.cs"/>
         <Compile Include="Monsters\Kobold.cs"/>

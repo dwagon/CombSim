@@ -19,7 +19,7 @@ namespace CombSim.Spells
             var heuristic = new Heuristic(actor, this);
             heuristic.AddDamageRoll(_damageRoll);
             heuristic.AddRepeat(NumberOfMissiles());
-            heuristic.IgnoreRange();
+            heuristic.NoRangeDisadvantage();
             return heuristic.GetValue(out reason);
         }
 
@@ -46,16 +46,7 @@ namespace CombSim.Spells
 
         private void DoMissile(Creature actor, Creature target)
         {
-            var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name());
-
-            target.OnHitAttacked?.Invoke(this, new Creature.OnHitEventArgs()
-            {
-                Source = actor,
-                DmgRoll = _damageRoll,
-                AttackMessage = attackMessage,
-                OnHitSideEffect = SideEffect,
-                Attack = this
-            });
+            DoHit(actor, target, _damageRoll);
         }
     }
 }

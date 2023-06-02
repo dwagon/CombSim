@@ -71,7 +71,7 @@ namespace CombSim.Characters
         public override string ToString()
         {
             var baseString = base.ToString();
-            var spellString = $"Spells: {_spellsAtLevel[Level]}";
+            var spellString = $"; Spells: {_spellsAtLevel[Level]}";
             return baseString + spellString;
         }
 

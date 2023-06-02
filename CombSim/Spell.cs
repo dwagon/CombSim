@@ -21,11 +21,6 @@ namespace CombSim
         protected DamageRoll DmgRoll { get; set; }
         public int Reach { get; protected set; }
 
-        // Overwrite if the attack has a side effect
-        protected virtual void SideEffect(Creature actor, Creature target)
-        {
-        }
-
         public override void DoAction(Creature actor)
         {
             if (!actor.CanCastSpell(this)) return;

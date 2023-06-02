@@ -14,11 +14,11 @@ namespace CombSim
         private int _friends = 0;
         private bool _hasAdvantage = false;
         private bool _hasDisadvantage = false;
-        private bool _ignoreRange = false;
 
         private int _maxDamage;
         private MeleeAttack _meleeAttack;
         private RangedAttack _rangedAttack;
+        private bool _rangeDisadvantage = true;
         private int _repeats = 1;
         private Spell _spell;
 
@@ -80,8 +80,8 @@ namespace CombSim
                 return 0;
             }
 
-            var range_value = RangeConsiderations(out string addendum);
-            if (!range_value)
+            var rangeValue = RangeConsiderations(out string addendum);
+            if (!rangeValue)
             {
                 reason = $"H: {addendum}";
                 return 0;
@@ -110,11 +110,6 @@ namespace CombSim
         {
             var enemy = _actor.PickClosestEnemy();
             var distance = _actor.DistanceTo(enemy);
-            if (_ignoreRange)
-            {
-                addendum = "Range not an issue";
-                return true;
-            }
 
             addendum = $"[distance: {distance}] ";
 
@@ -173,10 +168,15 @@ namespace CombSim
             return true;
         }
 
+        public void NoRangeDisadvantage()
+        {
+            _rangeDisadvantage = false;
+        }
+
         private bool RangedSpellConsiderations(float distance, out string reason)
         {
             reason = "";
-            if (distance < 2) AddDisadvantage();
+            if (distance < 2 && _rangeDisadvantage) AddDisadvantage();
             if (distance > _actor.Speed + _spell.Reach)
             {
                 reason = $"Out of range ({distance} > {_actor.Speed} + {_spell.Reach})";
@@ -204,11 +204,6 @@ namespace CombSim
         public void AddDamageRoll(DamageRoll damageRoll)
         {
             _maxDamage = damageRoll.Roll(max: true).hits;
-        }
-
-        public void IgnoreRange()
-        {
-            _ignoreRange = true;
         }
 
         public void AddDamage(int damage)

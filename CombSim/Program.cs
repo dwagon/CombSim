@@ -35,6 +35,7 @@ namespace CombSim
             _game.Add_Creature(new AirElemental("AirElemental1", monsters));
             _game.Add_Creature(new Gnoll("Gnoll1", monsters));
             _game.Add_Creature(new Bugbear("Bugbear1", monsters));
+            _game.Add_Creature(new GiantSpider("Giant Spider1", monsters));
 
             var humans = "humans";
             _game.Add_Creature(new Fighter("Fighter", level: 4, humans));

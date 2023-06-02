@@ -76,7 +76,6 @@ namespace CombSim.Characters
 
         public override void DoCastSpell(Spell spell)
         {
-            Console.WriteLine($"// DoCastSpell(spell={spell.Name()}) Level: {spell.Level}");
             if (spell.Level == 0) return;
             _spellsAtLevel[Level][spell.Level]--;
         }

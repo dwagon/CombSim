@@ -74,21 +74,25 @@ namespace CombSim
                 return;
             }
 
-            Damage dmg;
-            var damageNote = "";
-            if (e.CriticalHit)
+            if (e.DmgRoll != null)
             {
-                damageNote += " (Critical Hit) ";
-                dmg = e.DmgRoll.Roll(max: true) + e.DmgRoll.Roll();
-            }
-            else
-            {
-                dmg = e.DmgRoll.Roll();
+                Damage dmg;
+                var damageNote = "";
+                if (e.CriticalHit)
+                {
+                    damageNote += " (Critical Hit) ";
+                    dmg = e.DmgRoll.Roll(max: true) + e.DmgRoll.Roll();
+                }
+                else
+                {
+                    dmg = e.DmgRoll.Roll();
+                }
+
+                dmg = TakeDamage(dmg, e.Source, e.Attack, out string dmgModifier);
+                damageNote += dmgModifier;
+                e.AttackMessage.Result = $"Hit for ({e.DmgRoll}) {damageNote}:  {dmg}";
             }
 
-            dmg = TakeDamage(dmg, e.Source, e.Attack, out string dmgModifier);
-            damageNote += dmgModifier;
-            e.AttackMessage.Result = $"Hit for ({e.DmgRoll}) {damageNote}:  {dmg}";
             NarrationLog.LogMessage(e.AttackMessage.ToString());
             if (e.OnHitSideEffect != null) e.OnHitSideEffect(e.Source, this);
         }

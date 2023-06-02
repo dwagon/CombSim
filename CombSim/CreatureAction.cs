@@ -6,7 +6,7 @@ namespace CombSim
 {
     public partial class Creature
     {
-        protected void AddAction(Action action)
+        public void AddAction(Action action)
         {
             _actions.Add(action);
         }

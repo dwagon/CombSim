@@ -100,7 +100,7 @@ namespace CombSim.Monsters
         {
             public ElementalSlap() : base("Slap", new DamageRoll("2d8", DamageTypeEnums.Bludgeoning))
             {
-                Versatile = true;
+                Finesse = true;
             }
         }
     }
