@@ -10,12 +10,12 @@ namespace CombSim.Characters
     {
         private readonly Dictionary<int, int> _channelDivinity = new Dictionary<int, int>
         {
-            { 1, 1 }, { 2, 1 }, { 3, 1 }
+            { 1, 1 }, { 2, 1 }, { 3, 1 }, { 4, 1 }
         };
 
         private readonly Dictionary<int, int> _hitPointsAtLevel = new Dictionary<int, int>
         {
-            { 1, 9 }, { 2, 15 }, { 3, 21 }, { 4, -1 }
+            { 1, 9 }, { 2, 15 }, { 3, 21 }, { 4, 27 }
         };
 
         // CasterLevel: <SpellLevel: NumberOfSlots>
@@ -24,7 +24,8 @@ namespace CombSim.Characters
             {
                 { 1, new Dictionary<int, int> { { 1, 2 } } },
                 { 2, new Dictionary<int, int> { { 1, 3 } } },
-                { 3, new Dictionary<int, int> { { 1, 4 }, { 2, 2 } } }
+                { 3, new Dictionary<int, int> { { 1, 4 }, { 2, 2 } } },
+                { 4, new Dictionary<int, int> { { 1, 4 }, { 2, 3 } } }
             };
 
         public Cleric(string name, int level = 1, string team = "Clerics") : base(name, team)
@@ -65,6 +66,11 @@ namespace CombSim.Characters
                 AddAction(new PreserveLife(this));
                 // AddAction(new TurnUndead());
             }
+
+            if (level >= 4)
+            {
+                Stats[StatEnum.Wisdom] = new Stat(18);
+            }
         }
 
         // Disciple of Life: Healing Spells cure addition 2+Level HP
@@ -101,12 +107,12 @@ namespace CombSim.Characters
             _spellsAtLevel[Level][spell.Level]--;
         }
 
-        public bool CanChannelDivinity()
+        private bool CanChannelDivinity()
         {
             return _channelDivinity[Level] > 0;
         }
 
-        public void DoChannelDivinity()
+        private void DoChannelDivinity()
         {
             _channelDivinity[Level]--;
         }
@@ -168,6 +174,7 @@ namespace CombSim.Characters
                     return 0;
                 }
 
+                hpToHeal = Math.Min(hpToHeal, _maxHpToHeal);
                 reason = $"Can cure {allAlliesNeedingHealing.Count} ally of {hpToHeal} HP";
 
                 return Math.Min(_maxHpToHeal, hpToHeal);
@@ -181,7 +188,8 @@ namespace CombSim.Characters
                 var hpHealed = 0;
                 foreach (var creature in allAlliesNeedingHealing)
                 {
-                    var hpToHeal = Math.Min(creature.HitPointsDown(), _maxHpToHeal - hpHealed);
+                    var hpToHeal = Math.Min(creature.HitPointsDown(), _maxHpToHeal - hpHealed) /
+                                   allAlliesNeedingHealing.Count;
                     creature.Heal(hpToHeal, "Preserve Life");
                     hpHealed += hpToHeal;
                 }
