@@ -17,7 +17,7 @@ namespace CombSim
         {
             var heuristic = new Heuristic(actor, this);
             RangedWeapon rangedWeapon = (RangedWeapon)Weapon;
-            if (!rangedWeapon.HasAmmunition())
+            if (rangedWeapon != null && !rangedWeapon.HasAmmunition())
             {
                 reason = "No ammunition";
                 return 0;
@@ -42,7 +42,7 @@ namespace CombSim
 
             HasAdvantageDisadvantage(actor, enemy, ref hasAdvantage, ref hasDisadvantage);
 
-            Weapon.UseWeapon();
+            Weapon?.UseWeapon();
             DoAttack(actor, enemy,
                 attackBonus: actor.ProficiencyBonus + actor.Stats[StatEnum.Dexterity].Bonus(),
                 damageBonus: actor.Stats[StatEnum.Dexterity].Bonus());

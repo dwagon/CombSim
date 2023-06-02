@@ -36,6 +36,7 @@ namespace CombSim
 
         public static DamageRoll operator +(DamageRoll dmgRoll, int bonus)
         {
+            if (dmgRoll is null) return null;
             return new DamageRoll(dmgRoll._roll, dmgRoll._bonus + bonus, dmgRoll.Type);
         }
     }
