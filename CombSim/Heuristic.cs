@@ -80,8 +80,8 @@ namespace CombSim
                 return 0;
             }
 
-            var range_value = RangeConsiderations(out string addendum);
-            if (!range_value)
+            var rangeValue = RangeConsiderations(out string addendum);
+            if (!rangeValue)
             {
                 reason = $"H: {addendum}";
                 return 0;
