@@ -48,12 +48,40 @@ namespace CombSim.Monsters
             }
         }
 
-        private class GiantSpiderWeb : Action
+        // Web (Recharge 5–6). Ranged Weapon Attack: +5 to hit, range 30/60 ft., one creature.
+        // Hit: The target is restrained by webbing. As an action, the restrained target can make a DC 12 Strength check,
+        // bursting the webbing on a success.
+        private class GiantSpiderWeb : RangedAttack
         {
             private bool _hasCharge = true;
 
-            public GiantSpiderWeb() : base("Web", ActionCategory.Action)
+            public GiantSpiderWeb() : base("Web", null, 30 / 5, 60 / 5)
             {
+            }
+
+            protected override void SideEffect(Creature actor, Creature target)
+            {
+                target.AddEffect(new Webbed());
+            }
+
+            public override int GetHeuristic(Creature actor, out string reason)
+            {
+                var enemy = actor.PickClosestEnemy();
+                var distance = actor.DistanceTo(enemy);
+                if (distance > LongRange + actor.Speed)
+                {
+                    reason = "Beyond movement";
+                    return 0;
+                }
+
+                if (enemy.HasEffect("Giant Spider Web"))
+                {
+                    reason = $"{enemy.Name} already webbed";
+                    return 0;
+                }
+
+                reason = $"Can web {enemy.Name} ({distance})";
+                return 10;
             }
 
             public void TurnStart(object sender, OnTurnStartEventArgs e)
@@ -64,6 +92,53 @@ namespace CombSim.Monsters
                 if (roll >= 5)
                 {
                     _hasCharge = true;
+                }
+            }
+        }
+
+        private class Webbed : Effect
+        {
+            private Action _action;
+
+            public Webbed() : base("Giant Spider Web")
+            {
+            }
+
+            public override void Start(Creature target)
+            {
+                Console.WriteLine($"// {target.Name} is entrapped in a web");
+                target.AddCondition(ConditionEnum.Restrained);
+                _action = new RemoveWeb(this);
+                target.AddAction(_action);
+            }
+
+            public override void End(Creature target)
+            {
+                target.RemoveCondition(ConditionEnum.Restrained);
+                target.RemoveAction(_action);
+            }
+
+            private class RemoveWeb : Action
+            {
+                private readonly Effect _webbed;
+
+                public RemoveWeb(Effect webEffect) : base("Remove Web", ActionCategory.Action)
+                {
+                    _webbed = webEffect;
+                }
+
+                public override int GetHeuristic(Creature actor, out string reason)
+                {
+                    reason = "Remove web";
+                    return 15;
+                }
+
+                public override void DoAction(Creature actor)
+                {
+                    if (actor.MakeSavingThrow(StatEnum.Strength, 12, out _))
+                    {
+                        actor.RemoveEffect(_webbed);
+                    }
                 }
             }
         }
