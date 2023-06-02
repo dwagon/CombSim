@@ -10,7 +10,7 @@ namespace CombSim.Characters
     {
         private readonly Dictionary<int, int> _hitPointsAtLevel = new Dictionary<int, int>
         {
-            { 1, 10 }, { 2, 18 }, { 3, 24 }
+            { 1, 10 }, { 2, 18 }, { 3, 24 }, { 4, 31 }
         };
 
         // CasterLevel: <SpellLevel: NumberOfSlots>
@@ -19,7 +19,8 @@ namespace CombSim.Characters
             {
                 { 1, 1 },
                 { 2, 2 },
-                { 3, 2 }
+                { 3, 2 },
+                { 4, 2 }
             };
 
         public Warlock(string name, int level = 1, string team = "Warlocks") : base(name, team)
@@ -61,6 +62,12 @@ namespace CombSim.Characters
                 AddSpell(new FireBolt());
                 AddSpell(new ShockingGrasp());
                 // AddSpell(new ViciousMockery());
+            }
+
+
+            if (level >= 4)
+            {
+                Stats[StatEnum.Charisma] = new Stat(18);
             }
 
             if (HasAttribute(Attribute.EldritchSpear)) ebRange = 300 / 5;
