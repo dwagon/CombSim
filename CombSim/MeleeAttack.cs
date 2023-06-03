@@ -4,17 +4,29 @@ namespace CombSim
 {
     public class MeleeAttack : Attack
     {
-        private readonly int _reach;
-
-        public MeleeAttack(string name, DamageRoll damageRoll, int reach = 1, Weapon weapon = null) : base(name,
-            damageRoll, weapon)
+        protected MeleeAttack(string name, DamageRoll damageRoll, int reach = 1) : base(name, damageRoll)
         {
-            _reach = reach;
+            Reach = reach;
         }
+
+        public MeleeAttack(MeleeWeapon weapon) : base(weapon)
+        {
+            Reach = weapon.Reach;
+        }
+
+        public int Reach { get; }
 
         public override int GetHeuristic(Creature actor, out string reason)
         {
             var heuristic = new Heuristic(actor, this);
+            var bonusStat = UseStatForAttack(actor);
+            var damageBonus = actor.Stats[bonusStat].Bonus();
+            if (Weapon != null)
+            {
+                damageBonus += Weapon.MagicBonus;
+            }
+
+            heuristic.AddDamage(damageBonus);
             return heuristic.GetValue(out reason);
         }
 
@@ -42,11 +54,11 @@ namespace CombSim
                 return;
             }
 
-            actor.MoveWithinReachOfCreature(_reach, enemy);
+            actor.MoveWithinReachOfCreature(Reach, enemy);
 
-            if (actor.Game.DistanceTo(actor, enemy) > _reach)
+            if (actor.Game.DistanceTo(actor, enemy) > Reach)
             {
-                Console.WriteLine($"// {enemy.Name} still out of reach {actor.DistanceTo(enemy)} > {_reach}");
+                Console.WriteLine($"// {enemy.Name} still out of reach {actor.DistanceTo(enemy)} > {Reach}");
                 return;
             }
 

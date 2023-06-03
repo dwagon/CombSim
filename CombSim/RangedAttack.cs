@@ -5,12 +5,17 @@ namespace CombSim
         public readonly int LongRange;
         public readonly int ShortRange;
 
-        public RangedAttack(string name, DamageRoll damageRoll, int shortRange, int longRange,
-            Weapon weapon = null) :
-            base(name, damageRoll, weapon)
+        protected RangedAttack(string name, DamageRoll damageRoll, int shortRange, int longRange) :
+            base(name, damageRoll)
         {
             ShortRange = shortRange;
             LongRange = longRange;
+        }
+
+        public RangedAttack(RangedWeapon weapon) : base(weapon)
+        {
+            ShortRange = weapon.ShortRange;
+            LongRange = weapon.LongRange;
         }
 
         public override int GetHeuristic(Creature actor, out string reason)

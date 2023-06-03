@@ -10,7 +10,8 @@ namespace CombSimTest
         public void TestRangedWeapon()
         {
             var ammo = 2;
-            var rw = new RangedWeapon("TestWeapon", new DamageRoll("1d6", DamageTypeEnums.Psychic), 10, 20, ammo);
+            var rw = new RangedWeapon("TestWeapon", new DamageRoll("1d6", DamageTypeEnums.Psychic), 10, 20,
+                ammunition: ammo);
             Assert.True(rw.HasAmmunition());
             rw.UseWeapon();
             Assert.AreEqual(1, rw.GetAmmunition());
