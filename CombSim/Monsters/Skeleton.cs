@@ -18,6 +18,7 @@ namespace CombSim.Monsters
             AddEquipment(MeleeWeaponGear.Shortsword);
             AddEquipment(RangedWeaponGear.Shortbow);
             Vulnerable.Add(DamageTypeEnums.Bludgeoning);
+            Vulnerable.Add(DamageTypeEnums.MagicBludgeoning);
             Immune.Add(DamageTypeEnums.Poison);
         }
     }
