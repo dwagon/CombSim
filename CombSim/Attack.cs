@@ -8,11 +8,18 @@ namespace CombSim
         protected bool Finesse;
         protected bool Versatile;
 
-        protected Attack(string name, DamageRoll damageRoll, Weapon weapon) : base(name, ActionCategory.Action)
+        protected Attack(string name, DamageRoll damageRoll) : base(name, ActionCategory.Action)
         {
             DamageRoll = damageRoll;
             Finesse = false;
             Versatile = false;
+        }
+
+        protected Attack(Weapon weapon) : base(weapon.Name, ActionCategory.Action)
+        {
+            DamageRoll = weapon.DamageRoll;
+            Finesse = weapon.Finesse;
+            Versatile = weapon.Versatile;
             Weapon = weapon;
         }
 
@@ -35,6 +42,12 @@ namespace CombSim
             var hasDisadvantage = false;
             var hasAdvantage = false;
             HasAdvantageDisadvantage(actor, target, ref hasAdvantage, ref hasDisadvantage);
+
+            if (Weapon != null)
+            {
+                attackBonus += Weapon.MagicBonus;
+                damageBonus += Weapon.MagicBonus;
+            }
 
             var roll = RollToHit(hasAdvantage: hasAdvantage, hasDisadvantage: hasDisadvantage);
             var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name(),

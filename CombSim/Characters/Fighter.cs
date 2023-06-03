@@ -28,7 +28,7 @@ namespace CombSim.Characters
             Stats.Add(StatEnum.Wisdom, new Stat(13));
             Stats.Add(StatEnum.Charisma, new Stat(9));
             AddEquipment(DefenceFightingStyle);
-            AddEquipment(MeleeWeaponGear.Mace);
+
             AddEquipment(ArmourGear.Plate);
             AddEquipment(ArmourGear.Shield);
             AddEquipment(PotionsGear.HealingPotion);
@@ -48,6 +48,11 @@ namespace CombSim.Characters
             if (level >= 4)
             {
                 Stats[StatEnum.Strength] = new Stat(18);
+                AddEquipment(MeleeWeaponGear.MacePlusOne);
+            }
+            else
+            {
+                AddEquipment(MeleeWeaponGear.Mace);
             }
         }
 

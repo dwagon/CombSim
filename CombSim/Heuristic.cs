@@ -7,20 +7,21 @@ namespace CombSim
 {
     public class Heuristic
     {
-        private Creature _actor;
-        private AttackType _attackType;
-        private DcAttack _dcAttack;
+        private readonly Creature _actor;
+        private readonly AttackType _attackType;
+        private readonly DcAttack _dcAttack;
+        private readonly RangedAttack _rangedAttack;
+        private readonly Spell _spell;
+        private int _bonusDamage = 0;
         private int _enemies = 1;
         private int _friends = 0;
-        private bool _hasAdvantage = false;
-        private bool _hasDisadvantage = false;
+        private bool _hasAdvantage;
+        private bool _hasDisadvantage;
 
         private int _maxDamage;
         private MeleeAttack _meleeAttack;
-        private RangedAttack _rangedAttack;
         private bool _rangeDisadvantage = true;
         private int _repeats = 1;
-        private Spell _spell;
 
         public Heuristic(Creature actor, MeleeAttack attack)
         {
@@ -49,11 +50,6 @@ namespace CombSim
             AddDamageRoll(attack.DamageRoll);
         }
 
-        public Heuristic(Creature actor)
-        {
-            _actor = actor;
-        }
-
         public Heuristic(Creature actor, Spell spell)
         {
             _actor = actor;
@@ -80,27 +76,46 @@ namespace CombSim
                 return 0;
             }
 
-            var rangeValue = RangeConsiderations(out string addendum);
+            var rangeValue = RangeConsiderations(out var addendum);
             if (!rangeValue)
             {
                 reason = $"H: {addendum}";
                 return 0;
             }
 
-            if (_maxDamage == 0)
+            value = _maxDamage;
+
+            reason = $"H: Max Damage {value}";
+            if (_bonusDamage != 0)
             {
-                throw new Exception($"No damage specified: {_attackType}");
+                value += _bonusDamage;
+                reason += $"+{_bonusDamage}";
             }
 
-            // addendum += $"[_maxDamage {_maxDamage}; _repeats {_repeats}; _enemy {_enemies}]";
-            value = _maxDamage * _repeats;
-            value *= _enemies;
+            if (_repeats != 1)
+            {
+                value *= _repeats;
+                reason += $" x {_repeats} Repeats";
+            }
 
-            reason = $"H: Max Damage {value} {addendum}";
+            if (_enemies != 1)
+            {
+                value *= _enemies;
+                reason += $" x {_enemies} Enemies";
+            }
+
+            reason += addendum;
+
             if (_hasDisadvantage)
             {
                 reason += " (Disadvantage)";
-                value = (int)(value * 0.75f);
+                value = (int)(value * 0.5f); // DC 15 odds are halved
+            }
+
+            if (_hasAdvantage)
+            {
+                reason += " (Advantage)";
+                value = (int)(value * 2.0f); // DC 15 advantage doubles the odds
             }
 
             return value;
@@ -111,7 +126,7 @@ namespace CombSim
             var enemy = _actor.PickClosestEnemy();
             var distance = _actor.DistanceTo(enemy);
 
-            addendum = $"[distance: {distance}] ";
+            addendum = $" [distance: {distance}] ";
 
             switch (_attackType)
             {
@@ -208,7 +223,7 @@ namespace CombSim
 
         public void AddDamage(int damage)
         {
-            _maxDamage = damage;
+            _bonusDamage += damage;
         }
 
         public void AddAdvantage(bool hasAdvantage = true)
