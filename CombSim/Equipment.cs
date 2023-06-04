@@ -118,7 +118,7 @@ namespace CombSim
         public readonly int MaxDexBonus;
 
         public Armour(string name, int armourClass = 0, int armourClassBonus = 0, bool dexBonus = false,
-            int maxDexBonus = 2) : base(name)
+            int maxDexBonus = 99) : base(name)
         {
             ArmourClass = armourClass;
             ArmourClassBonus = armourClassBonus;
