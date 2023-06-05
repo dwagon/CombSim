@@ -35,7 +35,7 @@ namespace CombSim
 
         public int MagicBonus { get; }
         public bool Versatile { get; protected set; }
-        public bool Finesse { get; }
+        public bool Finesse { get; protected set; }
 
         public DamageRoll DamageRoll { get; }
 
@@ -46,9 +46,11 @@ namespace CombSim
 
     public class MeleeWeapon : Weapon
     {
-        public MeleeWeapon(string name, DamageRoll damageRoll, int reach, int bonus = 0) : base(name, damageRoll, bonus)
+        public MeleeWeapon(string name, DamageRoll damageRoll, int reach = 5 / 5, int bonus = 0, bool finesse = false) :
+            base(name, damageRoll, bonus)
         {
             Reach = reach;
+            Finesse = finesse;
             var action = new MeleeAttack(this);
             AddAction(action);
         }
@@ -118,7 +120,7 @@ namespace CombSim
         public readonly int MaxDexBonus;
 
         public Armour(string name, int armourClass = 0, int armourClassBonus = 0, bool dexBonus = false,
-            int maxDexBonus = 2) : base(name)
+            int maxDexBonus = 99) : base(name)
         {
             ArmourClass = armourClass;
             ArmourClassBonus = armourClassBonus;

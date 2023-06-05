@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using CombSim.Gear;
 using Pastel;
+
+[assembly: InternalsVisibleTo("CombSimTest")]
 
 namespace CombSim.Characters
 {
@@ -51,7 +54,7 @@ namespace CombSim.Characters
            a finesse or ranged weapon if you have advantage on the attack roll. You don’t need advantage 
            on the attack roll if another enemy of the target is within 5 ft. of it, that enemy isn’t incapacitated,
             and you don’t have disadvantage on the attack roll. */
-        private class SneakAttack : Effect
+        internal class SneakAttack : Effect
         {
             private readonly DamageRoll _sneakDamage;
 
@@ -60,7 +63,7 @@ namespace CombSim.Characters
                 _sneakDamage = sneakDamage;
             }
 
-            private bool IsStealthAttack(Attack attackAction, Creature actor, Creature target)
+            internal bool IsSneakAttack(Attack attackAction, Creature actor, Creature target)
             {
                 if (attackAction.Weapon == null) return false;
 
@@ -70,10 +73,17 @@ namespace CombSim.Characters
                     if (attackAction is RangedAttack) return true;
                 }
 
-                if (attackAction.HasAdvantage(actor, target)) return false;
+                if (attackAction.HasDisadvantage(actor, target)) return false;
+                if (HasAdjacentAlly(actor, target)) return true;
+
+                return false;
+            }
+
+            internal bool HasAdjacentAlly(Creature actor, Creature target)
+            {
                 foreach (var critter in target.GetNeighbourCreatures())
                 {
-                    if (critter.Team == actor.Team && critter.IsOk())
+                    if (critter != actor && critter.Team == actor.Team && critter.IsOk())
                         return true;
                 }
 
@@ -90,7 +100,7 @@ namespace CombSim.Characters
 
             public override void DoAttack(Attack attackAction, Creature actor, Creature target)
             {
-                if (!IsStealthAttack(attackAction, actor, target))
+                if (!IsSneakAttack(attackAction, actor, target))
                 {
                     return;
                 }
