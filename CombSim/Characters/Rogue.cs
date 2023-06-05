@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using CombSim.Gear;
 using Pastel;
+
+[assembly: InternalsVisibleTo("CombSimTest")]
 
 namespace CombSim.Characters
 {
@@ -51,7 +54,7 @@ namespace CombSim.Characters
            a finesse or ranged weapon if you have advantage on the attack roll. You don’t need advantage 
            on the attack roll if another enemy of the target is within 5 ft. of it, that enemy isn’t incapacitated,
             and you don’t have disadvantage on the attack roll. */
-        private class SneakAttack : Effect
+        internal class SneakAttack : Effect
         {
             private readonly DamageRoll _sneakDamage;
 
