@@ -40,6 +40,7 @@ namespace CombSimTest.Spells
             _caster.Initialise();
             _game.Add_Creature(_target);
             _target.Initialise();
+            _target.AddCondition(ConditionEnum.Restrained); // Make hit more often
         }
 
         private class Caster : Creature
