@@ -28,8 +28,6 @@ namespace CombSim.Characters
             Stats.Add(StatEnum.Intelligence, new Stat(9));
             Stats.Add(StatEnum.Wisdom, new Stat(15));
             Stats.Add(StatEnum.Charisma, new Stat(11));
-            AddEquipment(RangedWeaponGear.Longbow);
-            AddEquipment(MeleeWeaponGear.Shortsword);
             AddEquipment(PotionsGear.HealingPotion);
 
             // Sneak Attack (+1d6)
@@ -40,15 +38,22 @@ namespace CombSim.Characters
                 // Insightful Fighting (Inquisitive archetype)
                 sneakDamage = new DamageRoll("2d6");
                 AddEquipment(ArmourGear.LeatherPlusOne);
+                AddEquipment(RangedWeaponGear.ShortbowPlusOne);
             }
             else
             {
                 AddEquipment(ArmourGear.Leather);
+                AddEquipment(RangedWeaponGear.Longbow);
             }
 
             if (level >= 4)
             {
                 Stats[StatEnum.Dexterity] = new Stat(18);
+                AddEquipment(MeleeWeaponGear.ShortswordPlusOne);
+            }
+            else
+            {
+                AddEquipment(MeleeWeaponGear.Shortsword);
             }
 
             AddEffect(new SneakAttack(sneakDamage));
