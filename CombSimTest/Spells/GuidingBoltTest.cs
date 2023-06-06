@@ -40,7 +40,6 @@ namespace CombSimTest.Spells
             _caster.Initialise();
             _game.Add_Creature(_target);
             _target.Initialise();
-            _target.AddCondition(ConditionEnum.Restrained); // Make hit more often
         }
 
         private class Caster : Creature
@@ -69,6 +68,7 @@ namespace CombSimTest.Spells
             public Target() : base("TestTarget", "B")
             {
                 Stats.Add(StatEnum.Dexterity, new Stat(10));
+                MaxHitPoints = 9999; // Don't die - causes tests to be weird
             }
         }
 
