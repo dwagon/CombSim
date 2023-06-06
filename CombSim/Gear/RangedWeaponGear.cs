@@ -1,6 +1,6 @@
 namespace CombSim.Gear
 {
-    public class RangedWeaponGear
+    public static class RangedWeaponGear
     {
         public static readonly RangedWeapon Sling = new RangedWeapon("Sling",
             new DamageRoll("1d4", DamageTypeEnums.Bludgeoning), 30 / 5, 120 / 5);

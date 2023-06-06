@@ -136,6 +136,7 @@ namespace CombSim
             var maxDexBonus = 99;
 
             foreach (var gear in _equipment)
+            {
                 if (gear is Armour armour)
                 {
                     if (armour.ArmourClass > 0)
@@ -148,6 +149,9 @@ namespace CombSim
                     acBonus += armour.ArmourClassBonus;
                     acBonus += armour.MagicBonus;
                 }
+
+                acBonus += gear.ArmourModification();
+            }
 
             var result = ac + acBonus + GetDexAcBonus(dexBonus, maxDexBonus);
 
@@ -364,6 +368,11 @@ namespace CombSim
         {
             Console.Write($"// {Name} does {stat} saving vs DC {dc} - ");
             roll = Stats[stat].Roll();
+            foreach (var gear in _equipment)
+            {
+                roll += gear.SavingThrowModification(stat);
+            }
+
             if (HasCondition(ConditionEnum.Paralyzed))
             {
                 if (stat == StatEnum.Strength || stat == StatEnum.Dexterity) return false;

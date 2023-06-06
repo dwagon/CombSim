@@ -21,6 +21,16 @@ namespace CombSim
         {
             return _actions;
         }
+
+        public virtual int ArmourModification()
+        {
+            return 0;
+        }
+
+        public virtual int SavingThrowModification(StatEnum stat)
+        {
+            return 0;
+        }
     }
 
     public class Weapon : Equipment

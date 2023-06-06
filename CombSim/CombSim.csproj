@@ -80,6 +80,7 @@
         <Compile Include="Equipment.cs"/>
         <Compile Include="Game.cs"/>
         <Compile Include="Gear\ArmourGear.cs"/>
+        <Compile Include="Gear\Misc.cs"/>
         <Compile Include="Gear\PotionsGear.cs"/>
         <Compile Include="Gear\MeleeWeaponGear.cs"/>
         <Compile Include="Gear\RangedWeaponGear.cs"/>
