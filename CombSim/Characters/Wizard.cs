@@ -47,6 +47,7 @@ namespace CombSim.Characters
             if (Level >= 3)
             {
                 AddSpell(new ScorchingRay());
+                AddEquipment(new RingOfProtection());
             }
 
             if (level >= 4)
