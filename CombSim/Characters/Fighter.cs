@@ -29,30 +29,38 @@ namespace CombSim.Characters
             Stats.Add(StatEnum.Charisma, new Stat(9));
             AddEquipment(DefenceFightingStyle);
 
-            AddEquipment(ArmourGear.Plate);
-            AddEquipment(ArmourGear.Shield);
             AddEquipment(PotionsGear.HealingPotion);
 
             AddAction(new SecondWind());
             if (level >= 2)
             {
                 AddAction(new ActionSurge());
+                AddEquipment(ArmourGear.ShieldPlusOne);
+            }
+            else
+            {
+                AddEquipment(ArmourGear.Shield);
             }
 
             if (level >= 3)
             {
                 // Champion Martial Archetype
                 CriticalHitRoll = 19;
-            }
-
-            if (level >= 4)
-            {
-                Stats[StatEnum.Strength] = new Stat(18);
                 AddEquipment(MeleeWeaponGear.MacePlusOne);
             }
             else
             {
                 AddEquipment(MeleeWeaponGear.Mace);
+            }
+
+            if (level >= 4)
+            {
+                Stats[StatEnum.Strength] = new Stat(18);
+                AddEquipment(ArmourGear.PlatePlusOne);
+            }
+            else
+            {
+                AddEquipment(ArmourGear.Plate);
             }
         }
 

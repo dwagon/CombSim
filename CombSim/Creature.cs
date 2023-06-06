@@ -146,7 +146,7 @@ namespace CombSim
                     }
 
                     acBonus += armour.ArmourClassBonus;
-                    ac += armour.MagicBonus;
+                    acBonus += armour.MagicBonus;
                 }
 
             var result = ac + acBonus + GetDexAcBonus(dexBonus, maxDexBonus);
@@ -154,6 +154,17 @@ namespace CombSim
             // Not wearing any armour
             if (result == 0) result = baseAc + Stats[StatEnum.Dexterity].Bonus();
             _setArmourClass = result;
+            return result;
+        }
+
+        public List<string> GetGearList()
+        {
+            var result = new List<string>();
+            foreach (var gear in _equipment)
+            {
+                result.Add(gear.Name);
+            }
+
             return result;
         }
 
