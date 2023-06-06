@@ -49,5 +49,15 @@ namespace CombSimTest
             creature.AddEquipment(ArmourGear.Ring);
             Assert.AreEqual(14, creature.ArmourClass);
         }
+
+
+        [Test]
+        public void TestMagicArmourClass()
+        {
+            var creature = new Creature("Test", "TestTeam");
+            creature.Stats[StatEnum.Dexterity] = new Stat(10);
+            creature.AddEquipment(ArmourGear.LeatherPlusOne);
+            Assert.AreEqual(12, creature.ArmourClass);
+        }
     }
 }

@@ -117,15 +117,17 @@ namespace CombSim
         public readonly int ArmourClass;
         public readonly int ArmourClassBonus;
         public readonly bool DexBonus;
+        public readonly int MagicBonus;
         public readonly int MaxDexBonus;
 
         public Armour(string name, int armourClass = 0, int armourClassBonus = 0, bool dexBonus = false,
-            int maxDexBonus = 99) : base(name)
+            int maxDexBonus = 99, int magicBonus = 0) : base(name)
         {
             ArmourClass = armourClass;
             ArmourClassBonus = armourClassBonus;
             DexBonus = dexBonus;
             MaxDexBonus = maxDexBonus;
+            MagicBonus = magicBonus;
         }
     }
 }

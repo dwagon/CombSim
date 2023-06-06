@@ -13,7 +13,7 @@ namespace CombSimTest.Characters
         {
             var r1 = new Rogue("TestRogue", 1, "Test");
             r1.Initialise();
-            Assert.AreEqual(11 + 3, r1.ArmourClass);
+            Assert.AreEqual(11 + 3, r1.ArmourClass); // Leather & Dex
         }
 
         [Test]
@@ -21,7 +21,7 @@ namespace CombSimTest.Characters
         {
             var r4 = new Rogue("TestRogue", 4, "Test");
             r4.Initialise();
-            Assert.AreEqual(11 + 4, r4.ArmourClass);
+            Assert.AreEqual(12 + 4, r4.ArmourClass); // Leather +1 & Dex
         }
 
         [Test]
