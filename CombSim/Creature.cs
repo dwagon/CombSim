@@ -146,6 +146,7 @@ namespace CombSim
                     }
 
                     acBonus += armour.ArmourClassBonus;
+                    ac += armour.MagicBonus;
                 }
 
             var result = ac + acBonus + GetDexAcBonus(dexBonus, maxDexBonus);
