@@ -25,12 +25,12 @@ namespace CombSim
 
     public class Weapon : Equipment
     {
-        protected Weapon(string name, DamageRoll damageRoll, int bonus = 0) : base(name)
+        protected Weapon(string name, DamageRoll damageRoll, int magicBonus = 0) : base(name)
         {
             DamageRoll = damageRoll;
             Versatile = false;
             Finesse = false;
-            MagicBonus = bonus;
+            MagicBonus = magicBonus;
         }
 
         public int MagicBonus { get; }
@@ -46,8 +46,9 @@ namespace CombSim
 
     public class MeleeWeapon : Weapon
     {
-        public MeleeWeapon(string name, DamageRoll damageRoll, int reach = 5 / 5, int bonus = 0, bool finesse = false) :
-            base(name, damageRoll, bonus)
+        public MeleeWeapon(string name, DamageRoll damageRoll, int reach = 5 / 5, int magicBonus = 0,
+            bool finesse = false) :
+            base(name, damageRoll, magicBonus)
         {
             Reach = reach;
             Finesse = finesse;

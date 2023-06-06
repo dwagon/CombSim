@@ -15,7 +15,7 @@ namespace CombSim.Gear
             new MeleeWeapon("Mace", new DamageRoll("1d6", DamageTypeEnums.Bludgeoning));
 
         public static readonly MeleeWeapon MacePlusOne =
-            new MeleeWeapon("Mace +1", new DamageRoll("1d6", DamageTypeEnums.MagicBludgeoning), bonus: 1);
+            new MeleeWeapon("Mace +1", new DamageRoll("1d6", DamageTypeEnums.MagicBludgeoning), magicBonus: 1);
 
         public static readonly MeleeWeapon Flail =
             new MeleeWeapon("Flail", new DamageRoll("1d8", DamageTypeEnums.Bludgeoning));
