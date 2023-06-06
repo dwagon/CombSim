@@ -31,7 +31,7 @@ namespace CombSim
         }
 
         // Do all the Side Effects
-        protected void SideEffects(Creature actor, Creature target)
+        private void SideEffects(Creature actor, Creature target)
         {
             actor.Effects.DoAttack(this, actor, target);
             SideEffect(actor, target);
@@ -45,8 +45,8 @@ namespace CombSim
 
             if (Weapon != null)
             {
-                attackBonus += Weapon.MagicMagicBonus;
-                damageBonus += Weapon.MagicMagicBonus;
+                attackBonus += Weapon.MagicBonus;
+                damageBonus += Weapon.MagicBonus;
             }
 
             var roll = RollToHit(hasAdvantage: hasAdvantage, hasDisadvantage: hasDisadvantage);
