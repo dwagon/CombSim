@@ -45,8 +45,8 @@ namespace CombSim
 
             if (Weapon != null)
             {
-                attackBonus += Weapon.MagicBonus;
-                damageBonus += Weapon.MagicBonus;
+                attackBonus += Weapon.MagicMagicBonus;
+                damageBonus += Weapon.MagicMagicBonus;
             }
 
             var roll = RollToHit(hasAdvantage: hasAdvantage, hasDisadvantage: hasDisadvantage);
