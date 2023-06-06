@@ -73,9 +73,9 @@ namespace CombSim
     {
         private int _ammunition;
 
-        public RangedWeapon(string name, DamageRoll dmgroll, int shortRange, int longRange, int bonus = 0,
+        public RangedWeapon(string name, DamageRoll dmgroll, int shortRange, int longRange, int magicBonus = 0,
             int ammunition = -1) : base(
-            name, dmgroll, bonus)
+            name, dmgroll, magicBonus)
         {
             ShortRange = shortRange;
             LongRange = longRange;

@@ -39,7 +39,6 @@ namespace CombSim.Characters
             Stats.Add(StatEnum.Charisma, new Stat(15));
 
             AddEquipment(PotionsGear.HealingPotion);
-            AddEquipment(ArmourGear.StuddedLeather);
             AddEquipment(MeleeWeaponGear.Quarterstaff);
 
             // Cantrips
@@ -62,6 +61,11 @@ namespace CombSim.Characters
                 AddSpell(new FireBolt());
                 AddSpell(new ShockingGrasp());
                 // AddSpell(new ViciousMockery());
+                AddEquipment(ArmourGear.StuddedLeatherPlusOne);
+            }
+            else
+            {
+                AddEquipment(ArmourGear.StuddedLeather);
             }
 
 
