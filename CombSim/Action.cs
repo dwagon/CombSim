@@ -92,31 +92,42 @@ namespace CombSim
             });
         }
 
-        protected void HasAdvantageDisadvantage(Creature actor, Creature target, ref bool hasAdvantage,
-            ref bool hasDisadvantage)
+        // Conditions that cause advantage for the actor against the target
+        private bool HaveAdvantage(Creature actor, Creature target)
         {
-            if (target.HasAdvantageAgainstMe(actor))
+            if (target.HasAdvantageAgainstMe(actor)) return true;
+            if (actor.DistanceTo(target) < 2)
             {
-                hasAdvantage = true;
+                if (target.HasCondition(ConditionEnum.Paralyzed)) return true;
+                if (target.HasCondition(ConditionEnum.Prone)) return true;
             }
 
-            if (target.HasDisadvantageAgainstMe(actor))
-            {
-                hasDisadvantage = true;
-            }
+            return false;
+        }
+
+        // Conditions that cause disadvantage for the actor against the target
+        private bool HaveDisadvantage(Creature actor, Creature target)
+        {
+            if (target.HasDisadvantageAgainstMe(actor)) return true;
 
             if (actor.DistanceTo(target) < 2)
             {
-                if (target.HasCondition(ConditionEnum.Paralyzed)) hasAdvantage = true;
-                if (target.HasCondition(ConditionEnum.Prone)) hasAdvantage = true;
-                if (actor.HasCondition(ConditionEnum.Prone)) hasDisadvantage = true;
+                if (actor.HasCondition(ConditionEnum.Prone)) return true;
             }
             else
             {
-                if (target.HasCondition(ConditionEnum.Prone)) hasDisadvantage = true;
+                if (target.HasCondition(ConditionEnum.Prone)) return true;
             }
 
-            if (actor.HasCondition(ConditionEnum.Restrained)) hasDisadvantage = true;
+            if (actor.HasCondition(ConditionEnum.Restrained)) return true;
+            return false;
+        }
+
+        protected void HasAdvantageDisadvantage(Creature actor, Creature target, ref bool hasAdvantage,
+            ref bool hasDisadvantage)
+        {
+            hasAdvantage = HaveAdvantage(actor, target) || hasAdvantage;
+            hasDisadvantage = HaveDisadvantage(actor, target) || hasDisadvantage;
 
             if (hasAdvantage && hasDisadvantage)
             {
