@@ -24,9 +24,19 @@ namespace CombSim
         Unconscious
     }
 
-    public class Conditions
+    public class Conditions : IModifier
     {
         private readonly HashSet<ConditionEnum> _conditions = new HashSet<ConditionEnum>();
+
+        public int ArmourModification(Attack attack)
+        {
+            return 0;
+        }
+
+        public int SavingThrowModification(StatEnum stat)
+        {
+            return 0;
+        }
 
         public void SetCondition(ConditionEnum condition)
         {

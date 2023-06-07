@@ -86,6 +86,7 @@
         <Compile Include="Gear\RangedWeaponGear.cs"/>
         <Compile Include="HealingSpell.cs"/>
         <Compile Include="Heuristic.cs"/>
+        <Compile Include="IModifier.cs"/>
         <Compile Include="Location.cs"/>
         <Compile Include="MeleeAttack.cs"/>
         <Compile Include="Monster.cs"/>

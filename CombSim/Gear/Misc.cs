@@ -6,7 +6,7 @@ namespace CombSim.Gear
         {
         }
 
-        public override int ArmourModification()
+        public override int ArmourModification(Attack attack)
         {
             return 1;
         }

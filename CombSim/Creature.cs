@@ -16,6 +16,7 @@ namespace CombSim
         protected readonly List<DamageTypeEnums> Resistant;
         public readonly Dictionary<StatEnum, Stat> Stats;
         protected readonly List<DamageTypeEnums> Vulnerable;
+        private List<IModifier> _allModifiers;
 
         private int _setArmourClass = -1;
         protected int HitPoints;
@@ -33,6 +34,7 @@ namespace CombSim
             Team = team;
             Speed = 6;
             Stats = new Dictionary<StatEnum, Stat>();
+            _allModifiers = new List<IModifier>();
             Conditions = new Conditions();
             Effects = new Effects();
             _equipment = new List<Equipment>();
@@ -60,7 +62,7 @@ namespace CombSim
 
         public int ArmourClass
         {
-            get => CalcArmourClass();
+            get => CalcArmourClass(null);
             protected set => _setArmourClass = value;
         }
 
@@ -125,7 +127,7 @@ namespace CombSim
             return creatures;
         }
 
-        private int CalcArmourClass()
+        private int CalcArmourClass(Attack attack)
         {
             if (_setArmourClass >= 0) return _setArmourClass;
 
@@ -149,8 +151,11 @@ namespace CombSim
                     acBonus += armour.ArmourClassBonus;
                     acBonus += armour.MagicBonus;
                 }
+            }
 
-                acBonus += gear.ArmourModification();
+            foreach (var modifier in _allModifiers)
+            {
+                acBonus += modifier.ArmourModification(attack);
             }
 
             var result = ac + acBonus + GetDexAcBonus(dexBonus, maxDexBonus);
@@ -201,6 +206,7 @@ namespace CombSim
         public void AddEquipment(Equipment gear)
         {
             _equipment.Add(gear);
+            _allModifiers.Add(gear);
             foreach (var action in gear.GetActions()) _actions.Add(action);
         }
 
@@ -368,9 +374,9 @@ namespace CombSim
         {
             Console.Write($"// {Name} does {stat} saving vs DC {dc} - ");
             roll = Stats[stat].Roll();
-            foreach (var gear in _equipment)
+            foreach (var modifier in _allModifiers)
             {
-                roll += gear.SavingThrowModification(stat);
+                roll += modifier.SavingThrowModification(stat);
             }
 
             if (HasCondition(ConditionEnum.Paralyzed))
@@ -440,11 +446,13 @@ namespace CombSim
         {
             Effects.Add(effect);
             effect.Start(this);
+            _allModifiers.Add(effect);
         }
 
         public void RemoveEffect(Effect effect)
         {
             Effects.Remove(effect);
+            _allModifiers.Remove(effect);
             Console.WriteLine($"// Removing effect {effect.Name}");
             effect.End(this);
         }
