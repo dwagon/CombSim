@@ -6,6 +6,7 @@ namespace CombSim
     {
         public EventHandler<OnDcAttackedEventArgs> OnDcAttacked;
         public EventHandler<OnHitEventArgs> OnHitAttacked;
+        public EventHandler<OnTakingDamageEventArgs> OnTakingDamage;
         public EventHandler<OnToHitAttackedEventArgs> OnToHitAttacked;
 
         private void BeingAttackedInitialise()
@@ -13,12 +14,26 @@ namespace CombSim
             OnToHitAttacked += AttackedByWeapon;
             OnDcAttacked += AttackedByDc;
             OnHitAttacked += BeingHit;
+            OnTakingDamage += DamageDealt;
+        }
+
+        private void DamageDealt(object sender, OnTakingDamageEventArgs e)
+        {
+            DamageInflicted.Add(e.Damage);
         }
 
         // This creature has taken {damage} from an {action} by {source}
         private Damage TakeDamage(Damage damage, Creature source, Action action, out string dmgModifier)
         {
             damage = ModifyDamageForVulnerabilityOrResistance(damage, out dmgModifier);
+            damage.hits = Math.Min(damage.hits, HitPoints);
+
+            source.OnTakingDamage?.Invoke(this, new OnTakingDamageEventArgs
+            {
+                Damage = damage,
+                target = this,
+            });
+
             HitPoints -= damage.hits;
             DamageReceived.Add(damage);
             if (HitPoints <= 0)
@@ -167,6 +182,12 @@ namespace CombSim
             public Action<Creature, Creature> OnSucceedEffect;
             public Creature Source;
             public SpellSavedEffect SpellSavedEffect;
+        }
+
+        public class OnTakingDamageEventArgs : EventArgs
+        {
+            public Damage Damage;
+            public Creature target;
         }
     }
 }

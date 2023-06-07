@@ -11,6 +11,7 @@ namespace CombSim
         private readonly List<Equipment> _equipment;
         private readonly Dictionary<string, Spell> _spells;
         protected readonly Conditions Conditions;
+        private readonly List<Damage> DamageInflicted;
         protected readonly List<Damage> DamageReceived;
         protected readonly List<DamageTypeEnums> Immune;
         public readonly Modifiers Modifiers;
@@ -44,6 +45,7 @@ namespace CombSim
             Resistant = new List<DamageTypeEnums>();
             Immune = new List<DamageTypeEnums>();
             DamageReceived = new List<Damage>();
+            DamageInflicted = new List<Damage>();
             CriticalHitRoll = 20;
             Attributes = new HashSet<Attribute>();
             AddAction(new DashAction());
@@ -255,6 +257,32 @@ namespace CombSim
             output += $" {Conditions};";
             output += $" {Effects}";
             return output;
+        }
+
+        public string DamageReport(out int total)
+        {
+            var result = new List<string>();
+            var damageTypes = new Dictionary<DamageTypeEnums, int>();
+            total = 0;
+            foreach (var damage in DamageInflicted)
+            {
+                if (!damageTypes.ContainsKey(damage.type))
+                {
+                    damageTypes[damage.type] = 0;
+                }
+
+                damageTypes[damage.type] += damage.hits;
+                total += damage.hits;
+            }
+
+            foreach (var kvp in damageTypes)
+            {
+                result.Add($"{kvp.Key}: {kvp.Value}");
+            }
+
+            result.Add($"Total: {total}");
+            if (total == 0) return "None";
+            return String.Join("; ", result);
         }
 
         public void Heal(int hitPoints, string reason = "")
