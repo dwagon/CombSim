@@ -1,3 +1,5 @@
+using System;
+
 namespace CombSim.Gear
 {
     public static class ArmourGear
@@ -21,5 +23,24 @@ namespace CombSim.Gear
         // Shields
         public static readonly Armour Shield = new Armour("Shield", armourClassBonus: 2);
         public static readonly Armour ShieldPlusOne = new Armour("Shield +1", armourClassBonus: 2, magicBonus: 1);
+
+        public class ArrowCatchingShield : Armour
+        {
+            public ArrowCatchingShield() : base("Arrow Catching Shield", armourClassBonus: 2)
+            {
+            }
+
+            // You gain a +2 bonus to AC against ranged attacks while you wield this shield. 
+            public override int ArmourModification(Attack attack)
+            {
+                if (attack is RangedAttack)
+                {
+                    Console.WriteLine("Arrow Catching Shield caught an arrow");
+                    return 2;
+                }
+
+                return 0;
+            }
+        }
     }
 }
