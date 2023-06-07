@@ -15,7 +15,7 @@ namespace CombSim.Monsters
             Stats.Add(StatEnum.Charisma, new Stat(4));
             Repr = "S".Pastel(ConsoleColor.Black).PastelBg(ConsoleColor.White);
             HitDice = "4d10+4";
-            ArmourClass = 14;
+            ArmourClass(14);
             ProficiencyBonus = 2;
             AddAction(new GiantSpiderBite());
             var web = new GiantSpiderWeb();

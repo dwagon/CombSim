@@ -59,12 +59,6 @@ namespace CombSim
         public string Name { get; }
         public string Team { get; }
 
-        public int ArmourClass
-        {
-            get => CalcArmourClass(null);
-            protected set => _setArmourClass = value;
-        }
-
         public Game Game { get; private set; }
 
         protected bool HasAttribute(Attribute attribute)
@@ -126,7 +120,12 @@ namespace CombSim
             return creatures;
         }
 
-        private int CalcArmourClass(Attack attack)
+        protected void ArmourClass(int ac)
+        {
+            _setArmourClass = ac;
+        }
+
+        public int ArmourClass(Attack attack = null)
         {
             if (_setArmourClass >= 0) return _setArmourClass;
 
@@ -252,7 +251,7 @@ namespace CombSim
 
         public new virtual string ToString()
         {
-            var output = $"{Name} AC: {ArmourClass}; HP: {HitPoints}/{MaxHitPoints};";
+            var output = $"{Name} AC: {ArmourClass()}; HP: {HitPoints}/{MaxHitPoints};";
             output += $" {Conditions};";
             output += $" {Effects}";
             return output;

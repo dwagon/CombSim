@@ -13,7 +13,7 @@ namespace CombSim.Monsters
             Stats.Add(StatEnum.Wisdom, new Stat(8));
             Stats.Add(StatEnum.Charisma, new Stat(5));
             Repr = "s";
-            ArmourClass = 13;
+            ArmourClass(13);
             HitDice = "2d8+4";
             AddEquipment(MeleeWeaponGear.Shortsword);
             AddEquipment(RangedWeaponGear.Shortbow);

@@ -16,7 +16,7 @@ namespace CombSim.Monsters
             Stats.Add(StatEnum.Charisma, new Stat(6));
             Repr = "G";
             HitDice = "5d8";
-            ArmourClass = 12;
+            ArmourClass(12);
             Immune.Add(DamageTypeEnums.Poison);
             AddAction(new GhoulBite());
             AddAction(new GhoulClaw());

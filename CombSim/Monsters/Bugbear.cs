@@ -16,7 +16,7 @@ namespace CombSim.Monsters
             Stats.Add(StatEnum.Charisma, new Stat(9));
             Repr = "B";
             HitDice = "5d8+5";
-            ArmourClass = 12;
+            ArmourClass(12);
             AddEquipment(ArmourGear.Hide);
             AddEquipment(ArmourGear.Shield);
             AddEquipment(new BruteMorningStar());

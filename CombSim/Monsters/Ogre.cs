@@ -15,7 +15,7 @@ namespace CombSim.Monsters
             Stats.Add(StatEnum.Wisdom, new Stat(7));
             Stats.Add(StatEnum.Charisma, new Stat(7));
             Repr = "o";
-            ArmourClass = 12;
+            ArmourClass(12);
             HitDice = "7d10+21";
             AddEquipment(MeleeWeaponGear.Greatclub);
             javelin = RangedWeaponGear.Javelin;

@@ -12,7 +12,7 @@ namespace CombSimTest
         {
             var creature = new Creature("Test", "TestTeam");
             creature.Stats[StatEnum.Dexterity] = new Stat(11);
-            Assert.AreEqual(10, creature.ArmourClass);
+            Assert.AreEqual(10, creature.ArmourClass());
         }
 
         [Test]
@@ -20,7 +20,7 @@ namespace CombSimTest
         {
             var creature = new Creature("Test", "TestTeam");
             creature.Stats[StatEnum.Dexterity] = new Stat(16);
-            Assert.AreEqual(10 + 3, creature.ArmourClass);
+            Assert.AreEqual(10 + 3, creature.ArmourClass());
         }
 
         [Test]
@@ -29,7 +29,7 @@ namespace CombSimTest
             var creature = new Creature("Test", "TestTeam");
             creature.Stats[StatEnum.Dexterity] = new Stat(16);
             creature.AddEquipment(ArmourGear.Leather);
-            Assert.AreEqual(11 + 3, creature.ArmourClass);
+            Assert.AreEqual(11 + 3, creature.ArmourClass());
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace CombSimTest
             var creature = new Creature("Test", "TestTeam");
             creature.Stats[StatEnum.Dexterity] = new Stat(10);
             creature.AddEquipment(ArmourGear.Shield);
-            Assert.AreEqual(10 + 2, creature.ArmourClass);
+            Assert.AreEqual(10 + 2, creature.ArmourClass());
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace CombSimTest
             var creature = new Creature("Test", "TestTeam");
             creature.Stats[StatEnum.Dexterity] = new Stat(18);
             creature.AddEquipment(ArmourGear.Ring);
-            Assert.AreEqual(14, creature.ArmourClass);
+            Assert.AreEqual(14, creature.ArmourClass());
         }
 
 
@@ -57,7 +57,7 @@ namespace CombSimTest
             var creature = new Creature("Test", "TestTeam");
             creature.Stats[StatEnum.Dexterity] = new Stat(10);
             creature.AddEquipment(ArmourGear.LeatherPlusOne);
-            Assert.AreEqual(12, creature.ArmourClass);
+            Assert.AreEqual(12, creature.ArmourClass());
         }
     }
 }
