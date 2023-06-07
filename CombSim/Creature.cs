@@ -22,7 +22,7 @@ namespace CombSim
         protected int MaxHitPoints;
         public int Moves;
         public EventHandler<OnTurnEndEventArgs> OnTurnEnd;
-        public EventHandler<OnTurnStartEventArgs> OnTurnStart;
+        protected EventHandler<OnTurnStartEventArgs> OnTurnStart;
         public int ProficiencyBonus = 2;
         protected string Repr;
         protected StatEnum SpellCastingAbility;
@@ -105,7 +105,7 @@ namespace CombSim
             return Effects.HasDisadvantageAgainstMe(this, target);
         }
 
-        public List<Location> GetNeighbourLocations()
+        private List<Location> GetNeighbourLocations()
         {
             return Game.GetNeighbourLocations(this);
         }
@@ -487,16 +487,16 @@ namespace CombSim
             public Creature Creature;
         }
 
-        public class OnTurnStartEventArgs : EventArgs
+        protected class OnTurnStartEventArgs : EventArgs
         {
             public Creature Creature;
         }
 
         public class OnAnyBeingKilledEventArgs : EventArgs
         {
-            public Action action;
-            public Creature source;
-            public Creature victim;
+            public Action Action;
+            public Creature Source;
+            public Creature Victim;
         }
     }
 }

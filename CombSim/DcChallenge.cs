@@ -4,30 +4,30 @@ namespace CombSim
 {
     public class DcChallenge
     {
-        protected int Difficulty;
-        protected Action<Creature, Creature> Failed;
-        protected Action<Creature, Creature> Saved;
-        protected StatEnum SavingStat;
+        private int _difficulty;
+        private Action<Creature, Creature> _failed;
+        private Action<Creature, Creature> _saved;
+        private StatEnum _savingStat;
 
         public DcChallenge(StatEnum savingStat, int difficulty, Action<Creature, Creature> saved,
             Action<Creature, Creature> failed)
         {
-            SavingStat = savingStat;
-            Difficulty = difficulty;
-            Saved = saved;
-            Failed = failed;
+            _savingStat = savingStat;
+            _difficulty = difficulty;
+            _saved = saved;
+            _failed = failed;
         }
 
         public bool MakeSave(Creature actor, Creature cause, out int roll)
         {
             roll = 0;
-            if (actor.MakeSavingThrow(SavingStat, Difficulty, out roll))
+            if (actor.MakeSavingThrow(_savingStat, _difficulty, out roll))
             {
-                Saved(actor, cause);
+                _saved(actor, cause);
                 return true;
             }
 
-            Failed(actor, cause);
+            _failed(actor, cause);
             return false;
         }
     }
