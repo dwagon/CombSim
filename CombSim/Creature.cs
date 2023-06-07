@@ -13,11 +13,10 @@ namespace CombSim
         protected readonly Conditions Conditions;
         protected readonly List<Damage> DamageReceived;
         protected readonly List<DamageTypeEnums> Immune;
+        public readonly Modifiers Modifiers;
         protected readonly List<DamageTypeEnums> Resistant;
         public readonly Dictionary<StatEnum, Stat> Stats;
         protected readonly List<DamageTypeEnums> Vulnerable;
-        private List<IModifier> _allModifiers;
-
         private int _setArmourClass = -1;
         protected int HitPoints;
         protected int MaxHitPoints;
@@ -34,7 +33,6 @@ namespace CombSim
             Team = team;
             Speed = 6;
             Stats = new Dictionary<StatEnum, Stat>();
-            _allModifiers = new List<IModifier>();
             Conditions = new Conditions();
             Effects = new Effects();
             _equipment = new List<Equipment>();
@@ -42,6 +40,7 @@ namespace CombSim
             _actionsThisTurn = new HashSet<ActionCategory>();
             _spells = new Dictionary<string, Spell>();
             Vulnerable = new List<DamageTypeEnums>();
+            Modifiers = new Modifiers();
             Resistant = new List<DamageTypeEnums>();
             Immune = new List<DamageTypeEnums>();
             DamageReceived = new List<Damage>();
@@ -99,12 +98,12 @@ namespace CombSim
                 return true;
             }
 
-            return Effects.HasAdvantageAgainstMe(this, target);
+            return Modifiers.HasAdvantageAgainstMe(this, target);
         }
 
         public bool HasDisadvantageAgainstMe(Creature target)
         {
-            return Effects.HasDisadvantageAgainstMe(this, target);
+            return Modifiers.HasDisadvantageAgainstMe(this, target);
         }
 
         private List<Location> GetNeighbourLocations()
@@ -153,16 +152,9 @@ namespace CombSim
                 }
             }
 
-            foreach (var modifier in _allModifiers)
-            {
-                acBonus += modifier.ArmourModification(attack);
-            }
-
+            acBonus += Modifiers.ArmourModification(attack);
             var result = ac + acBonus + GetDexAcBonus(dexBonus, maxDexBonus);
-
-            // Not wearing any armour
-            if (result == 0) result = baseAc + Stats[StatEnum.Dexterity].Bonus();
-            _setArmourClass = result;
+            if (result == 0) result = baseAc + Stats[StatEnum.Dexterity].Bonus(); // Not wearing any armour
             return result;
         }
 
@@ -206,7 +198,7 @@ namespace CombSim
         public void AddEquipment(Equipment gear)
         {
             _equipment.Add(gear);
-            _allModifiers.Add(gear);
+            Modifiers.Add(gear);
             foreach (var action in gear.GetActions()) _actions.Add(action);
         }
 
@@ -374,10 +366,7 @@ namespace CombSim
         {
             Console.Write($"// {Name} does {stat} saving vs DC {dc} - ");
             roll = Stats[stat].Roll();
-            foreach (var modifier in _allModifiers)
-            {
-                roll += modifier.SavingThrowModification(stat);
-            }
+            roll += Modifiers.SavingThrowModification(stat);
 
             if (HasCondition(ConditionEnum.Paralyzed))
             {
@@ -446,13 +435,13 @@ namespace CombSim
         {
             Effects.Add(effect);
             effect.Start(this);
-            _allModifiers.Add(effect);
+            Modifiers.Add(effect);
         }
 
         public void RemoveEffect(Effect effect)
         {
             Effects.Remove(effect);
-            _allModifiers.Remove(effect);
+            Modifiers.Remove(effect);
             Console.WriteLine($"// Removing effect {effect.Name}");
             effect.End(this);
         }

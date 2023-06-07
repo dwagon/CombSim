@@ -33,7 +33,8 @@ namespace CombSim
         // Do all the Side Effects
         private void SideEffects(Creature actor, Creature target)
         {
-            actor.Effects.DoAttack(this, actor, target);
+            if (!target.IsAlive()) return;
+            actor.Modifiers.DoAttack(this, actor, target);
             SideEffect(actor, target);
         }
 

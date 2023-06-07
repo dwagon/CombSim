@@ -22,6 +22,20 @@ namespace CombSim
             return 0;
         }
 
+        public bool HasAdvantageAgainstMe(Creature actor, Creature victim)
+        {
+            return false;
+        }
+
+        public bool HasDisadvantageAgainstMe(Creature actor, Creature victim)
+        {
+            return false;
+        }
+
+        public void DoAttack(Attack attackAction, Creature actor, Creature victim)
+        {
+        }
+
         protected void AddAction(Action act)
         {
             _actions.Add(act);
