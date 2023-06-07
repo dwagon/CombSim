@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace CombSim
@@ -29,32 +28,6 @@ namespace CombSim
             _effects.Remove(effect);
         }
 
-        public bool HasAdvantageAgainstMe(Creature actor, Creature victim)
-        {
-            foreach (var effect in _effects)
-            {
-                if (effect.HasAdvantageAgainstMe(actor, victim))
-                {
-                    Console.WriteLine(
-                        $"// Effect {effect.Name} causing advantage against {actor.Name} from {victim.Name}");
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public bool HasDisadvantageAgainstMe(Creature actor, Creature victim)
-        {
-            foreach (var effect in _effects)
-            {
-                if (effect.HasDisadvantageAgainstMe(actor, victim))
-                    return true;
-            }
-
-            return false;
-        }
-
         public bool HasEffect(string name)
         {
             foreach (var effect in _effects)
@@ -63,15 +36,6 @@ namespace CombSim
             }
 
             return false;
-        }
-
-        public void DoAttack(Attack attackAction, Creature actor, Creature victim)
-        {
-            if (!victim.IsAlive()) return;
-            foreach (var effect in _effects)
-            {
-                effect.DoAttack(attackAction, actor, victim);
-            }
         }
     }
 }

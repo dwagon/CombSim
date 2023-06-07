@@ -44,7 +44,6 @@ namespace CombSim.Characters
             Stats.Add(StatEnum.Charisma, new Stat(11));
             AddEquipment(MeleeWeaponGear.Flail);
             AddEquipment(ArmourGear.Ring);
-            AddEquipment(ArmourGear.Shield);
             AddEquipment(PotionsGear.HealingPotion);
 
             // Cantrips
@@ -65,6 +64,15 @@ namespace CombSim.Characters
                 // Preserve Life: Restore 5*level HP to any creatures in 30' - creature can not restore to more than 50% HP
                 AddAction(new PreserveLife(this));
                 // AddAction(new TurnUndead());
+            }
+
+            if (Level >= 3)
+            {
+                AddEquipment(new ArmourGear.ArrowCatchingShield());
+            }
+            else
+            {
+                AddEquipment(ArmourGear.Shield);
             }
 
             if (level >= 4)

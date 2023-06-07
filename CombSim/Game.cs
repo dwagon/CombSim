@@ -173,9 +173,9 @@ namespace CombSim
         {
             Creature.OnAnyBeingKilled?.Invoke(this, new Creature.OnAnyBeingKilledEventArgs
             {
-                source = cause,
-                victim = victim,
-                action = action
+                Source = cause,
+                Victim = victim,
+                Action = action
             });
         }
 

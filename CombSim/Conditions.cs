@@ -24,9 +24,33 @@ namespace CombSim
         Unconscious
     }
 
-    public class Conditions
+    public class Conditions : IModifier
     {
         private readonly HashSet<ConditionEnum> _conditions = new HashSet<ConditionEnum>();
+
+        public int ArmourModification(Attack attack)
+        {
+            return 0;
+        }
+
+        public int SavingThrowModification(StatEnum stat)
+        {
+            return 0;
+        }
+
+        public bool HasAdvantageAgainstMe(Creature actor, Creature victim)
+        {
+            return false;
+        }
+
+        public bool HasDisadvantageAgainstMe(Creature actor, Creature victim)
+        {
+            return false;
+        }
+
+        public void DoAttack(Attack attackAction, Creature actor, Creature victim)
+        {
+        }
 
         public void SetCondition(ConditionEnum condition)
         {

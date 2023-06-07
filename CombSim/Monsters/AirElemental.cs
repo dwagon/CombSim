@@ -12,7 +12,7 @@ namespace CombSim.Monsters
             Stats.Add(StatEnum.Charisma, new Stat(6));
             Repr = "A";
             HitDice = "12d10+24";
-            ArmourClass = 15;
+            ArmourClass(15);
             Resistant.Add(DamageTypeEnums.Lightning);
             Resistant.Add(DamageTypeEnums.Thunder);
             Resistant.Add(DamageTypeEnums.Bludgeoning);

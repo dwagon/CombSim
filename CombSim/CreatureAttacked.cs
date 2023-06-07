@@ -67,7 +67,7 @@ namespace CombSim
 
         private void AttackedByWeapon(object sender, OnToHitAttackedEventArgs e)
         {
-            if (e.CriticalMiss || e.ToHit <= ArmourClass)
+            if (e.CriticalMiss || e.ToHit <= ArmourClass((Attack)e.Attack))
             {
                 e.AttackMessage.Result = "Miss";
                 NarrationLog.LogMessage(e.AttackMessage.ToString());

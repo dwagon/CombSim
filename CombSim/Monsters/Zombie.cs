@@ -16,7 +16,7 @@ namespace CombSim.Monsters
             Stats.Add(StatEnum.Wisdom, new Stat(6));
             Stats.Add(StatEnum.Charisma, new Stat(5));
             Repr = "z";
-            ArmourClass = 8;
+            ArmourClass(8);
             HitDice = "3d8+9";
             Immune.Add(DamageTypeEnums.Poison);
             AddAction(new ZombieSlam());

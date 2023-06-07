@@ -19,7 +19,7 @@ namespace CombSimTest.Characters
         {
             var f = new Fighter("Test", 1, "Test");
             f.Initialise();
-            Assert.AreEqual(21, f.ArmourClass); // Plate + Shield + Defense Fighting Style
+            Assert.AreEqual(21, f.ArmourClass()); // Plate + Shield + Defense Fighting Style
             Assert.True(f.ToString().Contains("HP: 12/12"));
         }
 
@@ -29,7 +29,7 @@ namespace CombSimTest.Characters
             var f = new Fighter("Test", 2, "Test");
             f.Initialise();
             Console.WriteLine($"F2={GearList(f)}");
-            Assert.AreEqual(22, f.ArmourClass); // Plate + Shield+1 + Defense Fighting Style
+            Assert.AreEqual(22, f.ArmourClass()); // Plate + Shield+1 + Defense Fighting Style
             Assert.True(f.ToString().Contains("HP: 20/20"));
         }
 
@@ -39,7 +39,7 @@ namespace CombSimTest.Characters
             var f = new Fighter("Test", 3, "Test");
             f.Initialise();
             Console.WriteLine($"F3={GearList(f)}");
-            Assert.AreEqual(22, f.ArmourClass); // Plate + Shield+1 + Defense Fighting Style
+            Assert.AreEqual(22, f.ArmourClass()); // Plate + Shield+1 + Defense Fighting Style
             Assert.True(f.ToString().Contains("HP: 28/28"));
         }
 
@@ -49,7 +49,7 @@ namespace CombSimTest.Characters
             var f = new Fighter("Test", 4, "Test");
             f.Initialise();
             Console.WriteLine($"F4={GearList(f)}");
-            Assert.AreEqual(23, f.ArmourClass); // Plate+1 + Shield+1 + DFS
+            Assert.AreEqual(23, f.ArmourClass()); // Plate+1 + Shield+1 + DFS
             Assert.True(f.ToString().Contains("HP: 36/36"));
         }
     }

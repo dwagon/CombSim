@@ -32,7 +32,7 @@ namespace CombSim.Monsters
         // the gnoll can take a bonus action to move up to half its speed and make a bite attack.
         private void Rampage(object sender, OnAnyBeingKilledEventArgs e)
         {
-            if (e.source == this && e.action is MeleeAttack)
+            if (e.Source == this && e.Action is MeleeAttack)
             {
                 var rampageAction = new GnollRampageBite();
                 Moves = Speed / 2;

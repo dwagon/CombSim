@@ -13,16 +13,16 @@ namespace CombSim
         protected readonly Conditions Conditions;
         protected readonly List<Damage> DamageReceived;
         protected readonly List<DamageTypeEnums> Immune;
+        public readonly Modifiers Modifiers;
         protected readonly List<DamageTypeEnums> Resistant;
         public readonly Dictionary<StatEnum, Stat> Stats;
         protected readonly List<DamageTypeEnums> Vulnerable;
-
         private int _setArmourClass = -1;
         protected int HitPoints;
         protected int MaxHitPoints;
         public int Moves;
         public EventHandler<OnTurnEndEventArgs> OnTurnEnd;
-        public EventHandler<OnTurnStartEventArgs> OnTurnStart;
+        protected EventHandler<OnTurnStartEventArgs> OnTurnStart;
         public int ProficiencyBonus = 2;
         protected string Repr;
         protected StatEnum SpellCastingAbility;
@@ -40,6 +40,7 @@ namespace CombSim
             _actionsThisTurn = new HashSet<ActionCategory>();
             _spells = new Dictionary<string, Spell>();
             Vulnerable = new List<DamageTypeEnums>();
+            Modifiers = new Modifiers();
             Resistant = new List<DamageTypeEnums>();
             Immune = new List<DamageTypeEnums>();
             DamageReceived = new List<Damage>();
@@ -57,12 +58,6 @@ namespace CombSim
 
         public string Name { get; }
         public string Team { get; }
-
-        public int ArmourClass
-        {
-            get => CalcArmourClass();
-            protected set => _setArmourClass = value;
-        }
 
         public Game Game { get; private set; }
 
@@ -97,15 +92,15 @@ namespace CombSim
                 return true;
             }
 
-            return Effects.HasAdvantageAgainstMe(this, target);
+            return Modifiers.HasAdvantageAgainstMe(this, target);
         }
 
         public bool HasDisadvantageAgainstMe(Creature target)
         {
-            return Effects.HasDisadvantageAgainstMe(this, target);
+            return Modifiers.HasDisadvantageAgainstMe(this, target);
         }
 
-        public List<Location> GetNeighbourLocations()
+        private List<Location> GetNeighbourLocations()
         {
             return Game.GetNeighbourLocations(this);
         }
@@ -125,7 +120,12 @@ namespace CombSim
             return creatures;
         }
 
-        private int CalcArmourClass()
+        protected void ArmourClass(int ac)
+        {
+            _setArmourClass = ac;
+        }
+
+        public int ArmourClass(Attack attack = null)
         {
             if (_setArmourClass >= 0) return _setArmourClass;
 
@@ -149,15 +149,11 @@ namespace CombSim
                     acBonus += armour.ArmourClassBonus;
                     acBonus += armour.MagicBonus;
                 }
-
-                acBonus += gear.ArmourModification();
             }
 
+            acBonus += Modifiers.ArmourModification(attack);
             var result = ac + acBonus + GetDexAcBonus(dexBonus, maxDexBonus);
-
-            // Not wearing any armour
-            if (result == 0) result = baseAc + Stats[StatEnum.Dexterity].Bonus();
-            _setArmourClass = result;
+            if (result == 0) result = baseAc + Stats[StatEnum.Dexterity].Bonus(); // Not wearing any armour
             return result;
         }
 
@@ -201,6 +197,7 @@ namespace CombSim
         public void AddEquipment(Equipment gear)
         {
             _equipment.Add(gear);
+            Modifiers.Add(gear);
             foreach (var action in gear.GetActions()) _actions.Add(action);
         }
 
@@ -254,7 +251,7 @@ namespace CombSim
 
         public new virtual string ToString()
         {
-            var output = $"{Name} AC: {ArmourClass}; HP: {HitPoints}/{MaxHitPoints};";
+            var output = $"{Name} AC: {ArmourClass()}; HP: {HitPoints}/{MaxHitPoints};";
             output += $" {Conditions};";
             output += $" {Effects}";
             return output;
@@ -368,10 +365,7 @@ namespace CombSim
         {
             Console.Write($"// {Name} does {stat} saving vs DC {dc} - ");
             roll = Stats[stat].Roll();
-            foreach (var gear in _equipment)
-            {
-                roll += gear.SavingThrowModification(stat);
-            }
+            roll += Modifiers.SavingThrowModification(stat);
 
             if (HasCondition(ConditionEnum.Paralyzed))
             {
@@ -440,11 +434,13 @@ namespace CombSim
         {
             Effects.Add(effect);
             effect.Start(this);
+            Modifiers.Add(effect);
         }
 
         public void RemoveEffect(Effect effect)
         {
             Effects.Remove(effect);
+            Modifiers.Remove(effect);
             Console.WriteLine($"// Removing effect {effect.Name}");
             effect.End(this);
         }
@@ -487,16 +483,16 @@ namespace CombSim
             public Creature Creature;
         }
 
-        public class OnTurnStartEventArgs : EventArgs
+        protected class OnTurnStartEventArgs : EventArgs
         {
             public Creature Creature;
         }
 
         public class OnAnyBeingKilledEventArgs : EventArgs
         {
-            public Action action;
-            public Creature source;
-            public Creature victim;
+            public Action Action;
+            public Creature Source;
+            public Creature Victim;
         }
     }
 }

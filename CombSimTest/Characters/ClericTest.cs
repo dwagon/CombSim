@@ -12,7 +12,7 @@ namespace CombSimTest.Characters
         {
             var c = new Cleric("Test", 1, "Test");
             c.Initialise();
-            Assert.AreEqual(16, c.ArmourClass);
+            Assert.AreEqual(16, c.ArmourClass());
             Assert.True(c.ToString().Contains("HP: 9/9"));
             Assert.True(c.ToString().Contains("Spells: L1 = 2"));
         }
