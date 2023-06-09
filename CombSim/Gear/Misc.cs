@@ -16,4 +16,11 @@ namespace CombSim.Gear
             return 1;
         }
     }
+
+    public class BracersOfDefence : Armour
+    {
+        public BracersOfDefence() : base("Bracers of Defence", armourClassBonus: 2)
+        {
+        }
+    }
 }

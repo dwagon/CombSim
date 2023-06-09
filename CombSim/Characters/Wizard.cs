@@ -53,6 +53,7 @@ namespace CombSim.Characters
             if (level >= 4)
             {
                 Stats[StatEnum.Intelligence] = new Stat(18);
+                AddEquipment(new BracersOfDefence());
             }
         }
 
