@@ -63,6 +63,27 @@ namespace CombSim
             foreach (var creature in _combatants) Console.WriteLine(creature.ToString());
 
             while (!IsEndOfGame() && turn < 30) TakeTurn(turn++);
+            EndOfGameReport();
+        }
+
+        private void EndOfGameReport()
+        {
+            var damageInflicted = new List<(int, string)>();
+            Console.WriteLine("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
+            // Sort by who has done the most damage
+            foreach (var creature in _combatants)
+            {
+                var report = creature.ToString();
+                report += "\tInflicted: ";
+                report += creature.DamageReport(out var total);
+                damageInflicted.Add((total, report));
+            }
+
+            damageInflicted.Sort((x, y) => x.Item1.CompareTo(y.Item1));
+            foreach (var report in damageInflicted)
+            {
+                Console.WriteLine(report.Item2);
+            }
         }
 
         private bool IsEndOfGame()
