@@ -5,10 +5,12 @@ namespace CombSim
         private int _deathSavesBad;
         private int _deathSavesGood;
 
-        protected Character(string name, string team = "Characters") : base(name, team)
+        protected Character(string name, int level, string team = "Characters") : base(name, team)
         {
+            Level = level;
             _deathSavesGood = 0;
             _deathSavesBad = 0;
+            ProficiencyBonus = 2 + Level / 5;
         }
 
         protected int Level { get; set; }
