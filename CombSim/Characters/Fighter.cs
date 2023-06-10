@@ -66,6 +66,7 @@ namespace CombSim.Characters
             if (level >= 5)
             {
                 AttacksPerAction = 2;
+                AddEquipment(RangedWeaponGear.LongbowPlusOne);
             }
         }
 
@@ -81,7 +82,7 @@ namespace CombSim.Characters
 
                 if (actor.PercentHitPoints() > 50)
                 {
-                    reason = "Have most of our hitpoints";
+                    reason = "Have most of our hit points";
                     return 0;
                 }
 

@@ -12,9 +12,9 @@ namespace CombSim
         private readonly DcAttack _dcAttack;
         private readonly RangedAttack _rangedAttack;
         private readonly Spell _spell;
-        private int _bonusDamage = 0;
+        private int _bonusDamage;
         private int _enemies = 1;
-        private int _friends = 0;
+        private int _friends;
         private bool _hasAdvantage;
         private bool _hasDisadvantage;
 
