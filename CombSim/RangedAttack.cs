@@ -29,6 +29,14 @@ namespace CombSim
                 return 0;
             }
 
+            var damageBonus = actor.Stats[StatEnum.Dexterity].Bonus();
+            if (Weapon != null)
+            {
+                damageBonus += Weapon.MagicBonus;
+            }
+
+            heuristic.AddDamage(damageBonus);
+
             return heuristic.GetValue(out reason);
         }
 
