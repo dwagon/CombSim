@@ -82,9 +82,16 @@ namespace CombSim
             return returnList;
         }
 
+        // How much do we heal with this spell
+        protected virtual Damage HealingAmount(Creature actor, Creature target, bool max = false)
+        {
+            var hp = HealingRoll.Roll(max: max) + actor.HealingBonus();
+            return hp;
+        }
+
         protected virtual void DoHealing(Creature actor, Creature target)
         {
-            var hp = HealingRoll.Roll() + actor.HealingBonus();
+            var hp = HealingAmount(actor, target);
             target.Heal(hp.hits, Name());
         }
     }
