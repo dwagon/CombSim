@@ -19,6 +19,7 @@ namespace CombSim
         public override int GetHeuristic(Creature actor, out string reason)
         {
             var heuristic = new Heuristic(actor, this);
+            heuristic.AddRepeat(actor.AttacksPerAction);
             var bonusStat = UseStatForAttack(actor);
             var damageBonus = actor.Stats[bonusStat].Bonus();
             if (Weapon != null)
@@ -47,27 +48,30 @@ namespace CombSim
 
         public override void DoAction(Creature actor)
         {
-            var enemy = actor.PickClosestEnemy();
-            if (enemy == null)
+            for (var attack = 0; attack < actor.AttacksPerAction; attack++)
             {
-                Console.WriteLine("No enemies left");
-                return;
+                var enemy = actor.PickClosestEnemy();
+                if (enemy == null)
+                {
+                    Console.WriteLine("No enemies left");
+                    return;
+                }
+
+                actor.MoveWithinReachOfCreature(Reach, enemy);
+
+                if (actor.Game.DistanceTo(actor, enemy) > Reach)
+                {
+                    Console.WriteLine($"// {enemy.Name} still out of reach {actor.DistanceTo(enemy)} > {Reach}");
+                    return;
+                }
+
+                Weapon?.UseWeapon();
+
+                var bonusStat = UseStatForAttack(actor);
+
+                DoAttack(actor, enemy, attackBonus: actor.ProficiencyBonus + actor.Stats[bonusStat].Bonus(),
+                    damageBonus: actor.Stats[bonusStat].Bonus());
             }
-
-            actor.MoveWithinReachOfCreature(Reach, enemy);
-
-            if (actor.Game.DistanceTo(actor, enemy) > Reach)
-            {
-                Console.WriteLine($"// {enemy.Name} still out of reach {actor.DistanceTo(enemy)} > {Reach}");
-                return;
-            }
-
-            Weapon?.UseWeapon();
-
-            var bonusStat = UseStatForAttack(actor);
-
-            DoAttack(actor, enemy, attackBonus: actor.ProficiencyBonus + actor.Stats[bonusStat].Bonus(),
-                damageBonus: actor.Stats[bonusStat].Bonus());
         }
     }
 }

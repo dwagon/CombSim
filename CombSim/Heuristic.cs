@@ -59,7 +59,6 @@ namespace CombSim
 
         public int GetValue(out string reason)
         {
-            int value;
             reason = "H: undefined";
             if (_attackType == AttackType.RangedSpellAttack || _attackType == AttackType.TouchSpellAttack)
             {
@@ -83,7 +82,7 @@ namespace CombSim
                 return 0;
             }
 
-            value = _maxDamage;
+            var value = _maxDamage;
 
             reason = $"H: Max Damage {value}";
             if (_bonusDamage != 0)

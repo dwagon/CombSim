@@ -21,6 +21,7 @@ namespace CombSim
         public override int GetHeuristic(Creature actor, out string reason)
         {
             var heuristic = new Heuristic(actor, this);
+            heuristic.AddRepeat(actor.AttacksPerAction);
             RangedWeapon rangedWeapon = (RangedWeapon)Weapon;
             if (rangedWeapon != null && !rangedWeapon.HasAmmunition())
             {
@@ -33,24 +34,27 @@ namespace CombSim
 
         public override void DoAction(Creature actor)
         {
-            var enemy = actor.PickClosestEnemy();
-            if (enemy == null) return;
-            var hasAdvantage = false;
-            var hasDisadvantage = false;
-            actor.MoveWithinReachOfCreature(ShortRange, enemy);
+            for (var attack = 0; attack < actor.AttacksPerAction; attack++)
+            {
+                var enemy = actor.PickClosestEnemy();
+                if (enemy == null) return;
+                var hasAdvantage = false;
+                var hasDisadvantage = false;
+                actor.MoveWithinReachOfCreature(ShortRange, enemy);
 
-            var distance = actor.DistanceTo(enemy);
+                var distance = actor.DistanceTo(enemy);
 
-            if (distance <= 1) hasDisadvantage = true;
-            else if (distance <= LongRange) hasDisadvantage = true;
-            else if (distance > LongRange) return;
+                if (distance <= 1) hasDisadvantage = true;
+                else if (distance <= LongRange) hasDisadvantage = true;
+                else if (distance > LongRange) return;
 
-            HasAdvantageDisadvantage(actor, enemy, ref hasAdvantage, ref hasDisadvantage);
+                HasAdvantageDisadvantage(actor, enemy, ref hasAdvantage, ref hasDisadvantage);
 
-            Weapon?.UseWeapon();
-            DoAttack(actor, enemy,
-                attackBonus: actor.ProficiencyBonus + actor.Stats[StatEnum.Dexterity].Bonus(),
-                damageBonus: actor.Stats[StatEnum.Dexterity].Bonus());
+                Weapon?.UseWeapon();
+                DoAttack(actor, enemy,
+                    attackBonus: actor.ProficiencyBonus + actor.Stats[StatEnum.Dexterity].Bonus(),
+                    damageBonus: actor.Stats[StatEnum.Dexterity].Bonus());
+            }
         }
     }
 }

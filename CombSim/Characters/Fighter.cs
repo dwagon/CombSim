@@ -62,6 +62,11 @@ namespace CombSim.Characters
             {
                 AddEquipment(ArmourGear.Plate);
             }
+
+            if (level >= 5)
+            {
+                AttacksPerAction = 2;
+            }
         }
 
         private class SecondWind : Action

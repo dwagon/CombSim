@@ -4,21 +4,21 @@ namespace CombSim
 {
     public class MultiAttack : Action
     {
-        protected readonly List<Attack> Attacks;
+        private readonly List<Attack> _attacks;
 
         public MultiAttack(string name, ActionCategory actionCategory) : base(name, actionCategory)
         {
-            Attacks = new List<Attack>();
+            _attacks = new List<Attack>();
         }
 
         public void AddAttack(Attack attack)
         {
-            Attacks.Add(attack);
+            _attacks.Add(attack);
         }
 
         public override void DoAction(Creature actor)
         {
-            foreach (var attack in Attacks)
+            foreach (var attack in _attacks)
             {
                 attack.DoAction(actor);
             }
@@ -28,7 +28,7 @@ namespace CombSim
         {
             reason = "Undefined MultiAttack";
             var result = 0;
-            foreach (var attack in Attacks)
+            foreach (var attack in _attacks)
             {
                 result += attack.GetHeuristic(actor, out reason);
             }
