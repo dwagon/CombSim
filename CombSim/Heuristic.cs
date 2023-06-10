@@ -12,9 +12,9 @@ namespace CombSim
         private readonly DcAttack _dcAttack;
         private readonly RangedAttack _rangedAttack;
         private readonly Spell _spell;
-        private int _bonusDamage = 0;
+        private int _bonusDamage;
         private int _enemies = 1;
-        private int _friends = 0;
+        private int _friends;
         private bool _hasAdvantage;
         private bool _hasDisadvantage;
 
@@ -59,7 +59,6 @@ namespace CombSim
 
         public int GetValue(out string reason)
         {
-            int value;
             reason = "H: undefined";
             if (_attackType == AttackType.RangedSpellAttack || _attackType == AttackType.TouchSpellAttack)
             {
@@ -83,7 +82,7 @@ namespace CombSim
                 return 0;
             }
 
-            value = _maxDamage;
+            var value = _maxDamage;
 
             reason = $"H: Max Damage {value}";
             if (_bonusDamage != 0)

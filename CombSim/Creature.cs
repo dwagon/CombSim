@@ -48,8 +48,11 @@ namespace CombSim
             DamageInflicted = new List<Damage>();
             CriticalHitRoll = 20;
             Attributes = new HashSet<Attribute>();
+            AttacksPerAction = 1;
             AddAction(new DashAction());
         }
+
+        public int AttacksPerAction { get; protected set; }
 
         public Effects Effects { get; }
 

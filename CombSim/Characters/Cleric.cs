@@ -28,7 +28,7 @@ namespace CombSim.Characters
                 { 4, new Dictionary<int, int> { { 1, 4 }, { 2, 3 } } }
             };
 
-        public Cleric(string name, int level = 1, string team = "Clerics") : base(name, team)
+        public Cleric(string name, int level = 1, string team = "Clerics") : base(name, level, team)
         {
             Repr = "C".Pastel(ConsoleColor.Red).PastelBg(ConsoleColor.DarkBlue);
 

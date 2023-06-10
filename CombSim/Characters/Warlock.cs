@@ -23,7 +23,7 @@ namespace CombSim.Characters
                 { 4, 2 }
             };
 
-        public Warlock(string name, int level = 1, string team = "Warlocks") : base(name, team)
+        public Warlock(string name, int level = 1, string team = "Warlocks") : base(name, level, team)
         {
             Repr = "W".Pastel(ConsoleColor.Red).PastelBg(ConsoleColor.DarkBlue);
 

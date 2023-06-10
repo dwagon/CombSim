@@ -23,7 +23,7 @@ namespace CombSim.Characters
                 { 4, new Dictionary<int, int> { { 1, 4 }, { 2, 3 } } }
             };
 
-        public Wizard(string name, int level = 1, string team = "Wizards") : base(name, team)
+        public Wizard(string name, int level = 1, string team = "Wizards") : base(name, level, team)
         {
             Repr = "W".Pastel(ConsoleColor.Magenta).PastelBg(ConsoleColor.DarkBlue);
             SpellCastingAbility = StatEnum.Intelligence;

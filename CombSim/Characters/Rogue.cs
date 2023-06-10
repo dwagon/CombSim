@@ -15,7 +15,7 @@ namespace CombSim.Characters
             { 1, 10 }, { 2, 17 }, { 3, 24 }, { 4, 31 }
         };
 
-        public Rogue(string name, int level = 1, string team = "Rogues") : base(name, team)
+        public Rogue(string name, int level = 1, string team = "Rogues") : base(name, level, team)
         {
             Repr = "R".Pastel(ConsoleColor.Red).PastelBg(ConsoleColor.DarkBlue);
 

@@ -11,10 +11,10 @@ namespace CombSim.Characters
 
         private readonly Dictionary<int, int> _hitPointsAtLevel = new Dictionary<int, int>
         {
-            { 1, 12 }, { 2, 20 }, { 3, 28 }, { 4, 36 }
+            { 1, 12 }, { 2, 20 }, { 3, 28 }, { 4, 36 }, { 5, 44 }
         };
 
-        public Fighter(string name, int level = 1, string team = "Fighters") : base(name, team)
+        public Fighter(string name, int level = 1, string team = "Fighters") : base(name, level, team)
         {
             Repr = "F".Pastel(ConsoleColor.Red).PastelBg(ConsoleColor.DarkBlue);
 
@@ -62,6 +62,12 @@ namespace CombSim.Characters
             {
                 AddEquipment(ArmourGear.Plate);
             }
+
+            if (level >= 5)
+            {
+                AttacksPerAction = 2;
+                AddEquipment(RangedWeaponGear.LongbowPlusOne);
+            }
         }
 
         private class SecondWind : Action
@@ -76,7 +82,7 @@ namespace CombSim.Characters
 
                 if (actor.PercentHitPoints() > 50)
                 {
-                    reason = "Have most of our hitpoints";
+                    reason = "Have most of our hit points";
                     return 0;
                 }
 
