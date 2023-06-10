@@ -117,6 +117,7 @@
         <Compile Include="Spells\HellishRebuke.cs"/>
         <Compile Include="Spells\InflictWounds.cs"/>
         <Compile Include="Spells\MagicMissile.cs"/>
+        <Compile Include="Spells\MassHealingWord.cs"/>
         <Compile Include="Spells\PoisonSpray.cs"/>
         <Compile Include="Spells\RayOfFrost.cs"/>
         <Compile Include="Spells\SacredFlame.cs"/>
