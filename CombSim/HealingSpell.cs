@@ -7,6 +7,7 @@ namespace CombSim
     public class HealingSpell : Spell
     {
         protected DamageRoll HealingRoll;
+        protected int NumRecipients = 1;
 
         protected HealingSpell(string name, int level, ActionCategory actionCategory) : base(name, level,
             actionCategory)
@@ -17,12 +18,16 @@ namespace CombSim
         {
             if (!actor.CanCastSpell(this)) return;
 
-            var friend = PickClosestFriendNearingHealing(actor, Reach + actor.Speed);
-            actor.MoveWithinReachOfCreature(Reach, friend);
-            if (actor.Game.DistanceTo(actor, friend) <= Reach)
+            var friends = PickClosestFriendsNeedingHealing(actor, Reach + actor.Speed);
+            var sickestFriend = friends.First();
+            actor.MoveWithinReachOfCreature(Reach, sickestFriend);
+            foreach (var friend in friends)
             {
-                actor.DoCastSpell(this);
-                DoHealing(actor, friend);
+                if (actor.Game.DistanceTo(actor, sickestFriend) <= Reach)
+                {
+                    actor.DoCastSpell(this);
+                    DoHealing(actor, friend);
+                }
             }
         }
 
@@ -34,22 +39,27 @@ namespace CombSim
                 return 0;
             }
 
-            var friend = PickClosestFriendNearingHealing(actor, Reach + actor.Speed);
-            if (friend == null)
+            var friends = PickClosestFriendsNeedingHealing(actor, Reach + actor.Speed);
+            if (friends == null)
             {
                 reason = "No one needs healing";
                 return 0;
             }
 
-            var hp = HealingRoll.Roll(max: true).hits + actor.HealingBonus();
-            hp = Math.Min(hp, friend.HitPointsDown());
-            reason = $"Can cure {friend.Name} of {hp}";
+            var totalCure = 0;
+            foreach (var critter in friends)
+            {
+                var hp = HealingAmount(actor, critter, true);
+                totalCure += Math.Min(hp.hits, critter.HitPointsDown());
+            }
 
-            return hp;
+            reason = $"Can cure {friends.Count} friends of {totalCure}";
+
+            return totalCure;
         }
 
-        // Pick the friend within range who needs the most healing
-        private Creature PickClosestFriendNearingHealing(Creature actor, int range)
+        // Pick the {numFriends} friends within range who needs the most healing
+        private List<Creature> PickClosestFriendsNeedingHealing(Creature actor, int range)
         {
             var healingTargets = new List<(Creature, int)>();
             foreach (var friend in actor.GetAllAllies())
@@ -62,7 +72,14 @@ namespace CombSim
 
             if (healingTargets.Count == 0) return null;
             healingTargets.Sort((a, b) => a.Item2.CompareTo(b.Item2));
-            return healingTargets.First().Item1;
+            var returnList = new List<Creature>();
+            var numFriends = Math.Min(NumRecipients, healingTargets.Count);
+            foreach (var target in healingTargets.GetRange(0, numFriends))
+            {
+                returnList.Add(target.Item1);
+            }
+
+            return returnList;
         }
 
         protected virtual void DoHealing(Creature actor, Creature target)
