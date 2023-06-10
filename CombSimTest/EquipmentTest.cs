@@ -1,4 +1,5 @@
 using CombSim;
+using CombSim.Gear;
 using NUnit.Framework;
 
 namespace CombSimTest
@@ -17,6 +18,13 @@ namespace CombSimTest
             Assert.AreEqual(1, rw.GetAmmunition());
             rw.UseWeapon();
             Assert.False(rw.HasAmmunition());
+        }
+
+        [Test]
+        public void TestCloakOfDisplacement()
+        {
+            var cloak = new CloakOfDisplacement();
+            Assert.True(cloak.HasDisadvantageAgainstMe(null, null));
         }
     }
 }
