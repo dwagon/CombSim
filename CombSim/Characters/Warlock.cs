@@ -72,6 +72,7 @@ namespace CombSim.Characters
             if (level >= 4)
             {
                 Stats[StatEnum.Charisma] = new Stat(18);
+                AddEquipment(new CloakOfDisplacement());
             }
 
             if (HasAttribute(Attribute.EldritchSpear)) ebRange = 300 / 5;

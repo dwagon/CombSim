@@ -23,4 +23,16 @@ namespace CombSim.Gear
         {
         }
     }
+
+    public class CloakOfDisplacement : Equipment
+    {
+        public CloakOfDisplacement() : base("Cloak of Displacement")
+        {
+        }
+
+        public override bool HasDisadvantageAgainstMe(Creature actor, Creature victim)
+        {
+            return true;
+        }
+    }
 }
