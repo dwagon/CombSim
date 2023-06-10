@@ -22,7 +22,12 @@ namespace CombSim
 
         public int SpellAttackModifier()
         {
-            return ProficiencyBonus + Stats[SpellCastingAbility].Bonus();
+            return ProficiencyBonus + SpellModifier();
+        }
+
+        public int SpellModifier()
+        {
+            return Stats[SpellCastingAbility].Bonus();
         }
 
         public int SpellSaveDc()
