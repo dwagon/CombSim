@@ -149,45 +149,5 @@ namespace CombSim
                 $"{message} :{roll} vs {e.DcSaveStat} DC {e.DcSaveDc} ({e.DmgRoll}) {dmgModifier}: {dmg}";
             NarrationLog.LogMessage(e.AttackMessage.ToString());
         }
-
-        public class OnHitEventArgs : EventArgs
-        {
-            public Action Attack;
-            public AttackMessage AttackMessage;
-            public DamageRoll DmgRoll;
-            public Action<Creature, Creature> OnHitSideEffect;
-            public Creature Source;
-        }
-
-        public class OnToHitAttackedEventArgs : EventArgs
-        {
-            public Action Attack;
-            public AttackMessage AttackMessage;
-            public bool CriticalHit;
-            public bool CriticalMiss;
-            public DamageRoll DmgRoll;
-            public Action<Creature, Creature> OnHitSideEffect;
-            public Creature Source;
-            public int ToHit;
-        }
-
-        public class OnDcAttackedEventArgs : EventArgs
-        {
-            public Action Attack;
-            public AttackMessage AttackMessage;
-            public int DcSaveDc;
-            public StatEnum DcSaveStat;
-            public DamageRoll DmgRoll;
-            public Action<Creature, Creature> OnFailEffect;
-            public Action<Creature, Creature> OnSucceedEffect;
-            public Creature Source;
-            public SpellSavedEffect SpellSavedEffect;
-        }
-
-        public class OnTakingDamageEventArgs : EventArgs
-        {
-            public Damage Damage;
-            public Creature target;
-        }
     }
 }

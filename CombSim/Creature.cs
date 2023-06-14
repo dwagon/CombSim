@@ -508,22 +508,5 @@ namespace CombSim
         {
             return Effects.HasEffect(name);
         }
-
-        public class OnTurnEndEventArgs : EventArgs
-        {
-            public Creature Creature;
-        }
-
-        protected class OnTurnStartEventArgs : EventArgs
-        {
-            public Creature Creature;
-        }
-
-        public class OnAnyBeingKilledEventArgs : EventArgs
-        {
-            public Action Action;
-            public Creature Source;
-            public Creature Victim;
-        }
     }
 }
