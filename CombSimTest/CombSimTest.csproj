@@ -54,6 +54,7 @@
         <Compile Include="HeuristicTest.cs"/>
         <Compile Include="LocationTests.cs"/>
         <Compile Include="Properties\AssemblyInfo.cs"/>
+        <Compile Include="SpellConcentrationTest.cs"/>
         <Compile Include="Spells\GuidingBoltTest.cs"/>
         <Compile Include="SpellTest.cs"/>
         <Compile Include="StatTest.cs"/>
