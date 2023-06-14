@@ -83,7 +83,7 @@ namespace CombSim.Characters
             if (level >= 5)
             {
                 AddSpell(new MassHealingWord());
-                // AddSpell(new SpiritGuardians());
+                AddSpell(new SpiritGuardians());
             }
         }
 
@@ -137,7 +137,7 @@ namespace CombSim.Characters
             {
             }
 
-            public override void DoAction(Creature actor)
+            public override void Perform(Creature actor)
             {
                 var cleric = (Cleric)actor;
                 cleric.DoChannelDivinity();
@@ -194,7 +194,7 @@ namespace CombSim.Characters
                 return Math.Min(_maxHpToHeal, hpToHeal);
             }
 
-            public override void DoAction(Creature actor)
+            public override void Perform(Creature actor)
             {
                 var cleric = (Cleric)actor;
                 cleric.DoChannelDivinity();

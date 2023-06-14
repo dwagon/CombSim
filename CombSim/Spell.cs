@@ -11,6 +11,7 @@ namespace CombSim
     public class Spell : Action
     {
         public readonly int Level;
+        protected bool Concentration = false;
         public bool TouchSpell = false;
 
         protected Spell(string name, int level, ActionCategory actionCategory) : base(name, actionCategory)
@@ -21,9 +22,28 @@ namespace CombSim
         protected DamageRoll DmgRoll { get; set; }
         public int Reach { get; protected set; }
 
-        public override void DoAction(Creature actor)
+        public bool IsConcentration()
+        {
+            return Concentration;
+        }
+
+        public virtual void EndConcentration()
+        {
+        }
+
+        public override void Perform(Creature actor)
         {
             if (!actor.CanCastSpell(this)) return;
+            Console.WriteLine($"// {actor.Name} {Name()}.Perform()");
+            if (IsConcentration())
+            {
+                var oldSpell = actor.ConcentratingOn();
+                if (oldSpell != null)
+                {
+                    oldSpell.EndConcentration();
+                    actor.ConcentrateOn(this);
+                }
+            }
 
             actor.DoCastSpell(this);
             DoAction(actor);

@@ -48,6 +48,7 @@ namespace CombSim
 
         public Location GetLocation(Creature creature)
         {
+            if (!_locations.ContainsKey(creature)) return null;
             return _locations[creature];
         }
 
@@ -58,7 +59,7 @@ namespace CombSim
 
         public void RunGame()
         {
-            int turn = 0;
+            var turn = 0;
             Console.WriteLine(_arena.ToString());
             foreach (var creature in _combatants) Console.WriteLine(creature.ToString());
 
@@ -121,7 +122,7 @@ namespace CombSim
             foreach (var creature in _combatants) Console.WriteLine(creature.ToString());
         }
 
-        public void EndGame()
+        public static void EndGame()
         {
         }
 
@@ -176,9 +177,23 @@ namespace CombSim
             return friends;
         }
 
+        // Return all enemies - even unconscious ones
+        public List<Creature> GetAllEnemies(Creature actor)
+        {
+            var enemies = new List<Creature>();
+            foreach (var critter in _combatants)
+            {
+                if (critter.Team != actor.Team && critter.IsAlive())
+                    enemies.Add(critter);
+            }
+
+            return enemies;
+        }
+
         // Return the distance between creatures {one} and {two}
         public int DistanceTo(Creature one, Creature two)
         {
+            if (!_locations.ContainsKey(one) || !_locations.ContainsKey(two)) return -1;
             return (int)_arena.DistanceBetween(_locations[one], _locations[two]);
         }
 

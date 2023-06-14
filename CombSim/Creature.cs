@@ -22,6 +22,7 @@ namespace CombSim
         protected int HitPoints;
         protected int MaxHitPoints;
         public int Moves;
+        public EventHandler<OnMovingEventArgs> OnMoving;
         public EventHandler<OnTurnEndEventArgs> OnTurnEnd;
         protected EventHandler<OnTurnStartEventArgs> OnTurnStart;
         public int ProficiencyBonus = 2;
@@ -222,8 +223,17 @@ namespace CombSim
             if (Moves <= 0)
                 return false;
             var next = Game.NextLocationTowards(this, destination);
-            Game.Move(this, next);
-            Moves--;
+            OnMoving?.Invoke(this, new OnMovingEventArgs
+            {
+                mover = this,
+                location = next
+            });
+            if (IsAlive()) // Can die due to area effects, etc.
+            {
+                Game.Move(this, next);
+                Moves--;
+            }
+
             return true;
         }
 
@@ -370,6 +380,7 @@ namespace CombSim
             while (Moves > 0 && distance >= minimumDistance)
             {
                 MoveTowards(enemy);
+                if (!IsAlive()) return;
                 distance = DistanceTo(enemy);
             }
 
@@ -384,7 +395,7 @@ namespace CombSim
             if (action is null) return;
 
             Console.WriteLine($"// {Name} doing {action.Name()}");
-            action.DoAction(this);
+            action.Perform(this);
             _actionsThisTurn.Remove(action.Category);
         }
 

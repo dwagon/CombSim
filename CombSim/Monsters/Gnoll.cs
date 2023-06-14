@@ -37,7 +37,7 @@ namespace CombSim.Monsters
                 var rampageAction = new GnollRampageBite();
                 Moves = Speed / 2;
                 AddAction(rampageAction);
-                rampageAction.DoAction(this);
+                rampageAction.Perform(this);
                 RemoveAction(rampageAction);
             }
         }
@@ -59,7 +59,7 @@ namespace CombSim.Monsters
             {
                 Console.WriteLine($"// RampageBite (actor={actor.Name})");
                 var bite = actor.PickActionByName("Bite");
-                bite.DoAction(actor);
+                bite.Perform(actor);
             }
         }
     }
