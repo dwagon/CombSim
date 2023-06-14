@@ -60,7 +60,7 @@ namespace CombSim.Spells
             }
         }
 
-        public override void DoAction(Creature actor)
+        protected override void DoAction(Creature actor)
         {
             if (!actor.CanCastSpell(this)) return;
             var enemy = actor.PickClosestEnemy();

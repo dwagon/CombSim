@@ -9,8 +9,11 @@ namespace CombSim
         {
         }
 
-        protected override void DoAttack(Creature actor, Creature target)
+        protected override void DoAction(Creature actor)
         {
+            var target = actor.PickClosestEnemy();
+            actor.MoveWithinReachOfCreature(Reach, target);
+            if (actor.Game.DistanceTo(actor, target) > Reach) return;
             var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name());
 
             target.OnDcAttacked?.Invoke(this, new Creature.OnDcAttackedEventArgs()

@@ -25,13 +25,8 @@ namespace CombSim
         {
             if (!actor.CanCastSpell(this)) return;
 
-            var enemy = actor.PickClosestEnemy();
-            actor.MoveWithinReachOfCreature(Reach, enemy);
-            if (actor.Game.DistanceTo(actor, enemy) <= Reach)
-            {
-                actor.DoCastSpell(this);
-                DoAttack(actor, enemy);
-            }
+            actor.DoCastSpell(this);
+            DoAction(actor);
         }
 
         public override int GetHeuristic(Creature actor, out string reason)
@@ -41,7 +36,8 @@ namespace CombSim
             return heuristic.GetValue(out reason);
         }
 
-        protected virtual void DoAttack(Creature actor, Creature target)
+        // Override with spell specific code
+        protected virtual void DoAction(Creature actor)
         {
             throw new NotImplementedException();
         }

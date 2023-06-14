@@ -62,7 +62,6 @@ namespace CombSim.Characters
 
             if (Level >= 2)
             {
-                // Preserve Life: Restore 5*level HP to any creatures in 30' - creature can not restore to more than 50% HP
                 AddAction(new PreserveLife(this));
                 // AddAction(new TurnUndead());
             }

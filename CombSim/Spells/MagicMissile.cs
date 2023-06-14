@@ -23,7 +23,7 @@ namespace CombSim.Spells
             return heuristic.GetValue(out reason);
         }
 
-        public override void DoAction(Creature actor)
+        protected override void DoAction(Creature actor)
         {
             var numMissiles = NumberOfMissiles();
             var hasCast = false;
