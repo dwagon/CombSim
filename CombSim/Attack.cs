@@ -1,5 +1,3 @@
-using System;
-
 namespace CombSim
 {
     public class Attack : Action
@@ -24,11 +22,6 @@ namespace CombSim
         }
 
         public Weapon Weapon { get; }
-
-        public override void DoAction(Creature actor)
-        {
-            throw new NotImplementedException();
-        }
 
         // Do all the Side Effects
         private void SideEffects(Creature actor, Creature target)

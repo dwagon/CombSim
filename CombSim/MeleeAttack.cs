@@ -46,7 +46,7 @@ namespace CombSim
             return bonusStat;
         }
 
-        public override void DoAction(Creature actor)
+        protected override void DoAction(Creature actor)
         {
             for (var attack = 0; attack < actor.AttacksPerAction; attack++)
             {

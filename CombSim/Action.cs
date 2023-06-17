@@ -1,6 +1,10 @@
 // Action - creature to do something
-//   Perform - defined by action types (eg spell, melee, etc)
-//      DoAction - defined by specific action (eg fireball)
+//   PerformAction
+//      PreAction - tends to be overwritten by Action type (e.g. attack spell)
+//      DoAction - will be overwritten by specific action - e.g. fireball
+//      PostAction - here for completeness
+
+using System;
 
 namespace CombSim
 {
@@ -35,8 +39,29 @@ namespace CombSim
             return _name;
         }
 
-        // Perform the action - should be overwritten by the general action type
-        public virtual void Perform(Creature actor)
+        // Wrap the action - should be overwritten by the general action type
+        public virtual void PerformAction(Creature actor)
+        {
+            if (!PreAction(actor))
+            {
+                return;
+            }
+
+            DoAction(actor);
+            PostAction();
+        }
+
+        protected virtual void DoAction(Creature actor)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual bool PreAction(Creature actor)
+        {
+            return false;
+        }
+
+        protected virtual void PostAction()
         {
         }
 

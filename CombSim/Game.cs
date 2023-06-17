@@ -122,7 +122,7 @@ namespace CombSim
             foreach (var creature in _combatants) Console.WriteLine(creature.ToString());
         }
 
-        public static void EndGame()
+        public void EndGame()
         {
         }
 

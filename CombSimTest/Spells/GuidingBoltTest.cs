@@ -16,7 +16,7 @@ namespace CombSimTest.Spells
         {
             SetUpTest();
             var gb = _caster.PickActionByName("Guiding Bolt");
-            gb.DoAction(_caster);
+            gb.PerformAction(_caster);
             Assert.True(_target.HasEffect("Guiding Bolt Effect"));
             Assert.True(_target.HasAdvantageAgainstMe(_caster));
         }
@@ -26,10 +26,10 @@ namespace CombSimTest.Spells
         {
             SetUpTest();
             var gb = _caster.PickActionByName("Guiding Bolt");
-            gb.DoAction(_caster);
+            gb.PerformAction(_caster);
             Assert.True(_target.HasEffect("Guiding Bolt Effect"));
             var tb = _caster.PickActionByName("TestBow");
-            tb.DoAction(_caster);
+            tb.PerformAction(_caster);
             Assert.False(_target.HasEffect("Guiding Bolt Effect"));
         }
 

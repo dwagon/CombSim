@@ -12,7 +12,7 @@ namespace CombSimTest
             var caster = new TestCaster();
             var action = caster.PickActionByName("Test Spell");
             Assert.AreEqual(null, caster._concentration);
-            action.Perform(caster);
+            action.PerformAction(caster);
             Assert.AreEqual("Test Spell", caster._concentration.Name());
         }
 

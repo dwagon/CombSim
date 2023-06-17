@@ -93,7 +93,7 @@ namespace CombSim.Characters
                 return result;
             }
 
-            public override void DoAction(Creature actor)
+            protected override void DoAction(Creature actor)
             {
                 Fighter f = (Fighter)actor;
                 actor.Heal(Dice.Roll("d10") + f.Level, "Second Wind");
@@ -121,7 +121,7 @@ namespace CombSim.Characters
                 return 0;
             }
 
-            public override void DoAction(Creature actor)
+            protected override void DoAction(Creature actor)
             {
                 NarrationLog.LogMessage($"{actor.Name} uses Action Surge");
                 actor.DoActionCategory(ActionCategory.Action, force: true);

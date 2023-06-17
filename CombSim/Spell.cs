@@ -1,5 +1,3 @@
-using System;
-
 public enum SpellSavedEffect
 {
     NoDamage,
@@ -31,10 +29,9 @@ namespace CombSim
         {
         }
 
-        public override void Perform(Creature actor)
+        protected override bool PreAction(Creature actor)
         {
-            if (!actor.CanCastSpell(this)) return;
-            Console.WriteLine($"// {actor.Name} {Name()}.Perform()");
+            if (!actor.CanCastSpell(this)) return false;
             if (IsConcentration())
             {
                 var oldSpell = actor.ConcentratingOn();
@@ -46,7 +43,7 @@ namespace CombSim
             }
 
             actor.DoCastSpell(this);
-            DoAction(actor);
+            return true;
         }
 
         public override int GetHeuristic(Creature actor, out string reason)
@@ -54,12 +51,6 @@ namespace CombSim
             var heuristic = new Heuristic(actor, this);
             heuristic.AddDamageRoll(DmgRoll);
             return heuristic.GetValue(out reason);
-        }
-
-        // Override with spell specific code
-        protected virtual void DoAction(Creature actor)
-        {
-            throw new NotImplementedException();
         }
     }
 }

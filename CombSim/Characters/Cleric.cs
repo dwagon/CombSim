@@ -137,7 +137,7 @@ namespace CombSim.Characters
             {
             }
 
-            public override void Perform(Creature actor)
+            protected override void DoAction(Creature actor)
             {
                 var cleric = (Cleric)actor;
                 cleric.DoChannelDivinity();
@@ -194,7 +194,7 @@ namespace CombSim.Characters
                 return Math.Min(_maxHpToHeal, hpToHeal);
             }
 
-            public override void Perform(Creature actor)
+            protected override void DoAction(Creature actor)
             {
                 var cleric = (Cleric)actor;
                 cleric.DoChannelDivinity();
