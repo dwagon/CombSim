@@ -48,7 +48,7 @@ namespace CombSim
             }
 
             DoAction(actor);
-            PostAction();
+            PostAction(actor);
         }
 
         protected virtual void DoAction(Creature actor)
@@ -61,7 +61,7 @@ namespace CombSim
             return false;
         }
 
-        protected virtual void PostAction()
+        protected virtual void PostAction(Creature actor)
         {
         }
 

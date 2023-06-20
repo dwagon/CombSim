@@ -23,6 +23,12 @@ namespace CombSim
 
         public Weapon Weapon { get; }
 
+        // Allow attack to proceed by default
+        protected override bool PreAction(Creature actor)
+        {
+            return true;
+        }
+
         // Do all the Side Effects
         private void SideEffects(Creature actor, Creature target)
         {

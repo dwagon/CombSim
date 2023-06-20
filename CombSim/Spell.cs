@@ -38,12 +38,17 @@ namespace CombSim
                 if (oldSpell != null)
                 {
                     oldSpell.EndConcentration();
-                    actor.ConcentrateOn(this);
                 }
+
+                actor.ConcentrateOn(this);
             }
 
-            actor.DoCastSpell(this);
             return true;
+        }
+
+        protected override void PostAction(Creature actor)
+        {
+            actor.DoCastSpell(this);
         }
 
         public override int GetHeuristic(Creature actor, out string reason)
