@@ -13,7 +13,7 @@ namespace CombSimTest
             var action = caster.PickActionByName("Test Spell");
             Assert.AreEqual(null, caster._concentration);
             action.PerformAction(caster);
-            Assert.AreEqual("Test Spell", caster._concentration.Name());
+            Assert.AreEqual("Test Spell", caster.ConcentratingOn().Name());
         }
 
         [Test]
@@ -35,6 +35,10 @@ namespace CombSimTest
         {
             return true;
         }
+
+        public override void DoCastSpell(Spell spell)
+        {
+        }
     }
 
     public class TestSpell : Spell
@@ -42,6 +46,10 @@ namespace CombSimTest
         public TestSpell() : base("Test Spell", 0, ActionCategory.Bonus)
         {
             Concentration = true;
+        }
+
+        protected override void DoAction(Creature actor)
+        {
         }
     }
 }

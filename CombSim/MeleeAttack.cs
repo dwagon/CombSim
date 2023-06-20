@@ -1,4 +1,7 @@
 using System;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("CombSimTest")]
 
 namespace CombSim
 {
@@ -31,7 +34,7 @@ namespace CombSim
             return heuristic.GetValue(out reason);
         }
 
-        private StatEnum UseStatForAttack(Creature actor)
+        internal StatEnum UseStatForAttack(Creature actor)
         {
             var bonusStat = StatEnum.Strength;
             var finesseWeapon = false;

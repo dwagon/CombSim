@@ -443,6 +443,13 @@ namespace CombSim
             Game.Remove(this);
         }
 
+        // Used only for testing - Reset things that are normally hidden
+        public void TestReset()
+        {
+            Console.WriteLine("// Resetting for testing purposes");
+            _actionsThisTurn.Add(ActionCategory.Action);
+        }
+
         protected virtual void TurnStart()
         {
             Moves = Speed;
