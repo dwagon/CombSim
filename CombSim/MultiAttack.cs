@@ -16,11 +16,11 @@ namespace CombSim
             _attacks.Add(attack);
         }
 
-        public override void DoAction(Creature actor)
+        public override void PerformAction(Creature actor)
         {
             foreach (var attack in _attacks)
             {
-                attack.DoAction(actor);
+                attack.PerformAction(actor);
             }
         }
 

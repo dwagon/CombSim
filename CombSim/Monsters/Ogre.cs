@@ -4,7 +4,7 @@ namespace CombSim.Monsters
 {
     public class Ogre : Monster
     {
-        private RangedWeapon javelin;
+        private RangedWeapon _javelin;
 
         public Ogre(string name, string team = "Ogres") : base(name, team)
         {
@@ -18,16 +18,16 @@ namespace CombSim.Monsters
             ArmourClass(12);
             HitDice = "7d10+21";
             AddEquipment(MeleeWeaponGear.Greatclub);
-            javelin = RangedWeaponGear.Javelin;
-            javelin.AddAmmunition(3);
-            AddEquipment(javelin);
+            _javelin = new Javelin();
+            _javelin.AddAmmunition(3);
+            AddEquipment(_javelin);
             AddEquipment(ArmourGear.Hide);
         }
 
         public override string ToString()
         {
             var baseString = base.ToString();
-            return baseString + $"Javelins: {javelin.GetAmmunition()}";
+            return baseString + $"Javelins: {_javelin.GetAmmunition()}";
         }
     }
 }

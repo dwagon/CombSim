@@ -82,7 +82,7 @@ namespace CombSim.Monsters
                 return heuristic.GetValue(out reason);
             }
 
-            public override void DoAction(Creature actor)
+            protected override void DoAction(Creature actor)
             {
                 var enemy = actor.PickClosestEnemy();
                 if (enemy == null) return;

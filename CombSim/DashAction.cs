@@ -21,7 +21,7 @@ namespace CombSim
             return 0;
         }
 
-        public override void DoAction(Creature actor)
+        protected override void DoAction(Creature actor)
         {
             var enemy = actor.PickClosestEnemy();
             actor.Moves = Math.Max(actor.Moves, actor.Speed);

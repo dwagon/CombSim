@@ -5,6 +5,7 @@ namespace CombSim
     public partial class Creature
     {
         public EventHandler<OnDcAttackedEventArgs> OnDcAttacked;
+        public EventHandler<OnDealingDamageEventArgs> OnDealingDamage;
         public EventHandler<OnHitEventArgs> OnHitAttacked;
         public EventHandler<OnTakingDamageEventArgs> OnTakingDamage;
         public EventHandler<OnToHitAttackedEventArgs> OnToHitAttacked;
@@ -14,10 +15,10 @@ namespace CombSim
             OnToHitAttacked += AttackedByWeapon;
             OnDcAttacked += AttackedByDc;
             OnHitAttacked += BeingHit;
-            OnTakingDamage += DamageDealt;
+            OnDealingDamage += DamageDealt;
         }
 
-        private void DamageDealt(object sender, OnTakingDamageEventArgs e)
+        private void DamageDealt(object sender, OnDealingDamageEventArgs e)
         {
             DamageInflicted.Add(e.Damage);
         }
@@ -28,11 +29,12 @@ namespace CombSim
             damage = ModifyDamageForVulnerabilityOrResistance(damage, out dmgModifier);
             damage.hits = Math.Min(damage.hits, HitPoints);
 
-            source.OnTakingDamage?.Invoke(this, new OnTakingDamageEventArgs
+            source.OnDealingDamage?.Invoke(this, new OnDealingDamageEventArgs
             {
                 Damage = damage,
                 target = this,
             });
+            OnTakingDamage?.Invoke(this, new OnTakingDamageEventArgs { Damage = damage });
 
             HitPoints -= damage.hits;
             DamageReceived.Add(damage);
@@ -148,46 +150,6 @@ namespace CombSim
             e.AttackMessage.Result =
                 $"{message} :{roll} vs {e.DcSaveStat} DC {e.DcSaveDc} ({e.DmgRoll}) {dmgModifier}: {dmg}";
             NarrationLog.LogMessage(e.AttackMessage.ToString());
-        }
-
-        public class OnHitEventArgs : EventArgs
-        {
-            public Action Attack;
-            public AttackMessage AttackMessage;
-            public DamageRoll DmgRoll;
-            public Action<Creature, Creature> OnHitSideEffect;
-            public Creature Source;
-        }
-
-        public class OnToHitAttackedEventArgs : EventArgs
-        {
-            public Action Attack;
-            public AttackMessage AttackMessage;
-            public bool CriticalHit;
-            public bool CriticalMiss;
-            public DamageRoll DmgRoll;
-            public Action<Creature, Creature> OnHitSideEffect;
-            public Creature Source;
-            public int ToHit;
-        }
-
-        public class OnDcAttackedEventArgs : EventArgs
-        {
-            public Action Attack;
-            public AttackMessage AttackMessage;
-            public int DcSaveDc;
-            public StatEnum DcSaveStat;
-            public DamageRoll DmgRoll;
-            public Action<Creature, Creature> OnFailEffect;
-            public Action<Creature, Creature> OnSucceedEffect;
-            public Creature Source;
-            public SpellSavedEffect SpellSavedEffect;
-        }
-
-        public class OnTakingDamageEventArgs : EventArgs
-        {
-            public Damage Damage;
-            public Creature target;
         }
     }
 }

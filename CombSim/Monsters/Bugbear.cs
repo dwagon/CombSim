@@ -6,6 +6,8 @@ namespace CombSim.Monsters
 {
     public class Bugbear : Monster
     {
+        private readonly RangedWeapon _javelin;
+
         public Bugbear(string name, string team = "Bugbears") : base(name, team)
         {
             Stats.Add(StatEnum.Strength, new Stat(15));
@@ -20,15 +22,21 @@ namespace CombSim.Monsters
             AddEquipment(ArmourGear.Hide);
             AddEquipment(ArmourGear.Shield);
             AddEquipment(new BruteMorningStar());
-            var javelin = RangedWeaponGear.Javelin;
-            javelin.AddAmmunition(3);
-            AddEquipment(javelin);
+            _javelin = new Javelin();
+            _javelin.AddAmmunition(3);
+            AddEquipment(_javelin);
             ProficiencyBonus = 2;
+        }
+
+        public override string ToString()
+        {
+            var baseString = base.ToString();
+            return baseString + $"Javelins: {_javelin.GetAmmunition()}";
         }
 
         private class BruteMorningStar : MeleeWeapon
         {
-            public BruteMorningStar() : base("MorningStar", new DamageRoll("2d8", 0, DamageTypeEnums.Piercing), 5 / 5)
+            public BruteMorningStar() : base("MorningStar", new DamageRoll("2d8", 0, DamageTypeEnums.Piercing))
             {
             }
         }

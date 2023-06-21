@@ -10,12 +10,12 @@ namespace CombSim.Characters
     {
         private readonly Dictionary<int, int> _channelDivinity = new Dictionary<int, int>
         {
-            { 1, 1 }, { 2, 1 }, { 3, 1 }, { 4, 1 }
+            { 1, 1 }, { 2, 1 }, { 3, 1 }, { 4, 1 }, { 5, 1 }
         };
 
         private readonly Dictionary<int, int> _hitPointsAtLevel = new Dictionary<int, int>
         {
-            { 1, 9 }, { 2, 15 }, { 3, 21 }, { 4, 27 }
+            { 1, 9 }, { 2, 15 }, { 3, 21 }, { 4, 27 }, { 5, 33 }
         };
 
         // CasterLevel: <SpellLevel: NumberOfSlots>
@@ -25,7 +25,8 @@ namespace CombSim.Characters
                 { 1, new Dictionary<int, int> { { 1, 2 } } },
                 { 2, new Dictionary<int, int> { { 1, 3 } } },
                 { 3, new Dictionary<int, int> { { 1, 4 }, { 2, 2 } } },
-                { 4, new Dictionary<int, int> { { 1, 4 }, { 2, 3 } } }
+                { 4, new Dictionary<int, int> { { 1, 4 }, { 2, 3 } } },
+                { 5, new Dictionary<int, int> { { 1, 4 }, { 2, 3 }, { 3, 2 } } }
             };
 
         public Cleric(string name, int level = 1, string team = "Clerics") : base(name, level, team)
@@ -61,7 +62,6 @@ namespace CombSim.Characters
 
             if (Level >= 2)
             {
-                // Preserve Life: Restore 5*level HP to any creatures in 30' - creature can not restore to more than 50% HP
                 AddAction(new PreserveLife(this));
                 // AddAction(new TurnUndead());
             }
@@ -78,6 +78,12 @@ namespace CombSim.Characters
             if (level >= 4)
             {
                 Stats[StatEnum.Wisdom] = new Stat(18);
+            }
+
+            if (level >= 5)
+            {
+                AddSpell(new MassHealingWord());
+                AddSpell(new SpiritGuardians());
             }
         }
 
@@ -131,7 +137,7 @@ namespace CombSim.Characters
             {
             }
 
-            public override void DoAction(Creature actor)
+            protected override void DoAction(Creature actor)
             {
                 var cleric = (Cleric)actor;
                 cleric.DoChannelDivinity();
@@ -188,7 +194,7 @@ namespace CombSim.Characters
                 return Math.Min(_maxHpToHeal, hpToHeal);
             }
 
-            public override void DoAction(Creature actor)
+            protected override void DoAction(Creature actor)
             {
                 var cleric = (Cleric)actor;
                 cleric.DoChannelDivinity();

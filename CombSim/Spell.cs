@@ -1,5 +1,3 @@
-using System;
-
 public enum SpellSavedEffect
 {
     NoDamage,
@@ -11,6 +9,7 @@ namespace CombSim
     public class Spell : Action
     {
         public readonly int Level;
+        protected bool Concentration = false;
         public bool TouchSpell = false;
 
         protected Spell(string name, int level, ActionCategory actionCategory) : base(name, actionCategory)
@@ -21,17 +20,35 @@ namespace CombSim
         protected DamageRoll DmgRoll { get; set; }
         public int Reach { get; protected set; }
 
-        public override void DoAction(Creature actor)
+        public bool IsConcentration()
         {
-            if (!actor.CanCastSpell(this)) return;
+            return Concentration;
+        }
 
-            var enemy = actor.PickClosestEnemy();
-            actor.MoveWithinReachOfCreature(Reach, enemy);
-            if (actor.Game.DistanceTo(actor, enemy) <= Reach)
+        public virtual void EndConcentration(Creature actor)
+        {
+        }
+
+        protected override bool PreAction(Creature actor)
+        {
+            if (!actor.CanCastSpell(this)) return false;
+            if (IsConcentration())
             {
-                actor.DoCastSpell(this);
-                DoAttack(actor, enemy);
+                var oldSpell = actor.ConcentratingOn();
+                if (oldSpell != null)
+                {
+                    oldSpell.EndConcentration(actor);
+                }
+
+                actor.ConcentrateOn(this);
             }
+
+            return true;
+        }
+
+        protected override void PostAction(Creature actor)
+        {
+            actor.DoCastSpell(this);
         }
 
         public override int GetHeuristic(Creature actor, out string reason)
@@ -39,11 +56,6 @@ namespace CombSim
             var heuristic = new Heuristic(actor, this);
             heuristic.AddDamageRoll(DmgRoll);
             return heuristic.GetValue(out reason);
-        }
-
-        protected virtual void DoAttack(Creature actor, Creature target)
-        {
-            throw new NotImplementedException();
         }
     }
 }

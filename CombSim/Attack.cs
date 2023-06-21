@@ -1,5 +1,3 @@
-using System;
-
 namespace CombSim
 {
     public class Attack : Action
@@ -25,9 +23,10 @@ namespace CombSim
 
         public Weapon Weapon { get; }
 
-        public override void DoAction(Creature actor)
+        // Allow attack to proceed by default
+        protected override bool PreAction(Creature actor)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         // Do all the Side Effects

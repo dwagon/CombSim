@@ -66,6 +66,7 @@
         <Compile Include="Creature.cs"/>
         <Compile Include="CreatureAction.cs"/>
         <Compile Include="CreatureAttacked.cs"/>
+        <Compile Include="CreatureEvents.cs"/>
         <Compile Include="CreatureSpell.cs"/>
         <Compile Include="Damage.cs"/>
         <Compile Include="DamageRoll.cs"/>
@@ -117,11 +118,13 @@
         <Compile Include="Spells\HellishRebuke.cs"/>
         <Compile Include="Spells\InflictWounds.cs"/>
         <Compile Include="Spells\MagicMissile.cs"/>
+        <Compile Include="Spells\MassHealingWord.cs"/>
         <Compile Include="Spells\PoisonSpray.cs"/>
         <Compile Include="Spells\RayOfFrost.cs"/>
         <Compile Include="Spells\SacredFlame.cs"/>
         <Compile Include="Spells\ScorchingRay.cs"/>
         <Compile Include="Spells\ShockingGrasp.cs"/>
+        <Compile Include="Spells\SpiritGuardians.cs"/>
         <Compile Include="Spells\Thunderclap.cs"/>
         <Compile Include="Stat.cs"/>
         <Compile Include="ToHitSpell.cs"/>

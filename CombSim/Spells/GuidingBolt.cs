@@ -4,7 +4,7 @@ namespace CombSim.Spells
 {
     public class GuidingBolt : ToHitSpell
     {
-        private GuidingBoltEffect _effect = new GuidingBoltEffect();
+        private readonly GuidingBoltEffect _effect = new GuidingBoltEffect();
         private Creature _target;
         private int _turnsToGo;
 

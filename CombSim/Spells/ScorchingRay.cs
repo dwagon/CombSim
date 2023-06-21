@@ -8,7 +8,7 @@ namespace CombSim.Spells
             Reach = 120 / 5;
         }
 
-        public override void DoAction(Creature actor)
+        protected override void DoAction(Creature actor)
         {
             var enemy = actor.PickClosestEnemy();
             if (enemy == null) return;
@@ -23,8 +23,6 @@ namespace CombSim.Spells
                         DoMissile(actor, enemy);
                     }
                 }
-
-                actor.DoCastSpell(this);
             }
         }
 

@@ -1,3 +1,11 @@
+// Action - creature to do something
+//   PerformAction
+//      PreAction - tends to be overwritten by Action type (e.g. attack spell)
+//      DoAction - will be overwritten by specific action - e.g. fireball
+//      PostAction - here for completeness
+
+using System;
+
 namespace CombSim
 {
     public enum ActionCategory
@@ -31,11 +39,33 @@ namespace CombSim
             return _name;
         }
 
-        public virtual void DoAction(Creature actor)
+        // Wrap the action - should be overwritten by the general action type
+        public virtual void PerformAction(Creature actor)
+        {
+            if (!PreAction(actor))
+            {
+                return;
+            }
+
+            DoAction(actor);
+            PostAction(actor);
+        }
+
+        protected virtual void DoAction(Creature actor)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual bool PreAction(Creature actor)
+        {
+            return false;
+        }
+
+        protected virtual void PostAction(Creature actor)
         {
         }
 
-        protected int RollToHit(bool hasAdvantage = false,
+        protected static int RollToHit(bool hasAdvantage = false,
             bool hasDisadvantage = false)
         {
             var roll = Dice.RollD20(hasAdvantage, hasDisadvantage, reason: "To Hit");
@@ -59,16 +89,16 @@ namespace CombSim
 
         public bool HasAdvantage(Creature actor, Creature target)
         {
-            bool hasAdvantage = false;
-            bool hasDisadvantage = false;
+            var hasAdvantage = false;
+            var hasDisadvantage = false;
             HasAdvantageDisadvantage(actor, target, ref hasAdvantage, ref hasDisadvantage);
             return hasAdvantage;
         }
 
         public bool HasDisadvantage(Creature actor, Creature target)
         {
-            bool hasAdvantage = false;
-            bool hasDisadvantage = false;
+            var hasAdvantage = false;
+            var hasDisadvantage = false;
             HasAdvantageDisadvantage(actor, target, ref hasAdvantage, ref hasDisadvantage);
             return hasDisadvantage;
         }
@@ -93,7 +123,7 @@ namespace CombSim
         }
 
         // Conditions that cause advantage for the actor against the target
-        private bool HaveAdvantage(Creature actor, Creature target)
+        private static bool HaveAdvantage(Creature actor, Creature target)
         {
             if (target.HasAdvantageAgainstMe(actor)) return true;
             if (actor.DistanceTo(target) < 2)
@@ -106,7 +136,7 @@ namespace CombSim
         }
 
         // Conditions that cause disadvantage for the actor against the target
-        private bool HaveDisadvantage(Creature actor, Creature target)
+        private static bool HaveDisadvantage(Creature actor, Creature target)
         {
             if (target.HasDisadvantageAgainstMe(actor)) return true;
 
@@ -123,7 +153,7 @@ namespace CombSim
             return false;
         }
 
-        protected void HasAdvantageDisadvantage(Creature actor, Creature target, ref bool hasAdvantage,
+        protected static void HasAdvantageDisadvantage(Creature actor, Creature target, ref bool hasAdvantage,
             ref bool hasDisadvantage)
         {
             hasAdvantage = HaveAdvantage(actor, target) || hasAdvantage;

@@ -1,3 +1,4 @@
+using System;
 using CombSim;
 using CombSim.Spells;
 using NUnit.Framework;
@@ -16,7 +17,7 @@ namespace CombSimTest.Spells
         {
             SetUpTest();
             var gb = _caster.PickActionByName("Guiding Bolt");
-            gb.DoAction(_caster);
+            gb.PerformAction(_caster);
             Assert.True(_target.HasEffect("Guiding Bolt Effect"));
             Assert.True(_target.HasAdvantageAgainstMe(_caster));
         }
@@ -26,10 +27,12 @@ namespace CombSimTest.Spells
         {
             SetUpTest();
             var gb = _caster.PickActionByName("Guiding Bolt");
-            gb.DoAction(_caster);
+            gb.PerformAction(_caster);
             Assert.True(_target.HasEffect("Guiding Bolt Effect"));
+            _caster.TestReset();
             var tb = _caster.PickActionByName("TestBow");
-            tb.DoAction(_caster);
+            Console.WriteLine($"// Test Bow = {tb.Name()}");
+            tb.PerformAction(_caster);
             Assert.False(_target.HasEffect("Guiding Bolt Effect"));
         }
 
@@ -48,7 +51,7 @@ namespace CombSimTest.Spells
             {
                 SpellCastingAbility = StatEnum.Wisdom;
                 Stats.Add(StatEnum.Wisdom, new Stat(99)); // Ensure hit
-                Stats.Add(StatEnum.Dexterity, new Stat(10));
+                Stats.Add(StatEnum.Dexterity, new Stat(99));
                 AddSpell(new GuidingBolt());
                 AddEquipment(TestBow);
             }
@@ -67,12 +70,12 @@ namespace CombSimTest.Spells
         {
             public Target() : base("TestTarget", "B")
             {
-                Stats.Add(StatEnum.Dexterity, new Stat(10));
+                Stats.Add(StatEnum.Dexterity, new Stat(1));
                 MaxHitPoints = 9999; // Don't die - causes tests to be weird
             }
         }
 
-        public static readonly RangedWeapon TestBow = new RangedWeapon("TestBow",
+        private static readonly RangedWeapon TestBow = new RangedWeapon("TestBow",
             new DamageRoll("1d8", DamageTypeEnums.Piercing), 80 / 5, 320 / 5);
     }
 }

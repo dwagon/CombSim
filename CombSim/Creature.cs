@@ -22,8 +22,9 @@ namespace CombSim
         protected int HitPoints;
         protected int MaxHitPoints;
         public int Moves;
+        public EventHandler<OnMovingEventArgs> OnMoving;
         public EventHandler<OnTurnEndEventArgs> OnTurnEnd;
-        protected EventHandler<OnTurnStartEventArgs> OnTurnStart;
+        public EventHandler<OnTurnStartEventArgs> OnTurnStart;
         public int ProficiencyBonus = 2;
         protected string Repr;
         protected StatEnum SpellCastingAbility;
@@ -222,8 +223,17 @@ namespace CombSim
             if (Moves <= 0)
                 return false;
             var next = Game.NextLocationTowards(this, destination);
-            Game.Move(this, next);
-            Moves--;
+            OnMoving?.Invoke(this, new OnMovingEventArgs
+            {
+                mover = this,
+                location = next
+            });
+            if (IsAlive()) // Can die due to area effects, etc.
+            {
+                Game.Move(this, next);
+                Moves--;
+            }
+
             return true;
         }
 
@@ -370,6 +380,7 @@ namespace CombSim
             while (Moves > 0 && distance >= minimumDistance)
             {
                 MoveTowards(enemy);
+                if (!IsAlive()) return;
                 distance = DistanceTo(enemy);
             }
 
@@ -384,7 +395,7 @@ namespace CombSim
             if (action is null) return;
 
             Console.WriteLine($"// {Name} doing {action.Name()}");
-            action.DoAction(this);
+            action.PerformAction(this);
             _actionsThisTurn.Remove(action.Category);
         }
 
@@ -430,6 +441,13 @@ namespace CombSim
             Conditions.RemoveAllConditions();
             Conditions.SetCondition(ConditionEnum.Dead);
             Game.Remove(this);
+        }
+
+        // Used only for testing - Reset things that are normally hidden
+        public void TestReset()
+        {
+            Console.WriteLine("// Resetting for testing purposes");
+            _actionsThisTurn.Add(ActionCategory.Action);
         }
 
         protected virtual void TurnStart()
@@ -507,23 +525,6 @@ namespace CombSim
         public bool HasEffect(string name)
         {
             return Effects.HasEffect(name);
-        }
-
-        public class OnTurnEndEventArgs : EventArgs
-        {
-            public Creature Creature;
-        }
-
-        protected class OnTurnStartEventArgs : EventArgs
-        {
-            public Creature Creature;
-        }
-
-        public class OnAnyBeingKilledEventArgs : EventArgs
-        {
-            public Action Action;
-            public Creature Source;
-            public Creature Victim;
         }
     }
 }

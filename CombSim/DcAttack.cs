@@ -34,7 +34,7 @@ namespace CombSim
             return 0;
         }
 
-        public override void DoAction(Creature actor)
+        public override void PerformAction(Creature actor)
         {
             var enemy = actor.PickClosestEnemy();
             if (enemy == null) return;

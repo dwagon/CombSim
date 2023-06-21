@@ -26,10 +26,8 @@ namespace CombSim.Spells
             return heuristic.GetValue(out reason);
         }
 
-        public override void DoAction(Creature actor)
+        protected override void DoAction(Creature actor)
         {
-            if (!actor.CanCastSpell(this)) return;
-            actor.DoCastSpell(this);
             foreach (var target in actor.GetNeighbourCreatures())
             {
                 DoThunderclapAttack(actor, target);

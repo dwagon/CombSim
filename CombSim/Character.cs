@@ -18,6 +18,7 @@ namespace CombSim
         protected override void FallenUnconscious()
         {
             NarrationLog.LogMessage($"{Name} has fallen unconscious");
+            ConcentratingOnSpell?.EndConcentration(this);
             Conditions.SetCondition(ConditionEnum.Unconscious);
             Conditions.RemoveCondition(ConditionEnum.Ok);
             HitPoints = 0;

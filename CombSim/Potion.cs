@@ -53,7 +53,7 @@ namespace CombSim
                 return _potion.GetHeuristic(actor, out reason);
             }
 
-            public override void DoAction(Creature actor)
+            protected override void DoAction(Creature actor)
             {
                 if (_potion.IsConsumed()) return;
                 _potion.PotionEffect(actor);
