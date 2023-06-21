@@ -10,6 +10,7 @@ namespace CombSim.Spells
         {
             Concentration = true;
             DmgRoll = new DamageRoll("3d8", DamageTypeEnums.Necrotic);
+            TouchSpell = true; // Not really, but isn't ranged either for heuristic purposes
         }
 
         public override int GetHeuristic(Creature actor, out string reason)
@@ -40,7 +41,7 @@ namespace CombSim.Spells
     public class SpiritGuardianEffect : Effect
     {
         private const int MaxRange = 15 / 5;
-        private readonly DamageRoll _dmgRoll = new DamageRoll("3d8", DamageTypeEnums.Necrotic);
+        private readonly DamageRoll _dmgRoll = new DamageRoll("3d8", DamageTypeEnums.Radiant);
         private Creature _caster;
 
         public SpiritGuardianEffect() : base("Spirit Guardians")
@@ -91,8 +92,9 @@ namespace CombSim.Spells
         private void OnCreatureStarting(object sender, Creature.OnTurnStartEventArgs e)
         {
             Creature target = e.Creature;
-            if (target.DistanceTo(_caster) <= MaxRange)
+            if (target.DistanceTo(_caster) <= MaxRange && target.IsAlive())
             {
+                Console.WriteLine($"// {target.Name} started turn in Spirit Guardians");
                 SpiritGuardiansAttack(target);
             }
         }
@@ -101,8 +103,9 @@ namespace CombSim.Spells
         private void OnCreatureMoving(object sender, Creature.OnMovingEventArgs e)
         {
             Creature target = e.mover;
-            if (target.DistanceTo(_caster) <= MaxRange)
+            if (target.DistanceTo(_caster) <= MaxRange && target.IsAlive())
             {
+                Console.WriteLine($"// {target.Name} moved into Spirit Guardians");
                 SpiritGuardiansAttack(target);
             }
         }
