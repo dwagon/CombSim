@@ -24,7 +24,7 @@ namespace CombSim
         public int Moves;
         public EventHandler<OnMovingEventArgs> OnMoving;
         public EventHandler<OnTurnEndEventArgs> OnTurnEnd;
-        protected EventHandler<OnTurnStartEventArgs> OnTurnStart;
+        public EventHandler<OnTurnStartEventArgs> OnTurnStart;
         public int ProficiencyBonus = 2;
         protected string Repr;
         protected StatEnum SpellCastingAbility;
