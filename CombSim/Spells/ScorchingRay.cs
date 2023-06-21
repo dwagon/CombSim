@@ -23,8 +23,6 @@ namespace CombSim.Spells
                         DoMissile(actor, enemy);
                     }
                 }
-
-                actor.DoCastSpell(this);
             }
         }
 
