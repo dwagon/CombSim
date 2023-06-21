@@ -25,7 +25,7 @@ namespace CombSim
             return Concentration;
         }
 
-        public virtual void EndConcentration()
+        public virtual void EndConcentration(Creature actor)
         {
         }
 
@@ -37,7 +37,7 @@ namespace CombSim
                 var oldSpell = actor.ConcentratingOn();
                 if (oldSpell != null)
                 {
-                    oldSpell.EndConcentration();
+                    oldSpell.EndConcentration(actor);
                 }
 
                 actor.ConcentrateOn(this);

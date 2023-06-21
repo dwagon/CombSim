@@ -4,6 +4,8 @@ namespace CombSim.Spells
 {
     public class SpiritGuardians : Spell
     {
+        private readonly SpiritGuardianEffect _effect = new SpiritGuardianEffect();
+
         public SpiritGuardians() : base("Spirit Guardians", 3, ActionCategory.Action)
         {
             Concentration = true;
@@ -26,7 +28,12 @@ namespace CombSim.Spells
 
         protected override void DoAction(Creature actor)
         {
-            actor.AddEffect(new SpiritGuardianEffect());
+            actor.AddEffect(_effect);
+        }
+
+        public override void EndConcentration(Creature actor)
+        {
+            actor.RemoveEffect(_effect);
         }
     }
 

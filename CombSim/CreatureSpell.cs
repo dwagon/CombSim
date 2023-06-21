@@ -7,7 +7,7 @@ namespace CombSim
 {
     public partial class Creature
     {
-        internal Spell _concentration; // What spell the creature is concentrating on if any
+        internal Spell ConcentratingOnSpell; // What spell the creature is concentrating on if any
 
         public virtual bool CanCastSpell(Spell spell)
         {
@@ -16,26 +16,32 @@ namespace CombSim
 
         public Spell ConcentratingOn()
         {
-            return _concentration;
+            return ConcentratingOnSpell;
         }
 
         public void ConcentrateOn(Spell spell)
         {
-            _concentration = spell;
+            ConcentratingOnSpell = spell;
+            OnTakingDamage += MakeConcentrationCheck;
+            Console.WriteLine($"// {Name} ConcentrateOn {spell.Name()}");
         }
 
         public void MakeConcentrationCheck(object sender, OnTakingDamageEventArgs e)
         {
+            Console.WriteLine($"// {Name} MakeConcentrationCheck sender={sender} dmg={e.Damage.hits}");
+            if (ConcentratingOnSpell == null)
+                return;
             var diff = Math.Max(10, e.Damage.hits / 2);
             if (MakeSavingThrow(StatEnum.Constitution, diff, out var roll))
             {
-                Console.WriteLine($"Succeeded Concentration check ({roll} vs DC {diff})");
+                Console.WriteLine($"// {Name} succeeded Concentration check ({roll} vs DC {diff})");
                 return;
             }
 
-            Console.WriteLine($"Failed Concentration check ({roll} vs DC {diff}) - {_concentration.Name()} ending");
-            _concentration?.EndConcentration();
-            _concentration = null;
+            Console.WriteLine(
+                $"// {Name} failed Concentration check ({roll} vs DC {diff}) - {ConcentratingOnSpell.Name()} ending");
+            ConcentratingOnSpell?.EndConcentration(this);
+            ConcentratingOnSpell = null;
         }
 
         public virtual void DoCastSpell(Spell spell)
