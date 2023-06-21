@@ -16,8 +16,6 @@ namespace CombSim
 
         protected override void DoAction(Creature actor)
         {
-            bool hasCast = false;
-
             var friends = PickClosestFriendsNeedingHealing(actor, Reach + actor.Speed);
             var sickestFriend = friends.First();
             actor.MoveWithinReachOfCreature(Reach, sickestFriend);
@@ -25,12 +23,6 @@ namespace CombSim
             {
                 if (actor.Game.DistanceTo(actor, sickestFriend) <= Reach)
                 {
-                    if (!hasCast)
-                    {
-                        actor.DoCastSpell(this);
-                        hasCast = true;
-                    }
-
                     DoHealing(actor, friend);
                 }
             }
