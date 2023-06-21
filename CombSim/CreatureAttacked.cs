@@ -5,6 +5,7 @@ namespace CombSim
     public partial class Creature
     {
         public EventHandler<OnDcAttackedEventArgs> OnDcAttacked;
+        public EventHandler<OnDealingDamageEventArgs> OnDealingDamage;
         public EventHandler<OnHitEventArgs> OnHitAttacked;
         public EventHandler<OnTakingDamageEventArgs> OnTakingDamage;
         public EventHandler<OnToHitAttackedEventArgs> OnToHitAttacked;
@@ -14,10 +15,10 @@ namespace CombSim
             OnToHitAttacked += AttackedByWeapon;
             OnDcAttacked += AttackedByDc;
             OnHitAttacked += BeingHit;
-            OnTakingDamage += DamageDealt;
+            OnDealingDamage += DamageDealt;
         }
 
-        private void DamageDealt(object sender, OnTakingDamageEventArgs e)
+        private void DamageDealt(object sender, OnDealingDamageEventArgs e)
         {
             DamageInflicted.Add(e.Damage);
         }
@@ -28,11 +29,12 @@ namespace CombSim
             damage = ModifyDamageForVulnerabilityOrResistance(damage, out dmgModifier);
             damage.hits = Math.Min(damage.hits, HitPoints);
 
-            source.OnTakingDamage?.Invoke(this, new OnTakingDamageEventArgs
+            source.OnDealingDamage?.Invoke(this, new OnDealingDamageEventArgs
             {
                 Damage = damage,
                 target = this,
             });
+            OnTakingDamage?.Invoke(this, new OnTakingDamageEventArgs { Damage = damage });
 
             HitPoints -= damage.hits;
             DamageReceived.Add(damage);

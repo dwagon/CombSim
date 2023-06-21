@@ -11,7 +11,7 @@ namespace CombSim
             public Creature Creature;
         }
 
-        protected class OnTurnStartEventArgs : EventArgs
+        public class OnTurnStartEventArgs : EventArgs
         {
             public Creature Creature;
         }
@@ -57,10 +57,15 @@ namespace CombSim
             public SpellSavedEffect SpellSavedEffect;
         }
 
-        public class OnTakingDamageEventArgs : EventArgs
+        public class OnDealingDamageEventArgs : EventArgs
         {
             public Damage Damage;
             public Creature target;
+        }
+
+        public class OnTakingDamageEventArgs : EventArgs
+        {
+            public Damage Damage;
         }
 
         public class OnMovingEventArgs : EventArgs
