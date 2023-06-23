@@ -218,19 +218,18 @@ namespace CombSim
         }
 
         // Move towards a location
-        private bool MoveTowards(Location destination)
+        private bool MoveTo(Location location)
         {
             if (Moves <= 0)
                 return false;
-            var next = Game.NextLocationTowards(this, destination);
             OnMoving?.Invoke(this, new OnMovingEventArgs
             {
                 mover = this,
-                location = next
+                location = location
             });
             if (IsAlive()) // Can die due to area effects, etc.
             {
-                Game.Move(this, next);
+                Game.Move(this, location);
                 Moves--;
             }
 
@@ -251,12 +250,6 @@ namespace CombSim
         {
             if (Conditions.HasCondition(ConditionEnum.Dead)) return false;
             return true;
-        }
-
-        // Move towards a creature
-        private bool MoveTowards(Creature creature)
-        {
-            return MoveTowards(creature.GetLocation());
         }
 
         public Location GetLocation()
@@ -373,21 +366,8 @@ namespace CombSim
         private void SpendRestOfMovement()
         {
             const int minimumDistance = 5;
-            var originalLocation = GetLocation();
             var enemy = PickClosestEnemy();
-            if (enemy is null) return;
-            var distance = DistanceTo(enemy);
-            while (Moves > 0 && distance >= minimumDistance)
-            {
-                MoveTowards(enemy);
-                if (!IsAlive()) return;
-                distance = DistanceTo(enemy);
-            }
-
-            if (GetLocation() != originalLocation)
-            {
-                Console.WriteLine($"// Moved from {originalLocation} to {GetLocation()}");
-            }
+            MoveWithinReachOfCreature(minimumDistance, enemy);
         }
 
         private void PerformAction(Action action)
@@ -503,9 +483,17 @@ namespace CombSim
         {
             var oldLocation = GetLocation();
             if (enemy == null) return;
-            while (DistanceTo(enemy) > reach)
-                if (!MoveTowards(enemy))
+            var route = Game.GetRouteTowards(this, enemy);
+            foreach (var location in route)
+            {
+                if (DistanceTo(enemy) <= reach)
                     break;
+                if (!MoveTo(location))
+                    break;
+                if (!IsAlive())
+                    break;
+            }
+
             if (oldLocation != GetLocation())
             {
                 Console.WriteLine($"// {Name} moved from {oldLocation} to {GetLocation()}");
