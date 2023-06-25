@@ -16,6 +16,14 @@ namespace CombSim
             _attacks.Add(attack);
         }
 
+        public void AddAttack(Weapon weapon)
+        {
+            foreach (var attack in weapon.GetActions())
+            {
+                _attacks.Add((Attack)attack);
+            }
+        }
+
         public override void PerformAction(Creature actor)
         {
             foreach (var attack in _attacks)
