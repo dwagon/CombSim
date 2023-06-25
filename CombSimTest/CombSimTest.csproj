@@ -58,6 +58,7 @@
         <Compile Include="Properties\AssemblyInfo.cs"/>
         <Compile Include="SpellConcentrationTest.cs"/>
         <Compile Include="Spells\GuidingBoltTest.cs"/>
+        <Compile Include="Spells\SpiritGuardiansTest.cs"/>
         <Compile Include="SpellTest.cs"/>
         <Compile Include="StatTest.cs"/>
     </ItemGroup>
