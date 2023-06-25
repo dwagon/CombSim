@@ -42,7 +42,7 @@ namespace CombSim.Monsters
                 _hasCharge = true;
             }
 
-            protected override void FailSideEffect(Creature actor, Creature target)
+            protected override void FailSideEffect(Creature actor, Creature target, Damage damage)
             {
                 target.AddCondition(ConditionEnum.Prone);
             }

@@ -55,7 +55,7 @@ namespace CombSim.Monsters
                 return 3;
             }
 
-            protected override void SideEffect(Creature actor, Creature target)
+            protected override void SideEffect(Creature actor, Creature target, Damage damage)
             {
                 if (!target.MakeSavingThrow(StatEnum.Constitution, 10, out _))
                 {

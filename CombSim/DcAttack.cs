@@ -47,12 +47,12 @@ namespace CombSim
         }
 
         // Overwrite if the attack has a side effect when you fail the DC
-        protected virtual void FailSideEffect(Creature actor, Creature target)
+        protected virtual void FailSideEffect(Creature actor, Creature target, Damage damage)
         {
         }
 
         // Overwrite if the attack has a side effect when you succeed the DC
-        protected virtual void SucceedSideEffect(Creature actor, Creature target)
+        protected virtual void SucceedSideEffect(Creature actor, Creature target, Damage damage)
         {
         }
 

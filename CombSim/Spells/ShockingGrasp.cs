@@ -10,7 +10,7 @@ namespace CombSim.Spells
             DmgRoll = new DamageRoll("1d8", DamageTypeEnums.Lightning);
         }
 
-        protected override void SideEffect(Creature actor, Creature target)
+        protected override void SideEffect(Creature actor, Creature target, Damage damage)
         {
             // Target can't take reactions until the start of its next turn.
             Console.WriteLine("ShockingGrasp Side Effect");

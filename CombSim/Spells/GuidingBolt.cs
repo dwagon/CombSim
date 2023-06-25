@@ -14,7 +14,7 @@ namespace CombSim.Spells
             DmgRoll = new DamageRoll("4d6", DamageTypeEnums.Radiant);
         }
 
-        protected override void SideEffect(Creature actor, Creature target)
+        protected override void SideEffect(Creature actor, Creature target, Damage damage)
         {
             _turnsToGo = 2; // End next turn
             Console.WriteLine($"// Guiding Bolt Side Effect Actor={actor.Name} Target={target.Name}");
