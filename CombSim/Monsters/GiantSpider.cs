@@ -59,7 +59,7 @@ namespace CombSim.Monsters
             {
             }
 
-            protected override void SideEffect(Creature actor, Creature target)
+            protected override void SideEffect(Creature actor, Creature target, Damage damage)
             {
                 target.AddEffect(new Webbed());
             }
