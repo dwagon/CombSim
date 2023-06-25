@@ -102,6 +102,7 @@
         <Compile Include="Monsters\Kobold.cs"/>
         <Compile Include="Monsters\Ogre.cs"/>
         <Compile Include="Monsters\Skeleton.cs"/>
+        <Compile Include="Monsters\Wight.cs"/>
         <Compile Include="Monsters\Zombie.cs"/>
         <Compile Include="MultiAttack.cs"/>
         <Compile Include="NarrationLog.cs"/>

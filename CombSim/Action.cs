@@ -104,7 +104,7 @@ namespace CombSim
         }
 
         // Overwrite if the attack has a side effect
-        protected virtual void SideEffect(Creature actor, Creature target)
+        protected virtual void SideEffect(Creature actor, Creature target, Damage damage)
         {
         }
 

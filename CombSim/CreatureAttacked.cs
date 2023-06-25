@@ -79,11 +79,13 @@ namespace CombSim
             damageNote += dmgModifier;
             e.AttackMessage.Result = $"Hit for ({e.DmgRoll}) {damageNote}:  {dmg}";
             NarrationLog.LogMessage(e.AttackMessage.ToString());
-            if (e.OnHitSideEffect != null) e.OnHitSideEffect(e.Source, this);
+            if (e.OnHitSideEffect != null) e.OnHitSideEffect(e.Source, this, dmg);
         }
 
         private void AttackedByWeapon(object sender, OnToHitAttackedEventArgs e)
         {
+            Damage dmg = null;
+
             if (e.CriticalMiss || e.ToHit <= ArmourClass((Attack)e.Attack))
             {
                 e.AttackMessage.Result = "Miss";
@@ -93,7 +95,6 @@ namespace CombSim
 
             if (e.DmgRoll != null)
             {
-                Damage dmg;
                 var damageNote = "";
                 if (e.CriticalHit)
                 {
@@ -111,7 +112,7 @@ namespace CombSim
             }
 
             NarrationLog.LogMessage(e.AttackMessage.ToString());
-            if (e.OnHitSideEffect != null) e.OnHitSideEffect(e.Source, this);
+            if (e.OnHitSideEffect != null) e.OnHitSideEffect(e.Source, this, dmg);
         }
 
         // Attack that is a DC challenge
@@ -123,7 +124,7 @@ namespace CombSim
             void Failed(Creature actor, Creature cause)
             {
                 message = $"Failed save for {dmg}";
-                if (e.OnFailEffect != null) e.OnFailEffect(e.Source, this);
+                if (e.OnFailEffect != null) e.OnFailEffect(e.Source, this, dmg);
             }
 
             void Saved(Creature actor, Creature cause)
@@ -140,7 +141,7 @@ namespace CombSim
                         break;
                 }
 
-                if (e.OnSucceedEffect != null) e.OnSucceedEffect(e.Source, this);
+                if (e.OnSucceedEffect != null) e.OnSucceedEffect(e.Source, this, dmg);
             }
 
             var dcChallenge = new DcChallenge(e.DcSaveStat, e.DcSaveDc, Saved, Failed);

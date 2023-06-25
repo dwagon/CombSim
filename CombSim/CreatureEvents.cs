@@ -28,7 +28,7 @@ namespace CombSim
             public Action Attack;
             public AttackMessage AttackMessage;
             public DamageRoll DmgRoll;
-            public Action<Creature, Creature> OnHitSideEffect;
+            public Action<Creature, Creature, Damage> OnHitSideEffect;
             public Creature Source;
         }
 
@@ -39,7 +39,7 @@ namespace CombSim
             public bool CriticalHit;
             public bool CriticalMiss;
             public DamageRoll DmgRoll;
-            public Action<Creature, Creature> OnHitSideEffect;
+            public Action<Creature, Creature, Damage> OnHitSideEffect;
             public Creature Source;
             public int ToHit;
         }
@@ -51,8 +51,8 @@ namespace CombSim
             public int DcSaveDc;
             public StatEnum DcSaveStat;
             public DamageRoll DmgRoll;
-            public Action<Creature, Creature> OnFailEffect;
-            public Action<Creature, Creature> OnSucceedEffect;
+            public Action<Creature, Creature, Damage> OnFailEffect;
+            public Action<Creature, Creature, Damage> OnSucceedEffect;
             public Creature Source;
             public SpellSavedEffect SpellSavedEffect;
         }

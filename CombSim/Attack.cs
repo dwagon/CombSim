@@ -30,11 +30,11 @@ namespace CombSim
         }
 
         // Do all the Side Effects
-        private void SideEffects(Creature actor, Creature target)
+        private void SideEffects(Creature actor, Creature target, Damage damage)
         {
             if (!target.IsAlive()) return;
             actor.Modifiers.DoAttack(this, actor, target);
-            SideEffect(actor, target);
+            SideEffect(actor, target, damage);
         }
 
         protected void DoAttack(Creature actor, Creature target, int attackBonus = 0, int damageBonus = 0)

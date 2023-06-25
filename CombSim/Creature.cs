@@ -67,6 +67,11 @@ namespace CombSim
 
         public Game Game { get; private set; }
 
+        public void DamageMaxHealth(int damage)
+        {
+            MaxHitPoints -= damage;
+        }
+
         protected bool HasAttribute(Attribute attribute)
         {
             return Attributes.Contains(attribute);

@@ -33,7 +33,7 @@ namespace CombSim.Monsters
             // Melee Weapon Attack: +5 to hit, reach 5 ft., one creature. Hit: 7 (1d8 + 3) piercing damage,
             // and the target must make a DC 11 Constitution saving throw, taking 9 (2d8) poison damage on a failed save,
             // or half as much damage on a successful one.
-            protected override void SideEffect(Creature actor, Creature target)
+            protected override void SideEffect(Creature actor, Creature target, Damage damage)
             {
                 var attack = new GiantSpiderBiteSideEffect();
                 attack.DoAttack(actor, target);
@@ -59,7 +59,7 @@ namespace CombSim.Monsters
             {
             }
 
-            protected override void SideEffect(Creature actor, Creature target)
+            protected override void SideEffect(Creature actor, Creature target, Damage damage)
             {
                 target.AddEffect(new Webbed());
             }
