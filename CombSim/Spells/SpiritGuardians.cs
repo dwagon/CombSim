@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace CombSim.Spells
 {
@@ -42,10 +43,12 @@ namespace CombSim.Spells
     {
         private const int MaxRange = 15 / 5;
         private readonly DamageRoll _dmgRoll = new DamageRoll("3d8", DamageTypeEnums.Radiant);
+        private List<Creature> _attackedThisTurn;
         private Creature _caster;
 
         public SpiritGuardianEffect() : base("Spirit Guardians")
         {
+            _attackedThisTurn = new List<Creature>();
         }
 
         public override void Start(Creature target)
@@ -75,6 +78,8 @@ namespace CombSim.Spells
 
         private void SpiritGuardiansAttack(Creature target)
         {
+            if (_attackedThisTurn.Contains(target)) return;
+            _attackedThisTurn.Add(target);
             var attackMessage = new AttackMessage(attacker: _caster.Name, victim: target.Name, attackName: Name);
             target.OnDcAttacked?.Invoke(this, new Creature.OnDcAttackedEventArgs
             {
@@ -92,6 +97,7 @@ namespace CombSim.Spells
         private void OnCreatureStarting(object sender, Creature.OnTurnStartEventArgs e)
         {
             Creature target = e.Creature;
+            _attackedThisTurn.Remove(target);
             if (target.DistanceTo(_caster) <= MaxRange && target.IsAlive())
             {
                 Console.WriteLine($"// {target.Name} started turn in Spirit Guardians");
