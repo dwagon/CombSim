@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using CombSim.Gear;
 using Pastel;
-
-[assembly: InternalsVisibleTo("CombSimTest")]
 
 namespace CombSim.Characters
 {
@@ -12,7 +9,7 @@ namespace CombSim.Characters
     {
         private readonly Dictionary<int, int> _hitPointsAtLevel = new Dictionary<int, int>
         {
-            { 1, 10 }, { 2, 17 }, { 3, 24 }, { 4, 31 }
+            { 1, 10 }, { 2, 17 }, { 3, 24 }, { 4, 31 }, { 5, 38 }
         };
 
         public Rogue(string name, int level = 1, string team = "Rogues") : base(name, level, team)
@@ -49,11 +46,23 @@ namespace CombSim.Characters
             if (level >= 4)
             {
                 Stats[StatEnum.Dexterity] = new Stat(18);
-                AddEquipment(MeleeWeaponGear.ShortswordPlusOne);
+                if (level >= 5)
+                {
+                    AddEquipment(new FrostBrandShortsword());
+                }
+                else
+                {
+                    AddEquipment(MeleeWeaponGear.ShortswordPlusOne);
+                }
             }
             else
             {
                 AddEquipment(MeleeWeaponGear.Shortsword);
+            }
+
+            if (level >= 5)
+            {
+                sneakDamage = new DamageRoll("3d6");
             }
 
             AddEffect(new SneakAttack(sneakDamage));
