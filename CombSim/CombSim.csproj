@@ -82,6 +82,7 @@
         <Compile Include="Game.cs"/>
         <Compile Include="GameMovement.cs"/>
         <Compile Include="Gear\ArmourGear.cs"/>
+        <Compile Include="Gear\FrostBrandWeapons.cs"/>
         <Compile Include="Gear\Misc.cs"/>
         <Compile Include="Gear\PotionsGear.cs"/>
         <Compile Include="Gear\MeleeWeaponGear.cs"/>
