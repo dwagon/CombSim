@@ -36,6 +36,10 @@ namespace CombSim
         {
         }
 
+        public virtual void Equip(Creature owner)
+        {
+        }
+
         protected void AddAction(Action act)
         {
             _actions.Add(act);
