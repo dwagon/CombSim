@@ -35,6 +35,7 @@ namespace CombSim
             if (!target.IsAlive()) return;
             actor.Modifiers.DoAttack(this, actor, target);
             SideEffect(actor, target, damage);
+            Weapon?.SideEffect(actor, target);
         }
 
         protected void DoAttack(Creature actor, Creature target, int attackBonus = 0, int damageBonus = 0)

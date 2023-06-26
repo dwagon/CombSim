@@ -435,6 +435,12 @@ namespace CombSim
             _actionsThisTurn.Add(ActionCategory.Action);
         }
 
+        // Dynamically make the creature resistant to a damage type
+        public void AddResistance(DamageTypeEnums damageType)
+        {
+            Resistant.Add(damageType);
+        }
+
         protected virtual void TurnStart()
         {
             Moves = Speed;

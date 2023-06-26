@@ -36,6 +36,10 @@ namespace CombSim
         {
         }
 
+        public virtual void Equip(Creature owner)
+        {
+        }
+
         protected void AddAction(Action act)
         {
             _actions.Add(act);
@@ -49,6 +53,8 @@ namespace CombSim
 
     public class Weapon : Equipment
     {
+        protected Action action;
+
         protected Weapon(string name, DamageRoll damageRoll, int magicBonus = 0) : base(name)
         {
             DamageRoll = damageRoll;
@@ -66,6 +72,16 @@ namespace CombSim
         public virtual void UseWeapon()
         {
         }
+
+        public virtual void SideEffect(Creature target, Creature actor)
+        {
+        }
+
+        // What modifier to the heuristic does the side effect have
+        public virtual int SideEffectHeuristic()
+        {
+            return 0;
+        }
     }
 
     public class MeleeWeapon : Weapon
@@ -76,7 +92,7 @@ namespace CombSim
         {
             Reach = reach;
             Finesse = finesse;
-            var action = new MeleeAttack(this);
+            action = new MeleeAttack(this);
             AddAction(action);
         }
 
@@ -94,7 +110,8 @@ namespace CombSim
             ShortRange = shortRange;
             LongRange = longRange;
             _ammunition = ammunition;
-            AddAction(new RangedAttack(this));
+            action = new RangedAttack(this);
+            AddAction(action);
         }
 
         public int LongRange { get; }

@@ -28,6 +28,7 @@ namespace CombSim
             if (Weapon != null)
             {
                 damageBonus += Weapon.MagicBonus;
+                damageBonus += Weapon.SideEffectHeuristic();
             }
 
             heuristic.AddDamage(damageBonus);
