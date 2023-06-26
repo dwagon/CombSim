@@ -25,7 +25,7 @@ namespace CombSim
 
         public Heuristic(Creature actor, MeleeAttack attack)
         {
-            // Modify by chance to hit
+            // TODO: Modify by chance to hit
             _actor = actor;
             _meleeAttack = attack;
             _attackType = AttackType.MeleeAttack;
@@ -103,7 +103,7 @@ namespace CombSim
                 reason += $" x {_enemies} Enemies";
             }
 
-            reason += addendum;
+            reason += $" {addendum}";
 
             if (_hasDisadvantage)
             {
