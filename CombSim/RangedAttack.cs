@@ -18,10 +18,26 @@ namespace CombSim
             LongRange = weapon.LongRange;
         }
 
+        private StatEnum UseStatForAttack(Creature actor)
+        {
+            var bonusStat = StatEnum.Dexterity;
+            var thrownWeapon = false;
+
+            if (Weapon != null) thrownWeapon = Weapon.Thrown;
+
+            if (thrownWeapon && actor.Stats[StatEnum.Strength] > actor.Stats[StatEnum.Dexterity])
+            {
+                bonusStat = StatEnum.Strength;
+            }
+
+            return bonusStat;
+        }
+
         public override int GetHeuristic(Creature actor, out string reason)
         {
             var heuristic = new Heuristic(actor, this);
             heuristic.AddRepeat(actor.AttacksPerAction);
+            var bonusStat = UseStatForAttack(actor);
             RangedWeapon rangedWeapon = (RangedWeapon)Weapon;
             if (rangedWeapon != null && !rangedWeapon.HasAmmunition())
             {
@@ -29,10 +45,11 @@ namespace CombSim
                 return 0;
             }
 
-            var damageBonus = actor.Stats[StatEnum.Dexterity].Bonus();
+            var damageBonus = actor.Stats[bonusStat].Bonus();
             if (Weapon != null)
             {
                 damageBonus += Weapon.MagicBonus;
+                damageBonus += Weapon.SideEffectHeuristic();
             }
 
             heuristic.AddDamage(damageBonus);
@@ -59,9 +76,11 @@ namespace CombSim
                 HasAdvantageDisadvantage(actor, enemy, ref hasAdvantage, ref hasDisadvantage);
 
                 Weapon?.UseWeapon();
+                var bonusStat = UseStatForAttack(actor);
+
                 DoAttack(actor, enemy,
-                    attackBonus: actor.ProficiencyBonus + actor.Stats[StatEnum.Dexterity].Bonus(),
-                    damageBonus: actor.Stats[StatEnum.Dexterity].Bonus());
+                    attackBonus: actor.ProficiencyBonus + actor.Stats[bonusStat].Bonus(),
+                    damageBonus: actor.Stats[bonusStat].Bonus());
             }
         }
     }

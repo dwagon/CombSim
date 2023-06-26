@@ -60,12 +60,14 @@ namespace CombSim
             DamageRoll = damageRoll;
             Versatile = false;
             Finesse = false;
+            Thrown = false;
             MagicBonus = magicBonus;
         }
 
         public int MagicBonus { get; }
         public bool Versatile { get; protected set; }
         public bool Finesse { get; protected set; }
+        public bool Thrown { get; protected set; }
 
         public DamageRoll DamageRoll { get; }
 
