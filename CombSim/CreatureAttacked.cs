@@ -20,7 +20,7 @@ namespace CombSim
 
         private void DamageDealt(object sender, OnDealingDamageEventArgs e)
         {
-            DamageInflicted.Add(e.Damage);
+            _damageInflicted.Add(e.Damage);
         }
 
         // This creature has taken {damage} from an {action} by {source}

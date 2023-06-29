@@ -8,10 +8,10 @@ namespace CombSim
         public static EventHandler<OnAnyBeingKilledEventArgs> OnAnyBeingKilled;
         private readonly List<Action> _actions;
         private readonly HashSet<ActionCategory> _actionsThisTurn;
+        private readonly List<Damage> _damageInflicted;
         private readonly List<Equipment> _equipment;
         private readonly Dictionary<string, Spell> _spells;
         protected readonly Conditions Conditions;
-        private readonly List<Damage> DamageInflicted;
         protected readonly List<Damage> DamageReceived;
         protected readonly List<DamageTypeEnums> Immune;
         public readonly Modifiers Modifiers;
@@ -46,7 +46,7 @@ namespace CombSim
             Resistant = new List<DamageTypeEnums>();
             Immune = new List<DamageTypeEnums>();
             DamageReceived = new List<Damage>();
-            DamageInflicted = new List<Damage>();
+            _damageInflicted = new List<Damage>();
             CriticalHitRoll = 20;
             Attributes = new HashSet<Attribute>();
             AttacksPerAction = 1;
@@ -275,7 +275,7 @@ namespace CombSim
             var result = new List<string>();
             var damageTypes = new Dictionary<DamageTypeEnums, int>();
             total = 0;
-            foreach (var damage in DamageInflicted)
+            foreach (var damage in _damageInflicted)
             {
                 if (!damageTypes.ContainsKey(damage.type))
                 {
@@ -329,6 +329,11 @@ namespace CombSim
         public IEnumerable<Location> GetConeLocations(int coneSize, GridDirection direction)
         {
             return Game.GetConeLocations(this, coneSize, direction);
+        }
+
+        public IEnumerable<Creature> GetCreaturesInCircle(int radius)
+        {
+            return Game.GetCreaturesInCircle(GetLocation(), radius);
         }
 
         public void DoActionCategory(ActionCategory actionCategory, bool force = false)
