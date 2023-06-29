@@ -131,6 +131,26 @@ namespace CombSim
             return neighbours;
         }
 
+        public IEnumerable<Location> CircleLocations(Location origin, int radius)
+        {
+            var locations = new HashSet<Location>();
+
+            for (var i = origin.X - radius - 1; i < origin.X + radius + 1; i++)
+            {
+                for (var j = origin.Y - radius - 1; j < origin.Y + radius + 1; j++)
+                {
+                    if (!IsValidLocation(i, j)) continue;
+                    var location = new Location(i, j);
+                    if (DistanceBetween(origin, location) <= radius)
+                    {
+                        locations.Add(location);
+                    }
+                }
+            }
+
+            return locations;
+        }
+
         // Return a list of all locations from the {origin} of size {coneSize} in {direction}
         // Cone is a 60 degree section
         public IEnumerable<Location> ConeLocations(Location origin, int coneSize, GridDirection direction)
