@@ -45,7 +45,7 @@ namespace CombSim.Characters
             Stats.Add(StatEnum.Charisma, new Stat(11));
             AddEquipment(MeleeWeaponGear.Flail);
             AddEquipment(ArmourGear.Ring);
-            AddEquipment(PotionsGear.HealingPotion);
+            AddEquipment(new HealingPotion());
 
             // Cantrips
             AddSpell(new SacredFlame());
@@ -84,6 +84,7 @@ namespace CombSim.Characters
             {
                 AddSpell(new MassHealingWord());
                 AddSpell(new SpiritGuardians());
+                AddEquipment(new GreaterHealingPotion());
             }
         }
 

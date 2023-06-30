@@ -38,7 +38,7 @@ namespace CombSim.Characters
             Stats.Add(StatEnum.Wisdom, new Stat(10));
             Stats.Add(StatEnum.Charisma, new Stat(15));
 
-            AddEquipment(PotionsGear.HealingPotion);
+            AddEquipment(new HealingPotion());
             AddEquipment(MeleeWeaponGear.Quarterstaff);
 
             // Cantrips
