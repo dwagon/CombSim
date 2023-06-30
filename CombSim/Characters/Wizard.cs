@@ -10,7 +10,7 @@ namespace CombSim.Characters
     {
         private readonly Dictionary<int, int> _hitPointsAtLevel = new Dictionary<int, int>()
         {
-            { 1, 8 }, { 2, 14 }, { 3, 20 }, { 4, 26 }
+            { 1, 8 }, { 2, 14 }, { 3, 20 }, { 4, 26 }, { 5, 32 }
         };
 
         // CasterLevel: <SpellLevel: NumberOfSlots>
@@ -20,7 +20,8 @@ namespace CombSim.Characters
                 { 1, new Dictionary<int, int> { { 1, 2 } } },
                 { 2, new Dictionary<int, int> { { 1, 3 } } },
                 { 3, new Dictionary<int, int> { { 1, 4 }, { 2, 2 } } },
-                { 4, new Dictionary<int, int> { { 1, 4 }, { 2, 3 } } }
+                { 4, new Dictionary<int, int> { { 1, 4 }, { 2, 3 } } },
+                { 5, new Dictionary<int, int> { { 1, 4 }, { 2, 3 }, { 3, 2 } } }
             };
 
         public Wizard(string name, int level = 1, string team = "Wizards") : base(name, level, team)
@@ -54,6 +55,11 @@ namespace CombSim.Characters
             {
                 Stats[StatEnum.Intelligence] = new Stat(18);
                 AddEquipment(new BracersOfDefence());
+            }
+
+            if (level >= 5)
+            {
+                AddSpell(new Fireball());
             }
         }
 

@@ -57,6 +57,13 @@ namespace CombSim
             _attackType = spell.TouchSpell ? AttackType.TouchSpellAttack : AttackType.RangedSpellAttack;
         }
 
+        public Heuristic(Creature actor, DcSaveSpell spell)
+        {
+            _actor = actor;
+            _spell = spell;
+            _attackType = AttackType.DcSpellAttack;
+        }
+
         public int GetValue(out string reason)
         {
             reason = "H: undefined";
@@ -142,10 +149,24 @@ namespace CombSim
                     return RangedAttackConsiderations(distance, out addendum);
                 case AttackType.RangedSpellAttack:
                     return RangedSpellConsiderations(distance, out addendum);
+                case AttackType.DcSpellAttack:
+                    return RangedDcSpellConsiderations(distance, out addendum);
                 case AttackType.DcAttack:
                     return RangedDcConsiderations(distance, out addendum);
                 default:
                     throw new NotImplementedException("Heuristic: _attackType undefined");
+            }
+
+            return true;
+        }
+
+        private bool RangedDcSpellConsiderations(float distance, out string reason)
+        {
+            reason = "";
+            if (distance > _actor.Speed + _spell.Reach)
+            {
+                reason = $"Out of range ({distance} > {_actor.Speed} + {_spell.Reach}) ";
+                return false;
             }
 
             return true;
@@ -241,6 +262,7 @@ namespace CombSim
             RangedAttack,
             RangedSpellAttack,
             TouchSpellAttack,
+            DcSpellAttack,
             DcAttack
         }
     }

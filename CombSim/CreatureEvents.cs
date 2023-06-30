@@ -48,6 +48,7 @@ namespace CombSim
         {
             public Action Attack;
             public AttackMessage AttackMessage;
+            public Damage Damage;
             public int DcSaveDc;
             public StatEnum DcSaveStat;
             public DamageRoll DmgRoll;

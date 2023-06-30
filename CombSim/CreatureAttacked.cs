@@ -20,31 +20,30 @@ namespace CombSim
 
         private void DamageDealt(object sender, OnDealingDamageEventArgs e)
         {
-            DamageInflicted.Add(e.Damage);
+            _damageInflicted.Add(e.Damage);
         }
 
         // This creature has taken {damage} from an {action} by {source}
         private Damage TakeDamage(Damage damage, Creature source, Action action, out string dmgModifier)
         {
-            damage = ModifyDamageForVulnerabilityOrResistance(damage, out dmgModifier);
-            damage.hits = Math.Min(damage.hits, HitPoints);
+            var adjustedDamage = ModifyDamageForVulnerabilityOrResistance(damage, out dmgModifier);
 
             source.OnDealingDamage?.Invoke(this, new OnDealingDamageEventArgs
             {
-                Damage = damage,
+                Damage = adjustedDamage,
                 target = this,
             });
-            OnTakingDamage?.Invoke(this, new OnTakingDamageEventArgs { Damage = damage });
+            OnTakingDamage?.Invoke(this, new OnTakingDamageEventArgs { Damage = adjustedDamage });
 
-            HitPoints -= damage.hits;
-            DamageReceived.Add(damage);
+            HitPoints -= adjustedDamage.hits;
+            DamageReceived.Add(adjustedDamage);
             if (HitPoints <= 0)
             {
                 FallenUnconscious();
                 Game.CreatureFallenUnconscious(source, this, action);
             }
 
-            return damage;
+            return adjustedDamage;
         }
 
         private Damage ModifyDamageForVulnerabilityOrResistance(Damage dmg, out string dmgModifier)
@@ -118,7 +117,8 @@ namespace CombSim
         // Attack that is a DC challenge
         private void AttackedByDc(object sender, OnDcAttackedEventArgs e)
         {
-            var dmg = e.DmgRoll.Roll();
+            var dmg = e.Damage ?? e.DmgRoll.Roll();
+
             var message = "";
 
             void Failed(Creature actor, Creature cause)
@@ -149,7 +149,7 @@ namespace CombSim
 
             dmg = TakeDamage(dmg, e.Source, e.Attack, out string dmgModifier);
             e.AttackMessage.Result =
-                $"{message} :{roll} vs {e.DcSaveStat} DC {e.DcSaveDc} ({e.DmgRoll}) {dmgModifier}: {dmg}";
+                $"{message} :{roll} vs {e.DcSaveStat} DC {e.DcSaveDc} Damage: {e.DmgRoll} {dmgModifier} = {dmg}";
             NarrationLog.LogMessage(e.AttackMessage.ToString());
         }
     }
