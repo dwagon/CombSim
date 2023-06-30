@@ -60,12 +60,10 @@ namespace CombSim.Spells
 
         protected override void DoAction(Creature actor)
         {
-            if (!actor.CanCastSpell(this)) return;
             var enemy = actor.PickClosestEnemy();
             if (enemy == null) return;
             actor.MoveWithinReachOfCreature(1, enemy);
             if (actor.DistanceTo(actor.PickClosestEnemy()) > Reach) return;
-            actor.DoCastSpell(this);
             DoBurningHandsAttack(actor);
         }
 
