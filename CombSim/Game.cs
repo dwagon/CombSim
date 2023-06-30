@@ -70,20 +70,6 @@ namespace CombSim
             return numSides <= 1;
         }
 
-        public IEnumerable<Creature> GetCreaturesInCircle(Location origin, int radius)
-        {
-            var creatures = new List<Creature>();
-            foreach (var location in _arena.CircleLocations(origin, radius))
-            {
-                if (_arena.GetLocation(location) != null)
-                {
-                    creatures.Add((Creature)_arena.GetLocation(location));
-                }
-            }
-
-            return creatures;
-        }
-
         private void TakeTurn(int turn)
         {
             Console.WriteLine($"\n# {turn} ##########################################################################");

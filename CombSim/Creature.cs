@@ -326,9 +326,9 @@ namespace CombSim
             return Game.DistanceTo(this, enemy);
         }
 
-        public IEnumerable<Location> GetConeLocations(int coneSize, GridDirection direction)
+        public IEnumerable<Creature> GetCreaturesInCone(int coneSize, GridDirection direction)
         {
-            return Game.GetConeLocations(this, coneSize, direction);
+            return Game.GetCreaturesInCone(GetLocation(), coneSize, direction);
         }
 
         public IEnumerable<Creature> GetCreaturesInCircle(int radius)

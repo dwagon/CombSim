@@ -26,6 +26,35 @@ namespace CombSim
             return (int)_arena.DistanceBetween(_locations[one], _locations[two]);
         }
 
+        public IEnumerable<Creature> GetCreaturesInCircle(Location origin, int radius)
+        {
+            var creatures = new List<Creature>();
+            foreach (var location in _arena.CircleLocations(origin, radius))
+            {
+                if (_arena.GetLocation(location) != null)
+                {
+                    creatures.Add((Creature)_arena.GetLocation(location));
+                }
+            }
+
+            return creatures;
+        }
+
+        public IEnumerable<Creature> GetCreaturesInCone(Location origin, int coneSize, GridDirection direction)
+        {
+            var creatures = new List<Creature>();
+            foreach (var location in _arena.ConeLocations(origin, coneSize, direction))
+            {
+                if (_arena.GetLocation(location) != null)
+                {
+                    creatures.Add((Creature)_arena.GetLocation(location));
+                }
+            }
+
+            return creatures;
+        }
+
+
         public Creature GetCreatureAtLocation(Location location)
         {
             return (_arena.GetLocation(location) as Creature);
@@ -69,11 +98,6 @@ namespace CombSim
         public Location NextLocationTowards(Creature srcCreature, Location destination)
         {
             return NextLocationTowards(_locations[srcCreature], destination);
-        }
-
-        public IEnumerable<Location> GetConeLocations(Creature actor, int coneSize, GridDirection direction)
-        {
-            return _arena.ConeLocations(actor.GetLocation(), coneSize, direction);
         }
 
         public Location NextLocationTowards(Creature srcCreature, Creature dstCreature)
