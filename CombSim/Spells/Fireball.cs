@@ -19,21 +19,22 @@ namespace CombSim.Spells
         protected override void DoAction(Creature actor)
         {
             var bestTarget = PickBestTarget(actor);
+            var damage = DmgRoll.Roll();
             foreach (var victim in bestTarget.GetCreaturesInCircle(FireballRadius))
             {
-                DoFireballAttack(actor, victim);
+                DoFireballAttack(actor, victim, damage);
             }
         }
 
-        private void DoFireballAttack(Creature caster, Creature victim)
+        private void DoFireballAttack(Creature caster, Creature victim, Damage damage)
         {
             var attackMessage = new AttackMessage(attacker: caster.Name, victim: victim.Name, attackName: Name());
-
-            victim.OnDcAttacked?.Invoke(this, new Creature.OnDcAttackedEventArgs()
+            victim.OnDcAttacked?.Invoke(this, new Creature.OnDcAttackedEventArgs
             {
                 Source = caster,
                 DcSaveStat = SpellSaveAgainst,
                 DcSaveDc = caster.SpellSaveDc(),
+                Damage = damage,
                 DmgRoll = DmgRoll,
                 SpellSavedEffect = SpellSavedEffect,
                 AttackMessage = attackMessage,
