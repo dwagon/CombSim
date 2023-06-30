@@ -13,7 +13,7 @@ namespace CombSim
             ProficiencyBonus = 2 + Level / 5;
         }
 
-        protected int Level { get; set; }
+        public int Level { get; protected set; }
 
         protected override void FallenUnconscious()
         {

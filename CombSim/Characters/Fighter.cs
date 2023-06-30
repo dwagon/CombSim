@@ -29,7 +29,7 @@ namespace CombSim.Characters
             Stats.Add(StatEnum.Charisma, new Stat(9));
             AddEquipment(DefenceFightingStyle);
 
-            AddEquipment(PotionsGear.HealingPotion);
+            AddEquipment(new HealingPotion());
 
             AddAction(new SecondWind());
             if (level >= 2)
@@ -67,6 +67,7 @@ namespace CombSim.Characters
             {
                 AttacksPerAction = 2;
                 AddEquipment(RangedWeaponGear.LongbowPlusOne);
+                AddEquipment(new GreaterHealingPotion());
             }
         }
 

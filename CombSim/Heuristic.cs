@@ -67,11 +67,11 @@ namespace CombSim
         public int GetValue(out string reason)
         {
             reason = "H: undefined";
-            if (_attackType == AttackType.RangedSpellAttack || _attackType == AttackType.TouchSpellAttack)
+            if (_spell != null)
             {
                 if (!_actor.CanCastSpell(_spell))
                 {
-                    reason = $"H: {_actor.Name} can't cast {_spell.Name()}";
+                    reason = $"H: {_spell.Name()} not available to {_actor.Name}";
                     return 0;
                 }
             }

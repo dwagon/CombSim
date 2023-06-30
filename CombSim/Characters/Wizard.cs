@@ -39,7 +39,7 @@ namespace CombSim.Characters
             Stats.Add(StatEnum.Charisma, new Stat(13));
 
             AddEquipment(MeleeWeaponGear.Quarterstaff);
-            AddEquipment(PotionsGear.SuperiorHealingPotion);
+            AddEquipment(new SuperiorHealingPotion());
 
             AddSpell(new RayOfFrost());
             AddSpell(new BurningHands());
@@ -60,6 +60,7 @@ namespace CombSim.Characters
             if (level >= 5)
             {
                 AddSpell(new Fireball());
+                AddEquipment(new GreaterHealingPotion());
             }
         }
 

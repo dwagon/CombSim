@@ -10,7 +10,7 @@ namespace CombSim.Characters
     {
         private readonly Dictionary<int, int> _hitPointsAtLevel = new Dictionary<int, int>
         {
-            { 1, 10 }, { 2, 18 }, { 3, 24 }, { 4, 31 }
+            { 1, 10 }, { 2, 18 }, { 3, 24 }, { 4, 31 }, { 5, 38 }
         };
 
         // CasterLevel: <SpellLevel: NumberOfSlots>
@@ -20,7 +20,8 @@ namespace CombSim.Characters
                 { 1, 1 },
                 { 2, 2 },
                 { 3, 2 },
-                { 4, 2 }
+                { 4, 2 },
+                { 5, 2 },
             };
 
         public Warlock(string name, int level = 1, string team = "Warlocks") : base(name, level, team)
@@ -38,7 +39,7 @@ namespace CombSim.Characters
             Stats.Add(StatEnum.Wisdom, new Stat(10));
             Stats.Add(StatEnum.Charisma, new Stat(15));
 
-            AddEquipment(PotionsGear.HealingPotion);
+            AddEquipment(new HealingPotion());
             AddEquipment(MeleeWeaponGear.Quarterstaff);
 
             // Cantrips
@@ -73,6 +74,12 @@ namespace CombSim.Characters
             {
                 Stats[StatEnum.Charisma] = new Stat(18);
                 AddEquipment(new CloakOfDisplacement());
+            }
+
+            if (level >= 5)
+            {
+                AddSpell(new Fireball());
+                AddEquipment(new GreaterHealingPotion());
             }
 
             if (HasAttribute(Attribute.EldritchSpear)) ebRange = 300 / 5;

@@ -25,7 +25,7 @@ namespace CombSim.Characters
             Stats.Add(StatEnum.Intelligence, new Stat(9));
             Stats.Add(StatEnum.Wisdom, new Stat(15));
             Stats.Add(StatEnum.Charisma, new Stat(11));
-            AddEquipment(PotionsGear.HealingPotion);
+            AddEquipment(new HealingPotion());
 
             // Sneak Attack (+1d6)
             var sneakDamage = new DamageRoll("1d6");
@@ -48,6 +48,7 @@ namespace CombSim.Characters
                 Stats[StatEnum.Dexterity] = new Stat(18);
                 if (level >= 5)
                 {
+                    AddEquipment(new GreaterHealingPotion());
                     AddEquipment(new FrostBrandShortsword());
                 }
                 else
