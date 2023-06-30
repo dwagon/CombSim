@@ -26,25 +26,24 @@ namespace CombSim
         // This creature has taken {damage} from an {action} by {source}
         private Damage TakeDamage(Damage damage, Creature source, Action action, out string dmgModifier)
         {
-            damage = ModifyDamageForVulnerabilityOrResistance(damage, out dmgModifier);
-            damage.hits = Math.Min(damage.hits, HitPoints);
+            var adjustedDamage = ModifyDamageForVulnerabilityOrResistance(damage, out dmgModifier);
 
             source.OnDealingDamage?.Invoke(this, new OnDealingDamageEventArgs
             {
-                Damage = damage,
+                Damage = adjustedDamage,
                 target = this,
             });
-            OnTakingDamage?.Invoke(this, new OnTakingDamageEventArgs { Damage = damage });
+            OnTakingDamage?.Invoke(this, new OnTakingDamageEventArgs { Damage = adjustedDamage });
 
-            HitPoints -= damage.hits;
-            DamageReceived.Add(damage);
+            HitPoints -= adjustedDamage.hits;
+            DamageReceived.Add(adjustedDamage);
             if (HitPoints <= 0)
             {
                 FallenUnconscious();
                 Game.CreatureFallenUnconscious(source, this, action);
             }
 
-            return damage;
+            return adjustedDamage;
         }
 
         private Damage ModifyDamageForVulnerabilityOrResistance(Damage dmg, out string dmgModifier)
