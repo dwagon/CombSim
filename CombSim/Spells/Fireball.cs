@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -44,6 +43,12 @@ namespace CombSim.Spells
 
         public override int GetHeuristic(Creature actor, out string reason)
         {
+            if (!actor.CanCastSpell(this))
+            {
+                reason = "Spell not available";
+                return 0;
+            }
+
             var heuristic = new Heuristic(actor, this);
             var target = PickBestTarget(actor);
             if (target is null)
@@ -75,7 +80,6 @@ namespace CombSim.Spells
                 bestTargets.Add((numEnemies, target));
             }
 
-            Console.WriteLine($"# Best Targets = {bestTargets.Count}");
             if (bestTargets.Count == 0)
                 return null;
 
