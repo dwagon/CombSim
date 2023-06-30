@@ -118,7 +118,8 @@ namespace CombSim
         // Attack that is a DC challenge
         private void AttackedByDc(object sender, OnDcAttackedEventArgs e)
         {
-            var dmg = e.DmgRoll.Roll();
+            var dmg = e.Damage ?? e.DmgRoll.Roll();
+
             var message = "";
 
             void Failed(Creature actor, Creature cause)
@@ -149,7 +150,7 @@ namespace CombSim
 
             dmg = TakeDamage(dmg, e.Source, e.Attack, out string dmgModifier);
             e.AttackMessage.Result =
-                $"{message} :{roll} vs {e.DcSaveStat} DC {e.DcSaveDc} ({e.DmgRoll}) {dmgModifier}: {dmg}";
+                $"{message} :{roll} vs {e.DcSaveStat} DC {e.DcSaveDc} Damage: {e.DmgRoll} {dmgModifier} = {dmg}";
             NarrationLog.LogMessage(e.AttackMessage.ToString());
         }
     }
