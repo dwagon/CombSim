@@ -55,8 +55,17 @@ namespace CombSim
 
             protected override void DoAction(Creature actor)
             {
-                if (_potion.IsConsumed()) return;
                 _potion.PotionEffect(actor);
+            }
+
+            protected override bool PreAction(Creature actor)
+            {
+                if (_potion.IsConsumed()) return false;
+                return true;
+            }
+
+            protected override void PostAction(Creature actor)
+            {
                 _potion.Consume();
             }
         }
