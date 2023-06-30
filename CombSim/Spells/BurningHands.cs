@@ -51,10 +51,8 @@ namespace CombSim.Spells
         {
             numEnemies = 0;
             numFriends = 0;
-            foreach (var location in actor.GetConeLocations(range, direction))
+            foreach (var creature in actor.GetCreaturesInCone(range, direction))
             {
-                var creature = actor.Game.GetCreatureAtLocation(location);
-                if (creature is null) continue;
                 if (creature.Team == actor.Team) numFriends++;
                 else numEnemies++;
             }
@@ -74,11 +72,8 @@ namespace CombSim.Spells
         private void DoBurningHandsAttack(Creature actor)
         {
             var bestDirection = GetBestDirection(actor, out _);
-            foreach (var location in actor.GetConeLocations(_arcSize, bestDirection))
+            foreach (var target in actor.GetCreaturesInCone(_arcSize, bestDirection))
             {
-                if (location == actor.GetLocation()) continue;
-                var target = actor.Game.GetCreatureAtLocation(location);
-                if (target is null) continue;
                 var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name());
 
                 target.OnDcAttacked?.Invoke(this, new Creature.OnDcAttackedEventArgs()

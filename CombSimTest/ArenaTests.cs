@@ -14,6 +14,23 @@ namespace CombSimTest
             Assert.True(a.IsClear(new Location(5, 5)));
         }
 
+
+        [Test]
+        public void TestConeLocations()
+        {
+            var a = new Arena(10, 10);
+            var locations = a.ConeLocations(new Location(5, 5), 3, GridDirection.E);
+            /*    x
+             * oxxx
+             *   xx
+             */
+            Assert.AreEqual(locations, new HashSet<Location>()
+            {
+                new Location(6, 5), new Location(7, 5), new Location(7, 6),
+                new Location(8, 4), new Location(8, 5), new Location(8, 6)
+            });
+        }
+
         [Test]
         public void TestNeighbours()
         {
