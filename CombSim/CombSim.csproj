@@ -57,6 +57,7 @@
         <Compile Include="AttackSpell.cs"/>
         <Compile Include="Attribute.cs"/>
         <Compile Include="Character.cs"/>
+        <Compile Include="Characters\Bard.cs"/>
         <Compile Include="Characters\Cleric.cs"/>
         <Compile Include="Characters\Fighter.cs"/>
         <Compile Include="Characters\Rogue.cs"/>
