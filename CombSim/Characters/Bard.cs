@@ -45,7 +45,7 @@ namespace CombSim.Characters
             AddEquipment(new HealingPotion());
 
             AddSpell(new Thunderclap());
-            // AddSpell(new ViciousMockery());
+            AddSpell(new ViciousMockery());
 
             // AddSpell(new CureWounds());
             // AddSpell(new EarthTremor());

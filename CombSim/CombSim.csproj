@@ -132,6 +132,7 @@
         <Compile Include="Spells\ShockingGrasp.cs"/>
         <Compile Include="Spells\SpiritGuardians.cs"/>
         <Compile Include="Spells\Thunderclap.cs"/>
+        <Compile Include="Spells\ViciousMockery.cs"/>
         <Compile Include="Stat.cs"/>
         <Compile Include="ToHitSpell.cs"/>
     </ItemGroup>

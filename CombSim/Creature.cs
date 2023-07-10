@@ -530,5 +530,10 @@ namespace CombSim
         {
             return Effects.HasEffect(name);
         }
+
+        public Effect GetEffectByName(string name)
+        {
+            return Effects.GetEffectByName(name);
+        }
     }
 }
