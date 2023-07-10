@@ -18,8 +18,8 @@ namespace CombSim.Characters
             new Dictionary<int, Dictionary<int, int>>
             {
                 { 1, new Dictionary<int, int> { { 1, 2 } } },
-                /*
                 { 2, new Dictionary<int, int> { { 1, 3 } } },
+                /*
                 { 3, new Dictionary<int, int> { { 1, 4 }, { 2, 2 } } },
                 { 4, new Dictionary<int, int> { { 1, 4 }, { 2, 3 } } },
                 { 5, new Dictionary<int, int> { { 1, 4 }, { 2, 3 }, { 3, 2 } } }
@@ -45,7 +45,7 @@ namespace CombSim.Characters
             AddEquipment(new HealingPotion());
 
             AddSpell(new Thunderclap());
-            // AddSpell(new ViciousMockery());
+            AddSpell(new ViciousMockery());
 
             // AddSpell(new CureWounds());
             // AddSpell(new EarthTremor());

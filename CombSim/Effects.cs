@@ -30,12 +30,21 @@ namespace CombSim
 
         public bool HasEffect(string name)
         {
+            if (GetEffectByName(name) == null) return false;
+            return true;
+        }
+
+        public Effect GetEffectByName(string name)
+        {
             foreach (var effect in _effects)
             {
-                if (effect.Name == name) return true;
+                if (effect.Name == name)
+                {
+                    return effect;
+                }
             }
 
-            return false;
+            return null;
         }
     }
 }
