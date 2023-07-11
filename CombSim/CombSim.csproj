@@ -129,6 +129,7 @@
         <Compile Include="Spells\RayOfFrost.cs"/>
         <Compile Include="Spells\SacredFlame.cs"/>
         <Compile Include="Spells\ScorchingRay.cs"/>
+        <Compile Include="Spells\Shatter.cs"/>
         <Compile Include="Spells\ShockingGrasp.cs"/>
         <Compile Include="Spells\SpiritGuardians.cs"/>
         <Compile Include="Spells\Thunderclap.cs"/>
