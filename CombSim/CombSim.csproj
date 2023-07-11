@@ -116,6 +116,7 @@
         <Compile Include="Spell.cs"/>
         <Compile Include="Spells\BurningHands.cs"/>
         <Compile Include="Spells\ChillTouch.cs"/>
+        <Compile Include="Spells\CureWounds.cs"/>
         <Compile Include="Spells\EldritchBlast.cs"/>
         <Compile Include="Spells\Fireball.cs"/>
         <Compile Include="Spells\FireBolt.cs"/>

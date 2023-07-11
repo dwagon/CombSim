@@ -44,7 +44,7 @@ namespace CombSim.Characters
             AddSpell(new Thunderclap());
             AddSpell(new ViciousMockery());
 
-            // AddSpell(new CureWounds());
+            AddSpell(new CureWounds());
             // AddSpell(new EarthTremor());
             AddSpell(new HealingWord());
             // AddSpell(new HideousLaughter());
@@ -57,6 +57,12 @@ namespace CombSim.Characters
             else
             {
                 AddEquipment(ArmourGear.Leather);
+            }
+
+            if (level >= 4)
+            {
+                Stats[StatEnum.Charisma] = new Stat(18);
+                AddEquipment(new HealingPotion());
             }
         }
 
