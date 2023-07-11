@@ -19,11 +19,9 @@ namespace CombSim.Characters
             {
                 { 1, new Dictionary<int, int> { { 1, 2 } } },
                 { 2, new Dictionary<int, int> { { 1, 3 } } },
-                /*
                 { 3, new Dictionary<int, int> { { 1, 4 }, { 2, 2 } } },
                 { 4, new Dictionary<int, int> { { 1, 4 }, { 2, 3 } } },
                 { 5, new Dictionary<int, int> { { 1, 4 }, { 2, 3 }, { 3, 2 } } }
-                */
             };
 
         public Bard(string name, int level, string team) : base(name, level, team)
@@ -41,7 +39,6 @@ namespace CombSim.Characters
             Stats.Add(StatEnum.Wisdom, new Stat(18));
             Stats.Add(StatEnum.Charisma, new Stat(16));
             AddEquipment(MeleeWeaponGear.Rapier);
-            AddEquipment(ArmourGear.Leather);
             AddEquipment(new HealingPotion());
 
             AddSpell(new Thunderclap());
@@ -51,6 +48,16 @@ namespace CombSim.Characters
             // AddSpell(new EarthTremor());
             AddSpell(new HealingWord());
             // AddSpell(new HideousLaughter());
+
+            if (level >= 3)
+            {
+                AddSpell(new Shatter());
+                AddEquipment(ArmourGear.LeatherPlusOne);
+            }
+            else
+            {
+                AddEquipment(ArmourGear.Leather);
+            }
         }
 
         public override string ToString()
