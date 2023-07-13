@@ -23,6 +23,9 @@ namespace CombSim.Gear
         public static readonly MeleeWeapon Rapier =
             new MeleeWeapon("Rapier", new DamageRoll("1d8", DamageTypeEnums.Piercing));
 
+        public static readonly MeleeWeapon RapierPlusOne =
+            new MeleeWeapon("Rapier", new DamageRoll("1d8", DamageTypeEnums.Piercing), magicBonus: 1);
+
         public static readonly MeleeWeapon Scimitar =
             new MeleeWeapon("Scimitar", new DamageRoll("1d6", DamageTypeEnums.Slashing), finesse: true);
 
