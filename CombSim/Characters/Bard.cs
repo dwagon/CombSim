@@ -38,7 +38,6 @@ namespace CombSim.Characters
             Stats.Add(StatEnum.Intelligence, new Stat(13));
             Stats.Add(StatEnum.Wisdom, new Stat(18));
             Stats.Add(StatEnum.Charisma, new Stat(16));
-            AddEquipment(MeleeWeaponGear.Rapier);
             AddEquipment(new HealingPotion());
 
             AddSpell(new Thunderclap());
@@ -63,6 +62,17 @@ namespace CombSim.Characters
             {
                 Stats[StatEnum.Charisma] = new Stat(18);
                 AddEquipment(new HealingPotion());
+            }
+
+            if (level >= 5)
+            {
+                AddEquipment(MeleeWeaponGear.RapierPlusOne);
+                // AddSpell(new StinkingCloud());
+                // AddSpell(new HypnoticPattern());
+            }
+            else
+            {
+                AddEquipment(MeleeWeaponGear.Rapier);
             }
         }
 
