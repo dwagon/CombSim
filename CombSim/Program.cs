@@ -41,7 +41,7 @@ namespace CombSim
             _game.Add_Creature(new Ape("Ape 1", monsters));
 
             var humans = "humans";
-            _game.Add_Creature(new Fighter("Fighter", level: 5, humans));
+            _game.Add_Creature(new Fighter("Fighter", level: 6, humans));
             _game.Add_Creature(new Wizard("Wizard", level: 5, humans));
             _game.Add_Creature(new Warlock("Warlock", level: 5, humans));
             _game.Add_Creature(new Rogue("Rogue", level: 5, humans));

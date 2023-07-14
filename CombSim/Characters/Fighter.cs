@@ -11,7 +11,7 @@ namespace CombSim.Characters
 
         private readonly Dictionary<int, int> _hitPointsAtLevel = new Dictionary<int, int>
         {
-            { 1, 12 }, { 2, 20 }, { 3, 28 }, { 4, 36 }, { 5, 44 }
+            { 1, 12 }, { 2, 20 }, { 3, 28 }, { 4, 36 }, { 5, 44 }, { 6, 52 }
         };
 
         public Fighter(string name, int level = 1, string team = "Fighters") : base(name, level, team)
@@ -32,42 +32,48 @@ namespace CombSim.Characters
             AddEquipment(new HealingPotion());
 
             AddAction(new SecondWind());
+
+            // Armour
+            if (level >= 6) AddEquipment(ArmourGear.PlatePlusTwo);
+            else if (level >= 4) AddEquipment(ArmourGear.PlatePlusOne);
+            else AddEquipment(ArmourGear.Plate);
+
+            // Shield
+            if (level >= 2) AddEquipment(ArmourGear.ShieldPlusOne);
+            else AddEquipment(ArmourGear.Shield);
+
+            // Weapons
+            if (level >= 3) AddEquipment(MeleeWeaponGear.MacePlusOne);
+            else AddEquipment(MeleeWeaponGear.Mace);
+
+            if (level >= 5) AddEquipment(RangedWeaponGear.LongbowPlusOne);
+
+            // Normal benefits
             if (level >= 2)
             {
                 AddAction(new ActionSurge());
-                AddEquipment(ArmourGear.ShieldPlusOne);
-            }
-            else
-            {
-                AddEquipment(ArmourGear.Shield);
             }
 
             if (level >= 3)
             {
                 // Champion Martial Archetype
                 CriticalHitRoll = 19;
-                AddEquipment(MeleeWeaponGear.MacePlusOne);
-            }
-            else
-            {
-                AddEquipment(MeleeWeaponGear.Mace);
             }
 
             if (level >= 4)
             {
                 Stats[StatEnum.Strength] = new Stat(18);
-                AddEquipment(ArmourGear.PlatePlusOne);
-            }
-            else
-            {
-                AddEquipment(ArmourGear.Plate);
             }
 
             if (level >= 5)
             {
                 AttacksPerAction = 2;
-                AddEquipment(RangedWeaponGear.LongbowPlusOne);
                 AddEquipment(new GreaterHealingPotion());
+            }
+
+            if (level >= 6)
+            {
+                Stats[StatEnum.Strength] = new Stat(20);
             }
         }
 
