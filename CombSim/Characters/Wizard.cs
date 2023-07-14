@@ -10,7 +10,7 @@ namespace CombSim.Characters
     {
         private readonly Dictionary<int, int> _hitPointsAtLevel = new Dictionary<int, int>()
         {
-            { 1, 8 }, { 2, 14 }, { 3, 20 }, { 4, 26 }, { 5, 32 }
+            { 1, 8 }, { 2, 14 }, { 3, 20 }, { 4, 26 }, { 5, 32 }, { 6, 38 }
         };
 
         // CasterLevel: <SpellLevel: NumberOfSlots>
@@ -21,7 +21,8 @@ namespace CombSim.Characters
                 { 2, new Dictionary<int, int> { { 1, 3 } } },
                 { 3, new Dictionary<int, int> { { 1, 4 }, { 2, 2 } } },
                 { 4, new Dictionary<int, int> { { 1, 4 }, { 2, 3 } } },
-                { 5, new Dictionary<int, int> { { 1, 4 }, { 2, 3 }, { 3, 2 } } }
+                { 5, new Dictionary<int, int> { { 1, 4 }, { 2, 3 }, { 3, 2 } } },
+                { 6, new Dictionary<int, int> { { 1, 4 }, { 2, 3 }, { 3, 3 } } }
             };
 
         public Wizard(string name, int level = 1, string team = "Wizards") : base(name, level, team)
