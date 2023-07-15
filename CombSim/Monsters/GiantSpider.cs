@@ -137,7 +137,12 @@ namespace CombSim.Monsters
                 {
                     if (actor.MakeSavingThrow(StatEnum.Strength, 12, out _))
                     {
+                        Console.WriteLine($"// {actor.Name} has removed Web");
                         actor.RemoveEffect(_webbed);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"// {actor.Name} failed to remove Web");
                     }
                 }
             }

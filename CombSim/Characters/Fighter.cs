@@ -133,7 +133,6 @@ namespace CombSim.Characters
                 NarrationLog.LogMessage($"{actor.Name} uses Action Surge");
                 actor.DoActionCategory(ActionCategory.Action, force: true);
                 actor.RemoveAction(this);
-                base.DoAction(actor);
             }
         }
     }
