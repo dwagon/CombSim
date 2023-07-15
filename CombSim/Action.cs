@@ -44,6 +44,7 @@ namespace CombSim
         {
             if (!PreAction(actor))
             {
+                Console.WriteLine($"// PreAction of {Name()} failed");
                 return;
             }
 
@@ -58,7 +59,7 @@ namespace CombSim
 
         protected virtual bool PreAction(Creature actor)
         {
-            return false;
+            return true;
         }
 
         protected virtual void PostAction(Creature actor)
