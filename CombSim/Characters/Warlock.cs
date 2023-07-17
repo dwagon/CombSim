@@ -44,6 +44,8 @@ namespace CombSim.Characters
             Stats.Add(StatEnum.Wisdom, new Stat(10));
             Stats.Add(StatEnum.Charisma, new Stat(15));
 
+            OnAnyBeingKilled += DarkOnesBlessing;
+
             AddEquipment(new HealingPotion());
 
             // Equipment
@@ -90,6 +92,16 @@ namespace CombSim.Characters
             if (HasAttribute(Attribute.EldritchSpear)) ebRange = 300 / 5;
             if (HasAttribute(Attribute.AgonizingBlast)) ebDmgBonus = Stats[StatEnum.Charisma].Bonus();
             AddSpell(new EldritchBlast(ebRange, ebDmgBonus));
+        }
+
+        private void DarkOnesBlessing(object sender, OnAnyBeingKilledEventArgs e)
+        {
+            if (e.Source == this)
+            {
+                var tempHP = Level + Stats[StatEnum.Charisma].Bonus();
+                Console.WriteLine($"// {Name} gained {tempHP} HP from Dark One's Blessing");
+                GrantTemporaryHitPoints(tempHP);
+            }
         }
 
         public override string ToString()

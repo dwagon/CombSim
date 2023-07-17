@@ -28,6 +28,7 @@ namespace CombSim
         public int ProficiencyBonus = 2;
         protected string Repr;
         protected StatEnum SpellCastingAbility;
+        protected int TempHitPoints;
 
         public Creature(string name, string team = "")
         {
@@ -91,8 +92,14 @@ namespace CombSim
         public virtual void Initialise()
         {
             HitPoints = MaxHitPoints;
+            TempHitPoints = 0;
             Conditions.SetCondition(ConditionEnum.Ok);
             BeingAttackedInitialise();
+        }
+
+        protected void GrantTemporaryHitPoints(int number)
+        {
+            TempHitPoints = Math.Max(TempHitPoints, number);
         }
 
         public bool HasAdvantageAgainstMe(Creature target)
@@ -265,6 +272,11 @@ namespace CombSim
         public new virtual string ToString()
         {
             var output = $"{Name} AC: {ArmourClass()}; HP: {HitPoints}/{MaxHitPoints};";
+            if (TempHitPoints > 0)
+            {
+                output += $" TempHP: {TempHitPoints};";
+            }
+
             output += $" {Conditions};";
             output += $" {Effects}";
             return output;
