@@ -35,6 +35,13 @@ namespace CombSim
             });
             OnTakingDamage?.Invoke(this, new OnTakingDamageEventArgs { Damage = adjustedDamage });
 
+            if (TempHitPoints >= 0)
+            {
+                var reduceBy = Math.Min(adjustedDamage.hits, TempHitPoints);
+                adjustedDamage -= reduceBy;
+                TempHitPoints -= reduceBy;
+            }
+
             HitPoints -= adjustedDamage.hits;
             DamageReceived.Add(adjustedDamage);
             if (HitPoints <= 0)

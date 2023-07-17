@@ -4,13 +4,17 @@ using CombSim.Gear;
 using CombSim.Spells;
 using Pastel;
 
+// TODO: Dark Ones Blessing
+// TODO: Casting spells at higher level
+// TODO: Dark Ones Own Luck
+
 namespace CombSim.Characters
 {
     public class Warlock : Character
     {
         private readonly Dictionary<int, int> _hitPointsAtLevel = new Dictionary<int, int>
         {
-            { 1, 10 }, { 2, 18 }, { 3, 24 }, { 4, 31 }, { 5, 38 }
+            { 1, 10 }, { 2, 18 }, { 3, 24 }, { 4, 31 }, { 5, 38 }, { 6, 45 }
         };
 
         // CasterLevel: <SpellLevel: NumberOfSlots>
@@ -22,6 +26,7 @@ namespace CombSim.Characters
                 { 3, 2 },
                 { 4, 2 },
                 { 5, 2 },
+                { 6, 2 }
             };
 
         public Warlock(string name, int level = 1, string team = "Warlocks") : base(name, level, team)
@@ -39,8 +44,16 @@ namespace CombSim.Characters
             Stats.Add(StatEnum.Wisdom, new Stat(10));
             Stats.Add(StatEnum.Charisma, new Stat(15));
 
+            OnAnyBeingKilled += DarkOnesBlessing;
+
             AddEquipment(new HealingPotion());
-            AddEquipment(MeleeWeaponGear.Quarterstaff);
+
+            // Equipment
+            if (level >= 6) AddEquipment(MeleeWeaponGear.QuarterstaffPlusOne);
+            else AddEquipment(MeleeWeaponGear.Quarterstaff);
+
+            if (level >= 3) AddEquipment(ArmourGear.StuddedLeatherPlusOne);
+            else AddEquipment(ArmourGear.StuddedLeather);
 
             // Cantrips
             AddSpell(new Thunderclap());
@@ -62,13 +75,7 @@ namespace CombSim.Characters
                 AddSpell(new FireBolt());
                 AddSpell(new ShockingGrasp());
                 // AddSpell(new ViciousMockery());
-                AddEquipment(ArmourGear.StuddedLeatherPlusOne);
             }
-            else
-            {
-                AddEquipment(ArmourGear.StuddedLeather);
-            }
-
 
             if (level >= 4)
             {
@@ -85,6 +92,16 @@ namespace CombSim.Characters
             if (HasAttribute(Attribute.EldritchSpear)) ebRange = 300 / 5;
             if (HasAttribute(Attribute.AgonizingBlast)) ebDmgBonus = Stats[StatEnum.Charisma].Bonus();
             AddSpell(new EldritchBlast(ebRange, ebDmgBonus));
+        }
+
+        private void DarkOnesBlessing(object sender, OnAnyBeingKilledEventArgs e)
+        {
+            if (e.Source == this)
+            {
+                var tempHP = Level + Stats[StatEnum.Charisma].Bonus();
+                Console.WriteLine($"// {Name} gained {tempHP} HP from Dark One's Blessing");
+                GrantTemporaryHitPoints(tempHP);
+            }
         }
 
         public override string ToString()
