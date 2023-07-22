@@ -53,7 +53,7 @@ namespace CombSimTest.Spells
                 SpellCastingAbility = StatEnum.Wisdom;
                 Stats.Add(StatEnum.Strength, new Stat(10));
                 Stats.Add(StatEnum.Wisdom, new Stat(99)); // Ensure hit
-                AddSpell(new SpiritGuardians());
+                AddSpell(new SpiritGuardians(3));
             }
 
             public override bool CanCastSpell(Spell spell)

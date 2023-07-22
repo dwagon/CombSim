@@ -52,7 +52,7 @@ namespace CombSimTest.Spells
                 SpellCastingAbility = StatEnum.Wisdom;
                 Stats.Add(StatEnum.Wisdom, new Stat(99)); // Ensure hit
                 Stats.Add(StatEnum.Dexterity, new Stat(99));
-                AddSpell(new GuidingBolt());
+                AddSpell(new GuidingBolt(2));
                 AddEquipment(TestBow);
             }
 
