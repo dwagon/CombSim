@@ -2,9 +2,11 @@ namespace CombSim.Spells
 {
     public class ViciousMockery : DcSaveSpell
     {
-        public ViciousMockery() : base("Vicious Mockery", 0, ActionCategory.Action)
+        public ViciousMockery(int casterLevel) : base("Vicious Mockery", 0, ActionCategory.Action)
         {
-            DmgRoll = new DamageRoll("1d4", DamageTypeEnums.Psychic);
+            if (casterLevel >= 11) DmgRoll = new DamageRoll("3d4", DamageTypeEnums.Psychic);
+            else if (casterLevel >= 5) DmgRoll = new DamageRoll("2d4", DamageTypeEnums.Psychic);
+            else DmgRoll = new DamageRoll("1d4", DamageTypeEnums.Psychic);
             SpellSavedEffect = SpellSavedEffect.NoDamage;
             SpellSaveAgainst = StatEnum.Wisdom;
             Reach = 60 / 5;

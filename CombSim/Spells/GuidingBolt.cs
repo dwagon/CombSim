@@ -8,10 +8,10 @@ namespace CombSim.Spells
         private Creature _target;
         private int _turnsToGo;
 
-        public GuidingBolt() : base("Guiding Bolt", 1, ActionCategory.Action)
+        public GuidingBolt(int castAtSpellLevel) : base("Guiding Bolt", 1, ActionCategory.Action)
         {
             Reach = 120 / 5;
-            DmgRoll = new DamageRoll("4d6", DamageTypeEnums.Radiant);
+            DmgRoll = new DamageRoll($"{4 + castAtSpellLevel - 1}d6", DamageTypeEnums.Radiant);
         }
 
         protected override void SideEffect(Creature actor, Creature target, Damage damage)

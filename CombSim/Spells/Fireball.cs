@@ -7,7 +7,7 @@ namespace CombSim.Spells
     {
         private const int FireballRadius = 20 / 5;
 
-        public Fireball() : base("Fireball", 3, ActionCategory.Action)
+        public Fireball(int castAtSpellLevel = 3) : base("Fireball", 3, ActionCategory.Action)
         {
             DmgRoll = new DamageRoll("8d6", DamageTypeEnums.Fire);
             SpellSavedEffect = SpellSavedEffect.DamageHalved;

@@ -2,10 +2,10 @@ namespace CombSim.Spells
 {
     public class MassHealingWord : HealingSpell
     {
-        public MassHealingWord() : base("Mass Healing Word", 3, ActionCategory.Bonus)
+        public MassHealingWord(int castAtSpellLevel) : base("Mass Healing Word", 3, ActionCategory.Bonus)
         {
             Reach = 60 / 5;
-            HealingRoll = new DamageRoll("1d4", DamageTypeEnums.None);
+            HealingRoll = new DamageRoll($"{1 + castAtSpellLevel - 3}d4", DamageTypeEnums.None);
             NumRecipients = 6;
         }
 

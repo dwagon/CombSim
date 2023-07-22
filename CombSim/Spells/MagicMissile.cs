@@ -2,16 +2,18 @@ namespace CombSim.Spells
 {
     public class MagicMissile : Spell
     {
-        private DamageRoll _damageRoll = new DamageRoll("1d4+1", DamageTypeEnums.Force);
+        private readonly int _castAtSpellLevel;
+        private readonly DamageRoll _damageRoll = new DamageRoll("1d4+1", DamageTypeEnums.Force);
 
-        public MagicMissile() : base("Magic Missile", 1, ActionCategory.Action)
+        public MagicMissile(int castAtSpellLevel) : base("Magic Missile", 1, ActionCategory.Action)
         {
             Reach = 120 / 5;
+            _castAtSpellLevel = castAtSpellLevel;
         }
 
         private int NumberOfMissiles()
         {
-            return 3;
+            return 3 + _castAtSpellLevel - 1;
         }
 
         public override int GetHeuristic(Creature actor, out string reason)

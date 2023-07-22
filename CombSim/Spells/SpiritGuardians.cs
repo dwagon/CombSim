@@ -7,10 +7,10 @@ namespace CombSim.Spells
     {
         private readonly SpiritGuardianEffect _effect = new SpiritGuardianEffect();
 
-        public SpiritGuardians() : base("Spirit Guardians", 3, ActionCategory.Action)
+        public SpiritGuardians(int castAtSpellLevel) : base("Spirit Guardians", 3, ActionCategory.Action)
         {
             Concentration = true;
-            DmgRoll = new DamageRoll("3d8", DamageTypeEnums.Necrotic);
+            DmgRoll = new DamageRoll($"{3 + castAtSpellLevel - 3}d8", DamageTypeEnums.Necrotic);
             TouchSpell = true; // Not really, but isn't ranged either for heuristic purposes
         }
 
@@ -42,8 +42,8 @@ namespace CombSim.Spells
     public class SpiritGuardianEffect : Effect
     {
         private const int MaxRange = 15 / 5;
+        private readonly List<Creature> _attackedThisTurn;
         private readonly DamageRoll _dmgRoll = new DamageRoll("3d8", DamageTypeEnums.Radiant);
-        private List<Creature> _attackedThisTurn;
         private Creature _caster;
 
         public SpiritGuardianEffect() : base("Spirit Guardians")

@@ -5,11 +5,12 @@ namespace CombSim.Spells
 {
     public class BurningHands : DcSaveSpell
     {
-        private int _arcSize = 15 / 5;
+        private const int ArcSize = 15 / 5;
 
-        public BurningHands() : base("Burning Hands", 1, ActionCategory.Action)
+        public BurningHands(int castAtSpellLevel) : base("Burning Hands", 1, ActionCategory.Action)
         {
-            DmgRoll = new DamageRoll("3d6", DamageTypeEnums.Fire);
+            var dmgString = $"{3 + castAtSpellLevel - 1}d6";
+            DmgRoll = new DamageRoll(dmgString, DamageTypeEnums.Fire);
             SpellSavedEffect = SpellSavedEffect.DamageHalved;
             SpellSaveAgainst = StatEnum.Dexterity;
             Reach = 5 / 5;
@@ -33,7 +34,7 @@ namespace CombSim.Spells
 
             foreach (var direction in Enum.GetValues(typeof(GridDirection)).Cast<GridDirection>())
             {
-                FriendEnemyCount(actor, _arcSize, direction, out var numFriends, out var numEnemies);
+                FriendEnemyCount(actor, ArcSize, direction, out var numFriends, out var numEnemies);
 
                 if (numFriends != 0) continue;
                 if (bestScore > numEnemies) continue;
@@ -70,7 +71,7 @@ namespace CombSim.Spells
         private void DoBurningHandsAttack(Creature actor)
         {
             var bestDirection = GetBestDirection(actor, out _);
-            foreach (var target in actor.GetCreaturesInCone(_arcSize, bestDirection))
+            foreach (var target in actor.GetCreaturesInCone(ArcSize, bestDirection))
             {
                 var attackMessage = new AttackMessage(attacker: actor.Name, victim: target.Name, attackName: Name());
 

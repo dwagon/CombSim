@@ -4,10 +4,12 @@ namespace CombSim.Spells
 {
     public class ShockingGrasp : ToHitSpell
     {
-        public ShockingGrasp() : base("Shocking Grasp", 0, ActionCategory.Action)
+        public ShockingGrasp(int casterLevel) : base("Shocking Grasp", 0, ActionCategory.Action)
         {
             Reach = 5 / 5;
-            DmgRoll = new DamageRoll("1d8", DamageTypeEnums.Lightning);
+            if (casterLevel >= 11) DmgRoll = new DamageRoll("3d8", DamageTypeEnums.Lightning);
+            else if (casterLevel >= 5) DmgRoll = new DamageRoll("2d8", DamageTypeEnums.Lightning);
+            else DmgRoll = new DamageRoll("1d8", DamageTypeEnums.Lightning);
         }
 
         protected override void SideEffect(Creature actor, Creature target, Damage damage)

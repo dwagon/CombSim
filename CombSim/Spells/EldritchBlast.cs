@@ -2,9 +2,13 @@ namespace CombSim.Spells
 {
     public class EldritchBlast : ToHitSpell
     {
-        public EldritchBlast(int reach = 120 / 5, int dmgBonus = 0) : base("Eldritch Blast", 0, ActionCategory.Action)
+        private readonly int _casterLevel;
+
+        public EldritchBlast(int casterLevel, int reach = 120 / 5, int dmgBonus = 0) : base("Eldritch Blast", 0,
+            ActionCategory.Action)
         {
             Reach = reach;
+            _casterLevel = casterLevel;
             DmgRoll = new DamageRoll("1d10", dmgBonus, DamageTypeEnums.Force);
         }
 
@@ -12,23 +16,22 @@ namespace CombSim.Spells
         {
             var heuristic = new Heuristic(actor, this);
 
-            heuristic.AddRepeat(GetNumRays(actor));
+            heuristic.AddRepeat(GetNumRays());
             heuristic.AddDamageRoll(DmgRoll);
             return heuristic.GetValue(out reason);
         }
 
-        private static int GetNumRays(Creature actor)
+        private int GetNumRays()
         {
-            var caster = actor as Character;
-            if (caster.Level >= 17) return 4;
-            if (caster.Level >= 11) return 3;
-            if (caster.Level >= 5) return 2;
+            if (_casterLevel >= 17) return 4;
+            if (_casterLevel >= 11) return 3;
+            if (_casterLevel >= 5) return 2;
             return 1;
         }
 
         protected override void DoAction(Creature actor)
         {
-            var numRays = GetNumRays(actor);
+            var numRays = GetNumRays();
             var enemy = actor.PickClosestEnemy();
             if (enemy == null) return;
             actor.MoveWithinReachOfCreature(1, enemy);
