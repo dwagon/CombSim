@@ -42,13 +42,13 @@ namespace CombSim.Characters
             AddEquipment(MeleeWeaponGear.Quarterstaff);
             AddEquipment(new SuperiorHealingPotion());
 
-            AddSpell(new RayOfFrost());
-            AddSpell(new BurningHands());
-            AddSpell(new MagicMissile());
-            AddSpell(new PoisonSpray());
+            AddSpell(new RayOfFrost(Level));
+            AddSpell(new BurningHands(Level));
+            AddSpell(new MagicMissile(Level));
+            AddSpell(new PoisonSpray(Level));
             if (Level >= 3)
             {
-                AddSpell(new ScorchingRay());
+                AddSpell(new ScorchingRay(Level));
                 AddEquipment(new RingOfProtection());
             }
 
@@ -60,7 +60,7 @@ namespace CombSim.Characters
 
             if (level >= 5)
             {
-                AddSpell(new Fireball());
+                AddSpell(new Fireball(Level));
                 AddEquipment(new GreaterHealingPotion());
             }
         }

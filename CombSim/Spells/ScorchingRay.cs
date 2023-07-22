@@ -2,9 +2,12 @@ namespace CombSim.Spells
 {
     public class ScorchingRay : ToHitSpell
     {
-        public ScorchingRay() : base("Scorching Ray", 2, ActionCategory.Action)
+        private int _castAtSpellLevel;
+
+        public ScorchingRay(int castAtSpellLevel) : base("Scorching Ray", 2, ActionCategory.Action)
         {
             DmgRoll = new DamageRoll("2d6", DamageTypeEnums.Fire);
+            _castAtSpellLevel = castAtSpellLevel;
             Reach = 120 / 5;
         }
 
@@ -28,7 +31,7 @@ namespace CombSim.Spells
 
         private int NumberOfMissiles()
         {
-            return 3;
+            return 3 + _castAtSpellLevel - 2;
         }
 
         public override int GetHeuristic(Creature actor, out string reason)

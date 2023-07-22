@@ -7,7 +7,7 @@ namespace CombSim.Spells
     {
         private const int StinkingCloudRadius = 20 / 5;
 
-        public StinkingCloud() : base("Stinking Cloud", 3, ActionCategory.Action)
+        public StinkingCloud(int castAtSpellLevel) : base("Stinking Cloud", 3, ActionCategory.Action)
         {
             SpellSavedEffect = SpellSavedEffect.NoDamage;
             SpellSaveAgainst = StatEnum.Constitution;

@@ -7,9 +7,9 @@ namespace CombSim.Spells
     {
         private const int ShatterRadius = 20 / 5;
 
-        public Shatter() : base("Shatter", 2, ActionCategory.Action)
+        public Shatter(int castAtSpellLevel) : base("Shatter", 2, ActionCategory.Action)
         {
-            DmgRoll = new DamageRoll("3d8", DamageTypeEnums.Thunder);
+            DmgRoll = new DamageRoll($"{3 + castAtSpellLevel - 2}d8", DamageTypeEnums.Thunder);
             SpellSavedEffect = SpellSavedEffect.DamageHalved;
             SpellSaveAgainst = StatEnum.Constitution;
             Reach = 60 / 5;

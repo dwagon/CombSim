@@ -4,7 +4,6 @@ using CombSim.Gear;
 using CombSim.Spells;
 using Pastel;
 
-// TODO: Dark Ones Blessing
 // TODO: Casting spells at higher level
 // TODO: Dark Ones Own Luck
 
@@ -56,10 +55,10 @@ namespace CombSim.Characters
             else AddEquipment(ArmourGear.StuddedLeather);
 
             // Cantrips
-            AddSpell(new Thunderclap());
+            AddSpell(new Thunderclap(Level));
 
             // Level 1
-            AddSpell(new BurningHands());
+            AddSpell(new BurningHands(MaxCastingLevel()));
             // AddSpell(new HellishRebuke());
 
             int ebRange = 120 / 5;
@@ -72,8 +71,8 @@ namespace CombSim.Characters
 
             if (Level >= 3) // Pact of the Tome
             {
-                AddSpell(new FireBolt());
-                AddSpell(new ShockingGrasp());
+                AddSpell(new FireBolt(Level));
+                AddSpell(new ShockingGrasp(Level));
                 // AddSpell(new ViciousMockery());
             }
 
@@ -85,22 +84,22 @@ namespace CombSim.Characters
 
             if (level >= 5)
             {
-                AddSpell(new Fireball());
+                AddSpell(new Fireball(MaxCastingLevel()));
                 AddEquipment(new GreaterHealingPotion());
             }
 
             if (HasAttribute(Attribute.EldritchSpear)) ebRange = 300 / 5;
             if (HasAttribute(Attribute.AgonizingBlast)) ebDmgBonus = Stats[StatEnum.Charisma].Bonus();
-            AddSpell(new EldritchBlast(ebRange, ebDmgBonus));
+            AddSpell(new EldritchBlast(Level, ebRange, ebDmgBonus));
         }
 
         private void DarkOnesBlessing(object sender, OnAnyBeingKilledEventArgs e)
         {
             if (e.Source == this)
             {
-                var tempHP = Level + Stats[StatEnum.Charisma].Bonus();
-                Console.WriteLine($"// {Name} gained {tempHP} HP from Dark One's Blessing");
-                GrantTemporaryHitPoints(tempHP);
+                var tempHp = Level + Stats[StatEnum.Charisma].Bonus();
+                Console.WriteLine($"// {Name} gained {tempHp} HP from Dark One's Blessing");
+                GrantTemporaryHitPoints(tempHp);
             }
         }
 
@@ -109,6 +108,11 @@ namespace CombSim.Characters
             var baseString = base.ToString();
             var spellString = $"; Spells: {_spellsAtLevel[Level]}";
             return baseString + spellString;
+        }
+
+        private int MaxCastingLevel()
+        {
+            return (Level + 1) / 2;
         }
 
         public override bool CanCastSpell(Spell spell)

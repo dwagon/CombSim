@@ -8,13 +8,15 @@ namespace CombSim
 {
     public class Spell : Action
     {
-        public readonly int Level;
+        public readonly int Level; // Level of the spell
+        public int CastAtLevel; // Level the spell was cast at
         protected bool Concentration = false;
         public bool TouchSpell = false;
 
         protected Spell(string name, int level, ActionCategory actionCategory) : base(name, actionCategory)
         {
             Level = level;
+            CastAtLevel = level;
         }
 
         protected DamageRoll DmgRoll { get; set; }

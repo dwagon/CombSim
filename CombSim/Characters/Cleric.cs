@@ -48,7 +48,7 @@ namespace CombSim.Characters
             AddEquipment(new HealingPotion());
 
             // Cantrips
-            AddSpell(new SacredFlame());
+            AddSpell(new SacredFlame(Level));
             // AddSpell(new Guidance());
             // AddSpell(new SpareTheDying());
 
@@ -56,9 +56,9 @@ namespace CombSim.Characters
             // AddSpell(new Bane());
             // AddSpell(new Bless());       // Life Domain
             // AddSpell(new CureWounds());  // Life Domain
-            AddSpell(new GuidingBolt());
-            AddSpell(new HealingWord());
-            AddSpell(new InflictWounds());
+            AddSpell(new GuidingBolt(Level));
+            AddSpell(new HealingWord(Level));
+            AddSpell(new InflictWounds(Level));
 
             if (Level >= 2)
             {
@@ -82,8 +82,8 @@ namespace CombSim.Characters
 
             if (level >= 5)
             {
-                AddSpell(new MassHealingWord());
-                AddSpell(new SpiritGuardians());
+                AddSpell(new MassHealingWord(Level));
+                AddSpell(new SpiritGuardians(Level));
                 AddEquipment(new GreaterHealingPotion());
             }
         }

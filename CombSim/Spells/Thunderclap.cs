@@ -2,10 +2,12 @@ namespace CombSim.Spells
 {
     public class Thunderclap : DcSaveSpell
     {
-        public Thunderclap() : base("Thunderclap", 0, ActionCategory.Action)
+        public Thunderclap(int casterLevel) : base("Thunderclap", 0, ActionCategory.Action)
         {
             Reach = 5 / 5;
-            DmgRoll = new DamageRoll("1d6", DamageTypeEnums.Thunder);
+            if (casterLevel >= 11) DmgRoll = new DamageRoll("3d6", DamageTypeEnums.Thunder);
+            else if (casterLevel >= 5) DmgRoll = new DamageRoll("2d6", DamageTypeEnums.Thunder);
+            else DmgRoll = new DamageRoll("1d6", DamageTypeEnums.Thunder);
             SpellSavedEffect = SpellSavedEffect.NoDamage;
         }
 

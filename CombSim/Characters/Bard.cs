@@ -40,17 +40,17 @@ namespace CombSim.Characters
             Stats.Add(StatEnum.Charisma, new Stat(16));
             AddEquipment(new HealingPotion());
 
-            AddSpell(new Thunderclap());
-            AddSpell(new ViciousMockery());
+            AddSpell(new Thunderclap(Level));
+            AddSpell(new ViciousMockery(Level));
 
-            AddSpell(new CureWounds());
+            AddSpell(new CureWounds(Level));
             // AddSpell(new EarthTremor());
-            AddSpell(new HealingWord());
+            AddSpell(new HealingWord(Level));
             // AddSpell(new HideousLaughter());
 
             if (level >= 3)
             {
-                AddSpell(new Shatter());
+                AddSpell(new Shatter(Level));
                 AddEquipment(ArmourGear.LeatherPlusOne);
             }
             else
